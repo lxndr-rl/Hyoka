@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import AppIntroSlider from 'react-native-app-intro-slider';
-import HomeScreen from './HomeScreen';
+import HomeScreen from './StackNavigator';
 
 const phoneWidth = Dimensions.get('window').width;
 
