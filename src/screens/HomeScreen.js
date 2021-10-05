@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, { useState } from 'react';
-import { StyleSheet, View, StatusBar, Platform, Dimensions, TouchableOpacity, TextInput, Image, Text, Linking, KeyboardAvoidingView, Alert } from 'react-native';
+import { SafeAreaView, StyleSheet, View, StatusBar, Platform, Dimensions, TouchableOpacity, TextInput, Image, Text, Linking, KeyboardAvoidingView, Alert, Keyboard, ActivityIndicator } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import { MaterialIcons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -8,56 +8,61 @@ import { TextAnimationFadeIn as FancyText } from 'react-native-text-effects';
 import Dialog, { DialogFooter, DialogButton, DialogContent, DialogTitle, ScaleAnimation } from 'react-native-popup-dialog';
 
 const phoneWidth = Platform.OS == 'web' ? 350 : Dimensions.get('window').width;
-
 const App = ({ navigation }) => {
   const [inputVisible, setInputVisible] = useState(false);
   const [inputAnimation, setInputAnimation] = useState('zoomIn');
   const [searchButton, setSearchButton] = useState(false);
   const [textCedula, setTextCedula] = useState('Cédula');
   const [popupVisible, setPopupVisible] = useState(false);
+  const [foundVisible, setFoundVisible] = useState(false);
+  const [studentData, setStudentData] = useState({});
+  const [apiData, setApiData] = useState(null);
+  const [loadingData, setLoadingData] = useState(false);
 
   const searchBtn = async () => {
+    Keyboard.dismiss();
     if (!inputVisible) {
       setInputVisible(true);
     }
     else {
       if (!textCedula || textCedula == 'Cédula') {
         setInputAnimation('zoomOut');
-        return;
       } else if (textCedula.length < 9) {
         Platform.OS == 'web' ? alert(`La cédula ${textCedula} no es válida`) : Alert.alert('Error', `La cédula ${textCedula} no es válida`);
-        return;
-      }
-      setSearchButton(true);
-      fetch(`https://api.lxndr.dev/uae/notas/v2/?cedula=${textCedula}`).then(
-        res => res.json()
-      ).then(data => {
-        if (data.error) return Platform.OS == 'web' ? alert(`Ocurrió un error\n${data.message}`) : Alert.alert('Error', `Ocurrió un error\n${data.message}`);
+      } else {
+        setLoadingData(true);
+        setSearchButton(true);
+        await fetch(`https://api.lxndr.dev/uae/notas/v2/?cedula=${textCedula}`).then(
+          res => res.json()
+        ).then(data => {
+          if (data.error) return Platform.OS == 'web' ? alert(`Ocurrió un error\n${data.message}`) : Alert.alert('Error', `Ocurrió un error\n${data.message}`);
+          setApiData(data);
+          setStudentData({ nombres: data.nombres, apellidos: data.apellidos, carrera: data.carrera, facultad: data.facultad, sede: data.sede })
+          setFoundVisible(true);
+        }).catch(err => {
+          Platform.OS == 'web' ? alert('Ocurrió un error\n' + err) : Alert.alert('Error', 'Ocurrió un error\n' + err);
+        });
+        setLoadingData(null);
         setSearchButton(false);
-        navigation.navigate('Notas', { name: `${data.nombres} ${data.apellidos}`, data: data, cedula: textCedula });
-      }).catch(err => {
-        console.log("error:", err);
-        Platform.OS == 'web' ? alert('Ocurrió un error\n' + err) : Alert.alert('Error', 'Ocurrió un error\n' + err);
-      });
-      setSearchButton(false);
+      }
     }
   };
 
   return (
-    <View style={{ flex: 1, backgroundColor: 'black' }}>
-      <TouchableOpacity onPress={() => setPopupVisible(true)} style={styles.buttonInfo}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: 'black' }}>
+      <TouchableOpacity onPress={() => setPopupVisible(true)} style={styles.buttonInfoCont}>
         <LinearGradient
-          colors={['#f38ba0', '#e4c1f9']}
+          colors={['#18bc9c', '#128f76']}
           style={styles.buttonInfo}>
-          <MaterialIcons name="info" size={40} color="white" />
+          <MaterialIcons name='info' size={40} color='white' />
         </LinearGradient>
       </TouchableOpacity>
       <KeyboardAvoidingView
         style={styles.container}
-        behavior="padding"
+        behavior='padding'
       >
-        <StatusBar backgroundColor="black" />
-        <View style={{ alignSelf: 'center' }}><FancyText value={"Consulta de Notas"} delay={100} duration={1000} style={{ color: 'white' }} /></View>
+        <StatusBar backgroundColor='black' />
+        <View style={{ alignSelf: 'center' }}><FancyText value={'Consulta de Notas'} delay={100} duration={1000} style={{ color: 'white' }} /></View>
         <Image
           style={styles.tinyLogo}
           source={require('../assets/uaeLOGO.png')}
@@ -68,27 +73,27 @@ const App = ({ navigation }) => {
             initialValue: 0,
             useNativeDriver: true,
           })}
-          dialogTitle={<DialogTitle style={{ backgroundColor: '#2b2b2b' }} textStyle={{ color: 'white' }} title="Información | UAE-SICAU" />}
+          dialogTitle={<DialogTitle style={{ backgroundColor: '#2b2b2b' }} textStyle={{ color: 'white' }} title='Información | UAE-SICAU' />}
           footer={
             <DialogFooter style={{ backgroundColor: '#2b2b2b' }}>
               <DialogButton
                 style={{ backgroundColor: '#2b2b2b' }}
-                text="Ver código fuente"
+                text='Ver código fuente'
                 onPress={() => Platform.OS == 'web' ? window.open('https://github.com/lxndr-rl/UAE-SICAU', '_blank') : Linking.openURL('https://github.com/lxndr-rl/UAE-SICAU')}
               />
               <DialogButton
                 style={{ backgroundColor: '#2b2b2b' }}
-                text="Informar un problema"
+                text='Informar un problema'
                 onPress={() => Platform.OS == 'web' ? window.open(`https://github.com/lxndr-rl/UAE-SICAU/issues/new?title=[ERROR]%20...&body=Platform: ${Platform.OS}`, '_blank') : Linking.openURL(`https://github.com/lxndr-rl/UAE-SICAU/issues/new?title=[ERROR]%20...&body=Platform: ${Platform.OS}`)}
               />
               <DialogButton
                 style={{ backgroundColor: '#2b2b2b' }}
-                text="Solicitar una característica"
+                text='Solicitar una característica'
                 onPress={() => Platform.OS == 'web' ? window.open(`https://github.com/lxndr-rl/UAE-SICAU/issues/new?title=[REQUEST]%20...&body=Platform: ${Platform.OS}`, '_blank') : Linking.openURL(`https://github.com/lxndr-rl/UAE-SICAU/issues/new?title=[REQUEST]%20...&body=Platform: ${Platform.OS}`)}
               />
               <DialogButton
                 style={{ backgroundColor: '#2b2b2b' }}
-                text="Cerrar"
+                text='Cerrar'
                 onPress={() => setPopupVisible(false)}
               />
               <Text style={{ alignSelf: 'center', color: 'white', backgroundColor: '#2b2b2b' }}>Hecha con ❤️ - lxndr</Text>
@@ -98,19 +103,48 @@ const App = ({ navigation }) => {
             <Text style={{ fontSize: 18, color: 'white', backgroundColor: '#2b2b2b' }}>Esta aplicación fue hecha de forma{'\n'}independiente y es de código abierto.</Text>
           </DialogContent>
         </Dialog>
+        <Dialog
+          visible={foundVisible}
+          dialogAnimation={new ScaleAnimation({
+            initialValue: 0,
+            useNativeDriver: true,
+          })}
+          dialogTitle={<DialogTitle style={{ backgroundColor: '#2b2b2b' }} textStyle={{ color: 'white' }} title='Estudiante encontrado' />}
+          footer={
+            <DialogFooter style={{ backgroundColor: '#2b2b2b' }}>
+              <DialogButton
+                style={{ backgroundColor: '#2b2b2b' }}
+                text='Cancelar'
+                onPress={() => setFoundVisible(false)}
+              />
+              <DialogButton
+                style={{ backgroundColor: '#2b2b2b' }}
+                text='Continuar'
+                onPress={() => {
+                  setFoundVisible(false);
+                  setTextCedula('Cédula');
+                  navigation.navigate('Notas', { name: `${studentData.nombres} ${studentData.apellidos}`, data: apiData, cedula: textCedula });
+                }}
+              />
+            </DialogFooter>
+          }>
+          <DialogContent style={{ backgroundColor: '#2b2b2b' }}>
+            <Text style={{ fontSize: 18, color: 'white', backgroundColor: '#2b2b2b' }}>Nombres: {studentData.apellidos} {studentData.nombres}{'\n\n'}Carrera: {studentData.carrera}{'\n\n'}Sede: {studentData.sede}{'\n\n'}Facultad: {studentData.facultad}</Text>
+          </DialogContent>
+        </Dialog>
         <TouchableOpacity disabled={searchButton} onPress={() => searchBtn()}>
           <LinearGradient
-            colors={['#f38ba0', '#e4c1f9']}
+            colors={['#18bc9c', '#128f76']}
             style={styles.button}>
-            <MaterialIcons name="search" size={40} color="white" />
+            {loadingData ? <ActivityIndicator size={'large'} color={'white'} /> : <MaterialIcons name='search' size={40} color='white' />}
           </LinearGradient>
         </TouchableOpacity>
         {inputVisible ?
-          <Animatable.View style={{paddingTop: 10}} animation={inputAnimation} onAnimationEnd={() => { inputAnimation === 'zoomOut' ? (setInputVisible(false), setInputAnimation('zoomIn')) : null }}>
-            <TextInput style={styles.input} placeholder={'Cédula'} onChangeText={(cedula) => setTextCedula(cedula)} />
+          <Animatable.View style={{ paddingTop: 10 }} animation={inputAnimation} onAnimationEnd={() => { inputAnimation === 'zoomOut' ? (setInputVisible(false), setInputAnimation('zoomIn')) : null }}>
+            <TextInput onSubmitEditing={() => searchBtn()} style={styles.input} placeholder={'Cédula'} onChangeText={(cedula) => setTextCedula(cedula)} />
           </Animatable.View> : null}
       </KeyboardAvoidingView>
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -147,6 +181,9 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
     borderRadius: 50,
     margin: 5
+  },
+  buttonInfoCont: {
+    alignSelf: 'flex-end'
   },
   paragraphStyle: {
     padding: 20,

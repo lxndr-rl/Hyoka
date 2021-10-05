@@ -18,7 +18,6 @@ const phoneWidth = Dimensions.get('window').width;
 const SplashScreen = () => {
 
   const [showApp, setShowApp] = useState(false);
-
   const [firstRun, setFirstRun] = useState();
 
   useEffect(() => {

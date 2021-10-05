@@ -19,11 +19,9 @@ let pickerItemsSemestres;
 let pickerItemsAños;
 const ShowDataScreen = ({ route, navigation }) => {
   const [initialSemester, setInitialSemester] = useState(null);
-  const [initialYear, setInitialYear] = useState(null);
   const [semestres, setSemestres] = useState([]);
   const [notasParciales, setNotasParciales] = useState(null);
   const [cedula, setCedula] = useState(null);
-  const [aniosLectivos, setAniosLectivos] = useState([]);
   const [loading, setLoading] = useState(false);
   const [anioLect, setAnioLect] = useState();
   const [semestre, setSemestre] = useState();
@@ -32,9 +30,7 @@ const ShowDataScreen = ({ route, navigation }) => {
     navigation.setOptions({ title: route.params.name });
     setNotasParciales(route.params.data.parciales);
     setCedula(route.params.cedula);
-    setAniosLectivos(route.params.data.aniosLect);
     setInitialSemester(route.params.data.parciales[route.params.data.semestres[0]]);
-    setInitialYear(route.params.data.aniosLect[0]);
     let i = 0;
     data = [{ key: i - 1, section: true, label: 'Semestre' }];
     for (i = 0; i < route.params.data.semestres.length; i++) {
@@ -62,9 +58,7 @@ const ShowDataScreen = ({ route, navigation }) => {
       if (apiDATA.error) return Platform.OS == 'web' ? alert(`Ocurrió un error\n${data.message}`) : Alert.alert('Error', `Ocurrió un error\n${data.message}`);
       setSemestres(apiDATA.semestres);
       setNotasParciales(apiDATA.parciales);
-      setAniosLectivos(apiDATA.aniosLect);
       setInitialSemester(apiDATA.parciales[apiDATA.semestres[0]]);
-      setInitialYear(apiDATA.aniosLect[0]);
       pickerItemsSemestres = apiDATA.semestres.map(i => (
         <Picker.Item label={i.toString()} value={i} />
       ));
@@ -94,7 +88,6 @@ const ShowDataScreen = ({ route, navigation }) => {
           selectedValue={anioLect ?? route.params.data.aniosLect[0]}
           onValueChange={(itemValue, itemIndex) => {
             setAnioLect(itemValue);
-            setInitialYear(aniosLectivos[itemIndex]);
             FetchAPI(itemValue);
           }}>
           {pickerItemsAños}
@@ -133,7 +126,6 @@ const ShowDataScreen = ({ route, navigation }) => {
           initValue={anioLect ?? route.params.data.aniosLect[0]}
           onChange={option => {
             setAnioLect(option.label);
-            setInitialYear(aniosLectivos[option.key]);
             FetchAPI(option.label);
             Keyboard.dismiss();
           }}
@@ -189,14 +181,14 @@ const ShowDataScreen = ({ route, navigation }) => {
               }}
               cancelText="Cancelar"
             />}
-        {loading ?
-          <ActivityIndicator size={'large'} color={'white'} />
-          : initialSemester ? initialSemester.map((element) => {
-            return (<Card key={Math.floor(Math.random() * 1000 + 1)} materia={element.materia} primero={element.primero} segundo={element.segundo} recuperacion={element.recuperacion} total={element.total} />)
-          })
-            : null
-        }
       </View>
+      {loading ?
+        <ActivityIndicator size={'large'} color={'white'} />
+        : initialSemester ? initialSemester.map((element) => {
+          return (<Card key={element.materia + Math.floor(Math.random() * 20)} materia={element.materia} primero={element.primero} segundo={element.segundo} recuperacion={element.recuperacion} total={element.total} />)
+        })
+          : null
+      }
     </ScrollView>
   )
 };
