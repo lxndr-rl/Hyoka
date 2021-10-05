@@ -1,5 +1,13 @@
 {
   "main": "AppEntry.js",
+  "name": "UAE-SICAU",
+  "description": "Obtener calificaciones UAE",
+  "version": "1.0.0",
+  "author": {
+    "name": "lxndr",
+    "url": "https://lxndr.dev"
+  },
+  "homepage": "/sicau",
   "scripts": {
     "start": "expo start",
     "android": "expo start --android",
@@ -26,6 +34,7 @@
     "react-native-screens": "~3.4.0",
     "react-native-searchable-dropdown": "^1.1.3",
     "react-native-svg": "^12.1.1",
+    "react-native-text-effects": "^1.0.0",
     "react-native-web": "~0.13.12"
   },
   "devDependencies": {

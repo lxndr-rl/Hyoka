@@ -22,18 +22,17 @@ const SplashScreen = () => {
   const [firstRun, setFirstRun] = useState();
 
   useEffect(() => {
-    const fetchFirstLaunch = async () => {
-      if (Platform.OS === 'web') setFirstRun(false);
+    (async () => {
       await AsyncStorage.getItem('alreadyLaunched').then(value => {
         if (value == null) {
-          AsyncStorage.setItem('alreadyLaunched', JSON.stringify(true)); // No need to wait for `setItem` to finish, although you might want to handle errors
+          AsyncStorage.setItem('alreadyLaunched', JSON.stringify(true));
           setFirstRun(true);
         } else {
           setFirstRun(false);
         }
       });
-    }
-    fetchFirstLaunch();
+      if (Platform.OS === 'web') setFirstRun(false);
+    })();
   }, []);
 
   const RenderItem = ({ item }) => {

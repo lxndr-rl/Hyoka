@@ -59,7 +59,7 @@ const ShowDataScreen = ({ route, navigation }) => {
     fetch(`https://api.lxndr.dev/uae/notas/v2/?cedula=${cedula}&alect=${anioLectivo}`).then(
       res => res.json()
     ).then(apiDATA => {
-      if (apiDATA.error) return alert(`Ocurrió un error\n${apiDATA.message}`);
+      if (apiDATA.error) return Platform.OS == 'web' ? alert(`Ocurrió un error\n${data.message}`) : Alert.alert('Error', `Ocurrió un error\n${data.message}`);
       setSemestres(apiDATA.semestres);
       setNotasParciales(apiDATA.parciales);
       setAniosLectivos(apiDATA.aniosLect);

@@ -1,12 +1,11 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, { useState } from 'react';
-import { StyleSheet, View, StatusBar, Platform, Dimensions, TouchableOpacity, TextInput, Text, Linking } from 'react-native';
+import { StyleSheet, View, StatusBar, Platform, Dimensions, TouchableOpacity, TextInput, Image, Text, Linking, KeyboardAvoidingView, Alert } from 'react-native';
 import * as Animatable from 'react-native-animatable';
-import { FontAwesome5 } from '@expo/vector-icons';
+import { MaterialIcons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
-import SearchableDropdown from 'react-native-searchable-dropdown';
+import { TextAnimationFadeIn as FancyText } from 'react-native-text-effects';
 import Dialog, { DialogFooter, DialogButton, DialogContent, DialogTitle, ScaleAnimation } from 'react-native-popup-dialog';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const phoneWidth = Platform.OS == 'web' ? 350 : Dimensions.get('window').width;
 
@@ -26,113 +25,91 @@ const App = ({ navigation }) => {
         setInputAnimation('zoomOut');
         return;
       } else if (textCedula.length < 9) {
-        alert(`La cédula ${textCedula} no es válida`);
+        Platform.OS == 'web' ? alert(`La cédula ${textCedula} no es válida`) : Alert.alert('Error', `La cédula ${textCedula} no es válida`);
         return;
       }
       setSearchButton(true);
       fetch(`https://api.lxndr.dev/uae/notas/v2/?cedula=${textCedula}`).then(
         res => res.json()
       ).then(data => {
-        if (data.error) return alert(`Ocurrió un error\n${data.message}`);
+        if (data.error) return Platform.OS == 'web' ? alert(`Ocurrió un error\n${data.message}`) : Alert.alert('Error', `Ocurrió un error\n${data.message}`);
         setSearchButton(false);
         navigation.navigate('Notas', { name: `${data.nombres} ${data.apellidos}`, data: data, cedula: textCedula });
       }).catch(err => {
         console.log("error:", err);
-        alert('Ocurrió un error\n' + err)
+        Platform.OS == 'web' ? alert('Ocurrió un error\n' + err) : Alert.alert('Error', 'Ocurrió un error\n' + err);
       });
       setSearchButton(false);
     }
   };
 
-  const items = [];
-
   return (
-    <View style={styles.container}>
-      <StatusBar backgroundColor="#2b2b2b" />
-      <TouchableOpacity onPress={() => setPopupVisible(true)}>
+    <View style={{ flex: 1, backgroundColor: 'black' }}>
+      <TouchableOpacity onPress={() => setPopupVisible(true)} style={styles.buttonInfo}>
         <LinearGradient
           colors={['#f38ba0', '#e4c1f9']}
           style={styles.buttonInfo}>
-          <FontAwesome5 name="info-circle" size={40} color="white" />
+          <MaterialIcons name="info" size={40} color="white" />
         </LinearGradient>
       </TouchableOpacity>
-      <Dialog
-        visible={popupVisible}
-        dialogAnimation={new ScaleAnimation({
-          initialValue: 0,
-          useNativeDriver: true,
-        })}
-        dialogTitle={<DialogTitle style={{ backgroundColor: '#2b2b2b' }} textStyle={{ color: 'white' }} title="Información | UAE-SICAU" />}
-        footer={
-          <DialogFooter style={{ backgroundColor: '#2b2b2b' }}>
-            <DialogButton
-              style={{ backgroundColor: '#2b2b2b' }}
-              text="Ver código fuente"
-              onPress={() => Linking.openURL('https://github.com/lxndr-rl/UAE-SICAU')}
-            />
-            <DialogButton
-              style={{ backgroundColor: '#2b2b2b' }}
-              text="Informar un problema"
-              onPress={() => Linking.openURL(`https://github.com/lxndr-rl/UAE-SICAU/issues/new?title=[ERROR]%20...&body=Platform: ${Platform.OS}`)}
-            />
-            <DialogButton
-              style={{ backgroundColor: '#2b2b2b' }}
-              text="Solicitar una característica"
-              onPress={() => Linking.openURL(`https://github.com/lxndr-rl/UAE-SICAU/issues/new?title=[REQUEST]%20...&body=Platform: ${Platform.OS}`)}
-            />
-            <DialogButton
-              style={{ backgroundColor: '#2b2b2b' }}
-              text="Cerrar"
-              onPress={() => setPopupVisible(false)}
-            />
-            <Text style={{ alignSelf: 'center', color: 'white', backgroundColor: '#2b2b2b' }}>Hecho con ♡ - lxndr</Text>
-          </DialogFooter>
-        }>
-        <DialogContent style={{ backgroundColor: '#2b2b2b' }}>
-          <Text style={{ fontSize: 18, color: 'white', backgroundColor: '#2b2b2b' }}>Esta aplicación fue hecha de forma{'\n'}independiente y es de código abierto.</Text>
-        </DialogContent>
-      </Dialog>
-      <TouchableOpacity disabled={searchButton} onPress={() => searchBtn()}>
-        <LinearGradient
-          colors={['#f38ba0', '#e4c1f9']}
-          style={styles.button}>
-          <FontAwesome5 name="search" size={40} color="white" />
-        </LinearGradient>
-      </TouchableOpacity>
-      {inputVisible ?
-        <Animatable.View style={styles.titleStyle} animation={inputAnimation} onAnimationEnd={() => { inputAnimation === 'zoomOut' ? (setInputVisible(false), setInputAnimation('zoomIn')) : null }}>
-          {Platform.OS == 'web' ?
+      <KeyboardAvoidingView
+        style={styles.container}
+        behavior="padding"
+      >
+        <StatusBar backgroundColor="black" />
+        <View style={{ alignSelf: 'center' }}><FancyText value={"Consulta de Notas"} delay={100} duration={1000} style={{ color: 'white' }} /></View>
+        <Image
+          style={styles.tinyLogo}
+          source={require('../assets/uaeLOGO.png')}
+        />
+        <Dialog
+          visible={popupVisible}
+          dialogAnimation={new ScaleAnimation({
+            initialValue: 0,
+            useNativeDriver: true,
+          })}
+          dialogTitle={<DialogTitle style={{ backgroundColor: '#2b2b2b' }} textStyle={{ color: 'white' }} title="Información | UAE-SICAU" />}
+          footer={
+            <DialogFooter style={{ backgroundColor: '#2b2b2b' }}>
+              <DialogButton
+                style={{ backgroundColor: '#2b2b2b' }}
+                text="Ver código fuente"
+                onPress={() => Platform.OS == 'web' ? window.open('https://github.com/lxndr-rl/UAE-SICAU', '_blank') : Linking.openURL('https://github.com/lxndr-rl/UAE-SICAU')}
+              />
+              <DialogButton
+                style={{ backgroundColor: '#2b2b2b' }}
+                text="Informar un problema"
+                onPress={() => Platform.OS == 'web' ? window.open(`https://github.com/lxndr-rl/UAE-SICAU/issues/new?title=[ERROR]%20...&body=Platform: ${Platform.OS}`, '_blank') : Linking.openURL(`https://github.com/lxndr-rl/UAE-SICAU/issues/new?title=[ERROR]%20...&body=Platform: ${Platform.OS}`)}
+              />
+              <DialogButton
+                style={{ backgroundColor: '#2b2b2b' }}
+                text="Solicitar una característica"
+                onPress={() => Platform.OS == 'web' ? window.open(`https://github.com/lxndr-rl/UAE-SICAU/issues/new?title=[REQUEST]%20...&body=Platform: ${Platform.OS}`, '_blank') : Linking.openURL(`https://github.com/lxndr-rl/UAE-SICAU/issues/new?title=[REQUEST]%20...&body=Platform: ${Platform.OS}`)}
+              />
+              <DialogButton
+                style={{ backgroundColor: '#2b2b2b' }}
+                text="Cerrar"
+                onPress={() => setPopupVisible(false)}
+              />
+              <Text style={{ alignSelf: 'center', color: 'white', backgroundColor: '#2b2b2b' }}>Hecha con ❤️ - lxndr</Text>
+            </DialogFooter>
+          }>
+          <DialogContent style={{ backgroundColor: '#2b2b2b' }}>
+            <Text style={{ fontSize: 18, color: 'white', backgroundColor: '#2b2b2b' }}>Esta aplicación fue hecha de forma{'\n'}independiente y es de código abierto.</Text>
+          </DialogContent>
+        </Dialog>
+        <TouchableOpacity disabled={searchButton} onPress={() => searchBtn()}>
+          <LinearGradient
+            colors={['#f38ba0', '#e4c1f9']}
+            style={styles.button}>
+            <MaterialIcons name="search" size={40} color="white" />
+          </LinearGradient>
+        </TouchableOpacity>
+        {inputVisible ?
+          <Animatable.View style={{paddingTop: 10}} animation={inputAnimation} onAnimationEnd={() => { inputAnimation === 'zoomOut' ? (setInputVisible(false), setInputAnimation('zoomIn')) : null }}>
             <TextInput style={styles.input} placeholder={'Cédula'} onChangeText={(cedula) => setTextCedula(cedula)} />
-            : <SearchableDropdown
-              onTextChange={(text) => setTextCedula(text)}
-              onItemSelect={(item) => setTextCedula(item.cedula)}
-              containerStyle={{ padding: 5 }}
-              textInputStyle={{
-                padding: 12,
-                borderWidth: 1,
-                borderColor: '#ccc',
-                backgroundColor: '#FAF7F6',
-              }}
-              itemStyle={{
-                padding: 10,
-                marginTop: 2,
-                backgroundColor: '#FAF9F8',
-                borderColor: '#bbb',
-                borderWidth: 1,
-              }}
-              itemTextStyle={{
-                color: '#222',
-              }}
-              itemsContainerStyle={{
-                maxHeight: '60%',
-              }}
-              items={items}
-              defaultIndex={2}
-              resetValue={false}
-              placeholder={textCedula}
-              underlineColorAndroid="transparent"
-            />}
-        </Animatable.View> : null}
+          </Animatable.View> : null}
+      </KeyboardAvoidingView>
     </View>
   );
 };
@@ -142,29 +119,34 @@ export default App;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
     backgroundColor: 'black',
+    alignSelf: 'center',
     padding: 10,
     justifyContent: 'center'
   },
+  tinyLogo: {
+    width: 200,
+    height: 200,
+    padding: 20,
+    margin: 20,
+    alignSelf: 'center'
+  },
   button: {
-    padding: 30,
+    padding: 20,
     alignItems: 'center',
     borderRadius: 50,
+    fontSize: 35,
+    fontWeight: 'bold',
+    color: 'white',
+    width: phoneWidth - 70,
+    alignSelf: 'center',
     margin: 10
   },
   buttonInfo: {
     padding: 5,
-    alignItems: 'center',
+    alignItems: 'flex-end',
     borderRadius: 50,
-    margin: 10
-  },
-  titleStyle: {
-    padding: 10,
-    textAlign: 'center',
-    fontSize: 18,
-    color: 'white',
-    fontWeight: 'bold',
+    margin: 5
   },
   paragraphStyle: {
     padding: 20,
@@ -177,11 +159,10 @@ const styles = StyleSheet.create({
     color: '#555555',
     paddingRight: 10,
     paddingLeft: 10,
-    paddingTop: 5,
     height: 50,
     borderColor: '#6E5BAA',
     borderWidth: 1,
-    borderRadius: 2,
+    borderRadius: 50,
     alignSelf: 'center',
     backgroundColor: '#ffffff',
   },

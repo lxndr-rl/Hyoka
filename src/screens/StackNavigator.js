@@ -10,7 +10,7 @@ const MainStack = () => {
     return (
         <StackNavigator.Navigator>
             <StackNavigator.Screen
-                name="Inicio"
+                name="Consulta de Notas"
                 component={Inicio}
                 options={{
                     headerShown: false,
@@ -23,7 +23,7 @@ const MainStack = () => {
                     headerStyle: {
                         backgroundColor: 'black',
                     },
-                    headerTintColor: '#fff',
+                    headerTintColor: '#fff'
                 }}
             />
         </StackNavigator.Navigator>
