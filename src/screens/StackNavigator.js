@@ -10,14 +10,14 @@ const MainStack = () => {
     return (
         <StackNavigator.Navigator>
             <StackNavigator.Screen
-                name="Consulta de Notas"
+                name='Consulta de Notas'
                 component={Inicio}
                 options={{
                     headerShown: false,
                 }}
             />
             <StackNavigator.Screen
-                name="Notas"
+                name='Notas'
                 component={Notas}
                 options={{
                     headerStyle: {

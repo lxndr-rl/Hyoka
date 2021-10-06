@@ -44,7 +44,7 @@ const SplashScreen = () => {
           justifyContent: 'space-around',
           paddingBottom: 100,
         }}>
-        <StatusBar translucent backgroundColor={"transparent"} barStyle="light-content" />
+        <StatusBar translucent backgroundColor={'transparent'} barStyle='light-content' />
         <Text style={styles.introTitleStyle}>{item.title}</Text>
         <Image style={styles.introImageStyle} source={item.image} />
         <Text style={styles.introTextStyle}>{item.text}</Text>

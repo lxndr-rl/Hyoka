@@ -129,7 +129,7 @@ const ShowDataScreen = ({ route, navigation }) => {
             FetchAPI(option.label);
             Keyboard.dismiss();
           }}
-          cancelText="Cancelar"
+          cancelText='Cancelar'
         />}
         <Text style={styles.title}>Semestre</Text>
         {loading ? null :
@@ -179,7 +179,7 @@ const ShowDataScreen = ({ route, navigation }) => {
                 setInitialSemester(notasParciales[option.label]);
                 Keyboard.dismiss();
               }}
-              cancelText="Cancelar"
+              cancelText='Cancelar'
             />}
       </View>
       {loading ?
