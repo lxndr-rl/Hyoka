@@ -1,5 +1,5 @@
-import registerRootComponent from 'expo/build/launch/registerRootComponent';
+import registerRootComponent from "expo/build/launch/registerRootComponent";
 
-import App from './src/screens/SplashScreen';
+import App from "./src/screens/SplashScreen";
 
 registerRootComponent(App);

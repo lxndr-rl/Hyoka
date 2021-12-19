@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   ScrollView,
@@ -8,10 +8,11 @@ import {
   View,
   Platform,
   ActivityIndicator,
-} from 'react-native';
-import ModalSelector from 'react-native-modal-selector';
-import Card from '../components/CardView';
-import { Picker } from '@react-native-picker/picker';
+} from "react-native";
+import ModalSelector from "react-native-modal-selector";
+import Card from "../components/CardView";
+import { Picker } from "@react-native-picker/picker";
+import deviceInfo from "../util/deviceInfo";
 
 let data;
 let dataYear;
@@ -30,167 +31,194 @@ const ShowDataScreen = ({ route, navigation }) => {
     navigation.setOptions({ title: route.params.name });
     setNotasParciales(route.params.data.parciales);
     setCedula(route.params.cedula);
-    setInitialSemester(route.params.data.parciales[route.params.data.semestres[0]]);
+    setInitialSemester(
+      route.params.data.parciales[route.params.data.semestres[0]]
+    );
     let i = 0;
-    data = [{ key: i - 1, section: true, label: 'Semestre' }];
+    data = [{ key: i - 1, section: true, label: "Semestre" }];
     for (i = 0; i < route.params.data.semestres.length; i++) {
       data.push({ key: i, label: route.params.data.semestres[i] });
     }
-    pickerItemsSemestres = route.params.data.semestres.map(i => (
+    pickerItemsSemestres = route.params.data.semestres.map((i) => (
       <Picker.Item label={i.toString()} value={i} />
     ));
-    pickerItemsAños = route.params.data.aniosLect.map(i => (
+    pickerItemsAños = route.params.data.aniosLect.map((i) => (
       <Picker.Item label={i.toString()} value={i} />
     ));
     i = 0;
-    dataYear = [{ key: i - 1, section: true, label: 'Año Lectivo' }];
+    dataYear = [{ key: i - 1, section: true, label: "Año Lectivo" }];
     for (i = 0; i < route.params.data.aniosLect.length; i++) {
       dataYear.push({ key: i, label: route.params.data.aniosLect[i] });
     }
   }, []);
 
   const FetchAPI = (anioLectivo) => {
-    if (!anioLectivo) return console.log('Error');
+    if (!anioLectivo) return console.log("Error");
     setLoading(true);
-    fetch(`https://api.lxndr.dev/uae/notas/v2/?cedula=${cedula}&alect=${anioLectivo}`).then(
-      res => res.json()
-    ).then(apiDATA => {
-      if (apiDATA.error) return Platform.OS == 'web' ? alert(`Ocurrió un error\n${data.message}`) : Alert.alert('Error', `Ocurrió un error\n${data.message}`);
-      setSemestres(apiDATA.semestres);
-      setNotasParciales(apiDATA.parciales);
-      setInitialSemester(apiDATA.parciales[apiDATA.semestres[0]]);
-      pickerItemsSemestres = apiDATA.semestres.map(i => (
-        <Picker.Item label={i.toString()} value={i} />
-      ));
-      let i = 0;
-      data = [{ key: i - 1, section: true, label: 'Semestre' }];
-      for (i = 0; i < apiDATA.semestres.length; i++) {
-        data.push({ key: i, label: apiDATA.semestres[i] });
-      }
-      i = 0
-      dataYear = [{ key: i - 1, section: true, label: 'Año Lectivo' }];
-      for (i = 0; i < apiDATA.aniosLect.length; i++) {
-        dataYear.push({ key: i, label: apiDATA.aniosLect[i] });
-      }
-      setLoading(false);
-    });
+    fetch(
+      `https://api.lxndr.dev/uae/notas/v2/?cedula=${cedula}&alect=${anioLectivo}&analytics=${JSON.stringify(
+        deviceInfo
+      )}`
+    )
+      .then((res) => res.json())
+      .then((apiDATA) => {
+        if (apiDATA.error)
+          return Platform.OS == "web"
+            ? alert(`Ocurrió un error\n${data.message}`)
+            : Alert.alert("Error", `Ocurrió un error\n${data.message}`);
+        setSemestres(apiDATA.semestres);
+        setNotasParciales(apiDATA.parciales);
+        setInitialSemester(apiDATA.parciales[apiDATA.semestres[0]]);
+        pickerItemsSemestres = apiDATA.semestres.map((i) => (
+          <Picker.Item label={i.toString()} value={i} />
+        ));
+        let i = 0;
+        data = [{ key: i - 1, section: true, label: "Semestre" }];
+        for (i = 0; i < apiDATA.semestres.length; i++) {
+          data.push({ key: i, label: apiDATA.semestres[i] });
+        }
+        i = 0;
+        dataYear = [{ key: i - 1, section: true, label: "Año Lectivo" }];
+        for (i = 0; i < apiDATA.aniosLect.length; i++) {
+          dataYear.push({ key: i, label: apiDATA.aniosLect[i] });
+        }
+        setLoading(false);
+      });
   };
 
   return (
-    <ScrollView style={{
-      flex: 1,
-      backgroundColor: 'black',
-      padding: 10,
-    }}>
+    <ScrollView
+      style={{
+        flex: 1,
+        backgroundColor: "black",
+        padding: 10,
+      }}
+    >
       <View style={styles.container}>
         <Text style={styles.title}>Año Lectivo</Text>
-        {Platform.OS == 'web' ? <Picker
-          selectedValue={anioLect ?? route.params.data.aniosLect[0]}
-          onValueChange={(itemValue, itemIndex) => {
-            setAnioLect(itemValue);
-            FetchAPI(itemValue);
-          }}>
-          {pickerItemsAños}
-        </Picker> : <ModalSelector
-          data={dataYear}
-          sectionTextStyle={{
-            color: '#BFBCBC',
-          }}
-          optionTextStyle={{
-            color: 'lightblue',
-          }}
-          optionContainerStyle={{
-            borderRadius: 5,
-            flexShrink: 1,
-            marginBottom: 8,
-            padding: 8,
-            backgroundColor: '#171717',
-          }}
-          cancelStyle={{
-            borderRadius: 5,
-            backgroundColor: '#171717',
-            padding: 8,
-          }}
-          cancelTextStyle={{
-            textAlign: 'center',
-            color: '#BFBCBC',
-            fontSize: 16,
-          }}
-          optionStyle={{
-            padding: 8,
-            borderBottomWidth: 1,
-            borderBottomColor: '#818181',
-          }}
-          style={{ width: 200, alignSelf: 'center' }}
-          backdropPressToClose
-          initValue={anioLect ?? route.params.data.aniosLect[0]}
-          onChange={option => {
-            setAnioLect(option.label);
-            FetchAPI(option.label);
-            Keyboard.dismiss();
-          }}
-          cancelText='Cancelar'
-        />}
+        {Platform.OS == "web" ? (
+          <Picker
+            selectedValue={anioLect ?? route.params.data.aniosLect[0]}
+            onValueChange={(itemValue, itemIndex) => {
+              setAnioLect(itemValue);
+              FetchAPI(itemValue);
+            }}
+          >
+            {pickerItemsAños}
+          </Picker>
+        ) : (
+          <ModalSelector
+            data={dataYear}
+            sectionTextStyle={{
+              color: "#BFBCBC",
+            }}
+            optionTextStyle={{
+              color: "lightblue",
+            }}
+            optionContainerStyle={{
+              borderRadius: 5,
+              flexShrink: 1,
+              marginBottom: 8,
+              padding: 8,
+              backgroundColor: "#171717",
+            }}
+            cancelStyle={{
+              borderRadius: 5,
+              backgroundColor: "#171717",
+              padding: 8,
+            }}
+            cancelTextStyle={{
+              textAlign: "center",
+              color: "#BFBCBC",
+              fontSize: 16,
+            }}
+            optionStyle={{
+              padding: 8,
+              borderBottomWidth: 1,
+              borderBottomColor: "#818181",
+            }}
+            style={{ width: 200, alignSelf: "center" }}
+            backdropPressToClose
+            initValue={anioLect ?? route.params.data.aniosLect[0]}
+            onChange={(option) => {
+              setAnioLect(option.label);
+              FetchAPI(option.label);
+              Keyboard.dismiss();
+            }}
+            cancelText="Cancelar"
+          />
+        )}
         <Text style={styles.title}>Semestre</Text>
-        {loading ? null :
-          Platform.OS == 'web' ?
-            <Picker
-              selectedValue={semestre ?? route.params.data.semestres[0]}
-              onValueChange={(itemValue, itemIndex) => {
-                setSemestre(itemValue);
-                setInitialSemester(notasParciales[itemValue]);
-              }}>
-              {pickerItemsSemestres}
-            </Picker> :
-            <ModalSelector
-              data={data}
-              sectionTextStyle={{
-                color: '#BFBCBC',
-              }}
-              optionTextStyle={{
-                color: 'lightblue',
-              }}
-              optionContainerStyle={{
-                borderRadius: 5,
-                flexShrink: 1,
-                marginBottom: 8,
-                padding: 8,
-                backgroundColor: '#171717',
-              }}
-              cancelStyle={{
-                borderRadius: 5,
-                backgroundColor: '#171717',
-                padding: 8,
-              }}
-              cancelTextStyle={{
-                textAlign: 'center',
-                color: '#BFBCBC',
-                fontSize: 16,
-              }}
-              optionStyle={{
-                padding: 8,
-                borderBottomWidth: 1,
-                borderBottomColor: '#818181',
-              }}
-              style={{ width: 200, alignSelf: 'center' }}
-              backdropPressToClose
-              initValue={semestres[0] ?? route.params.data.semestres[0]}
-              onChange={option => {
-                setInitialSemester(notasParciales[option.label]);
-                Keyboard.dismiss();
-              }}
-              cancelText='Cancelar'
-            />}
+        {loading ? null : Platform.OS == "web" ? (
+          <Picker
+            selectedValue={semestre ?? route.params.data.semestres[0]}
+            onValueChange={(itemValue, itemIndex) => {
+              setSemestre(itemValue);
+              setInitialSemester(notasParciales[itemValue]);
+            }}
+          >
+            {pickerItemsSemestres}
+          </Picker>
+        ) : (
+          <ModalSelector
+            data={data}
+            sectionTextStyle={{
+              color: "#BFBCBC",
+            }}
+            optionTextStyle={{
+              color: "lightblue",
+            }}
+            optionContainerStyle={{
+              borderRadius: 5,
+              flexShrink: 1,
+              marginBottom: 8,
+              padding: 8,
+              backgroundColor: "#171717",
+            }}
+            cancelStyle={{
+              borderRadius: 5,
+              backgroundColor: "#171717",
+              padding: 8,
+            }}
+            cancelTextStyle={{
+              textAlign: "center",
+              color: "#BFBCBC",
+              fontSize: 16,
+            }}
+            optionStyle={{
+              padding: 8,
+              borderBottomWidth: 1,
+              borderBottomColor: "#818181",
+            }}
+            style={{ width: 200, alignSelf: "center" }}
+            backdropPressToClose
+            initValue={semestres[0] ?? route.params.data.semestres[0]}
+            onChange={(option) => {
+              setInitialSemester(notasParciales[option.label]);
+              Keyboard.dismiss();
+            }}
+            cancelText="Cancelar"
+          />
+        )}
       </View>
-      {loading ?
-        <ActivityIndicator size={'large'} color={'white'} />
-        : initialSemester ? initialSemester.map((element) => {
-          return (<Card key={element.materia + Math.floor(Math.random() * 20)} materia={element.materia} primero={element.primero} segundo={element.segundo} recuperacion={element.recuperacion} total={element.total} />)
+      {loading ? (
+        <ActivityIndicator size={"large"} color={"white"} />
+      ) : initialSemester ? (
+        initialSemester.map((element) => {
+          return (
+            <Card
+              key={element.materia + Math.floor(Math.random() * 20)}
+              materia={element.materia}
+              primero={element.primero}
+              segundo={element.segundo}
+              recuperacion={element.recuperacion}
+              total={element.total}
+            />
+          );
         })
-          : null
-      }
+      ) : null}
     </ScrollView>
-  )
+  );
 };
 
 export default ShowDataScreen;
@@ -198,16 +226,16 @@ export default ShowDataScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    backgroundColor: 'black',
+    alignItems: "center",
+    backgroundColor: "black",
     padding: 10,
-    justifyContent: 'center',
+    justifyContent: "center",
   },
   title: {
-    fontWeight: 'bold',
+    fontWeight: "bold",
     fontSize: 20,
-    alignSelf: 'center',
-    color: 'white',
-    paddingStart: 20
-  }
+    alignSelf: "center",
+    color: "white",
+    paddingStart: 20,
+  },
 });
