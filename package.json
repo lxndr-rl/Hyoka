@@ -1,5 +1,5 @@
 {
-  "main": "AppEntry.js",
+  "main": "index.js",
   "name": "uae-sicau",
   "description": "Obtener calificaciones UAE",
   "version": "1.0.0",
