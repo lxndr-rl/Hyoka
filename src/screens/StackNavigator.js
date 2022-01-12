@@ -6,6 +6,20 @@ import Notas from "./ShowDataScreen";
 
 const StackNavigator = createStackNavigator();
 
+const linking = {
+  prefixes: ["https://sicau.lxndr.dev", "sicau://"],
+  config: {
+    screens: {
+      "Consulta de Notas": {
+        path: "",
+      },
+      Notas: {
+        path: "notas",
+      },
+    },
+  },
+};
+
 const MainStack = () => {
   return (
     <StackNavigator.Navigator>
@@ -33,7 +47,7 @@ const MainStack = () => {
 // eslint-disable-next-line no-undef
 const App = () => {
   return (
-    <NavigationContainer>
+    <NavigationContainer linking={linking}>
       <MainStack />
     </NavigationContainer>
   );

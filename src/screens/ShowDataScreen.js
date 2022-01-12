@@ -8,10 +8,12 @@ import {
   View,
   Platform,
   ActivityIndicator,
+  TouchableOpacity,
 } from "react-native";
 import ModalSelector from "react-native-modal-selector";
 import Card from "../components/CardView";
 import { Picker } from "@react-native-picker/picker";
+import { Ionicons } from "@expo/vector-icons";
 import deviceInfo from "../util/deviceInfo";
 
 let data;
@@ -28,29 +30,92 @@ const ShowDataScreen = ({ route, navigation }) => {
   const [semestre, setSemestre] = useState();
 
   useEffect(() => {
-    navigation.setOptions({ title: route.params.name });
-    setNotasParciales(route.params.data.parciales);
-    setCedula(route.params.cedula);
-    setInitialSemester(
-      route.params.data.parciales[route.params.data.semestres[0]]
-    );
-    let i = 0;
-    data = [{ key: i - 1, section: true, label: "Semestre" }];
-    for (i = 0; i < route.params.data.semestres.length; i++) {
-      data.push({ key: i, label: route.params.data.semestres[i] });
+    if (route.params.cedula && !route.params.data) {
+      setCedula(route.params.cedula);
+      getData();
+      return;
     }
-    pickerItemsSemestres = route.params.data.semestres.map((i) => (
-      <Picker.Item label={i.toString()} value={i} />
-    ));
-    pickerItemsAños = route.params.data.aniosLect.map((i) => (
-      <Picker.Item label={i.toString()} value={i} />
-    ));
-    i = 0;
-    dataYear = [{ key: i - 1, section: true, label: "Año Lectivo" }];
-    for (i = 0; i < route.params.data.aniosLect.length; i++) {
-      dataYear.push({ key: i, label: route.params.data.aniosLect[i] });
+    if (route.params.data) {
+      navigation.setOptions({
+        title: `${route.params.data.nombres} ${route.params.data.apellidos}`,
+      });
+      setNotasParciales(route.params.data.parciales);
+      setCedula(route.params.data.cedula);
+      setAnioLect(route.params.data.aniosLect[0]);
+      setSemestre(route.params.data.semestres[0]);
+      setInitialSemester(
+        route.params.data.parciales[route.params.data.semestres[0]]
+      );
+      let i = 0;
+      data = [{ key: i - 1, section: true, label: "Semestre" }];
+      for (i = 0; i < route.params.data.semestres.length; i++) {
+        data.push({ key: i, label: route.params.data.semestres[i] });
+      }
+      pickerItemsSemestres = route.params.data.semestres.map((i) => (
+        <Picker.Item label={i.toString()} value={i} />
+      ));
+      pickerItemsAños = route.params.data.aniosLect.map((i) => (
+        <Picker.Item label={i.toString()} value={i} />
+      ));
+      i = 0;
+      dataYear = [{ key: i - 1, section: true, label: "Año Lectivo" }];
+      for (i = 0; i < route.params.data.aniosLect.length; i++) {
+        dataYear.push({ key: i, label: route.params.data.aniosLect[i] });
+      }
+    } else {
+      navigation.navigate("Consulta de Notas");
     }
   }, []);
+
+  const getData = async () => {
+    setLoading(true);
+    await fetch(
+      `https://api.lxndr.dev/uae/notas/v2/?cedula=${
+        route.params.cedula
+      }&analytics=${JSON.stringify(deviceInfo)}`
+    )
+      .then((res) => res.json())
+      .then((apidata) => {
+        if (apidata.error)
+          return Platform.OS == "web"
+            ? alert(`Ocurrió un error\n${apidata.message}`)
+            : Alert.alert("Error", `Ocurrió un error\n${apidata.message}`);
+        navigation.setOptions({
+          title: `${apidata.nombres} ${apidata.apellidos}`,
+          headerLeft: () => (
+            <TouchableOpacity
+              style={{ marginLeft: 10 }}
+              onPress={() => navigation.navigate("Consulta de Notas")}
+            >
+              <Ionicons name="arrow-back" size={24} color="white" />
+            </TouchableOpacity>
+          ),
+        });
+        setNotasParciales(apidata.parciales);
+        setAnioLect(apidata.aniosLect[0]);
+        setSemestre(apidata.semestres[0]);
+        setInitialSemester(apidata.parciales[apidata.semestres[0]]);
+        let i = 0;
+        data = [{ key: i - 1, section: true, label: "Semestre" }];
+        let dataYear = [{ key: i - 1, section: true, label: "Año Lectivo" }];
+
+        pickerItemsSemestres = apidata.semestres.map((i) => {
+          data.push({ key: i, label: i });
+          return <Picker.Item label={i.toString()} value={i} />;
+        });
+        pickerItemsAños = apidata.aniosLect.map((i) => {
+          dataYear.push({ key: i, label: i });
+          return <Picker.Item label={i.toString()} value={i} />;
+        });
+      })
+      .catch((err) => {
+        Platform.OS == "web"
+          ? alert("Ocurrió un error\n" + err)
+          : Alert.alert("Error", "Ocurrió un error\n" + err);
+        navigation.navigate("Consulta de Notas");
+      });
+    setLoading(false);
+  };
 
   const FetchAPI = (anioLectivo) => {
     if (!anioLectivo) return console.log("Error");
@@ -98,7 +163,7 @@ const ShowDataScreen = ({ route, navigation }) => {
         <Text style={styles.title}>Año Lectivo</Text>
         {Platform.OS == "web" ? (
           <Picker
-            selectedValue={anioLect ?? route.params.data.aniosLect[0]}
+            selectedValue={anioLect}
             onValueChange={(itemValue, itemIndex) => {
               setAnioLect(itemValue);
               FetchAPI(itemValue);
@@ -151,7 +216,7 @@ const ShowDataScreen = ({ route, navigation }) => {
         <Text style={styles.title}>Semestre</Text>
         {loading ? null : Platform.OS == "web" ? (
           <Picker
-            selectedValue={semestre ?? route.params.data.semestres[0]}
+            selectedValue={semestre}
             onValueChange={(itemValue, itemIndex) => {
               setSemestre(itemValue);
               setInitialSemester(notasParciales[itemValue]);
