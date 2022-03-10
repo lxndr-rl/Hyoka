@@ -63,11 +63,7 @@ const App = ({ navigation }) => {
       } else {
         setLoadingData(true);
         setSearchButton(true);
-        await fetch(
-          `https://api.lxndr.dev/uae/notas/v2/?cedula=${textCedula}&analytics=${JSON.stringify(
-            deviceInfo
-          )}`
-        )
+        await fetch(`https://api.lxndr.dev/uae/notas/v2/?cedula=${textCedula}&analytics=${JSON.stringify(deviceInfo)}`)
           .then((res) => res.json())
           .then((data) => {
             if (data.error)
@@ -192,6 +188,7 @@ const App = ({ navigation }) => {
             >
               Esta aplicación fue hecha de forma independiente y es de código
               abierto.{"\n\n"}No asociada a la Universidad Agraria del Ecuador.
+              {"\n"}Este proyecto es netamente educativo.
             </Text>
           </DialogContent>
         </Dialog>
@@ -222,8 +219,11 @@ const App = ({ navigation }) => {
                 text="Continuar"
                 onPress={() => {
                   setFoundVisible(false);
+                  setTextCedula("Cédula");
                   navigation.navigate("Notas", {
+                    name: `${studentData.nombres} ${studentData.apellidos}`,
                     data: apiData,
+                    cedula: textCedula,
                   });
                 }}
               />
