@@ -13,11 +13,9 @@ import {
   Text,
   Linking,
   KeyboardAvoidingView,
-  Alert,
   Keyboard,
   ActivityIndicator,
 } from "react-native";
-import * as Animatable from "react-native-animatable";
 import { MaterialIcons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { TextAnimationFadeIn as FancyText } from "react-native-text-effects";
@@ -36,11 +34,8 @@ const phoneWidth =
       ? Dimensions.get("window").width - 100
       : 350
     : Dimensions.get("window").width - 100;
-const reg = /^\d+$/;
 
 const App = ({ navigation }) => {
-  const [inputVisible, setInputVisible] = useState(false);
-  const [inputAnimation, setInputAnimation] = useState("zoomIn");
   const [searchButton, setSearchButton] = useState(false);
   const [textCedula, setTextCedula] = useState("Cédula");
   const [popupVisible, setPopupVisible] = useState(false);
@@ -48,46 +43,100 @@ const App = ({ navigation }) => {
   const [studentData, setStudentData] = useState({});
   const [apiData, setApiData] = useState(null);
   const [loadingData, setLoadingData] = useState(false);
+  const [errorContent, setErrorContent] = useState({
+    visible: false,
+    message: "",
+    title: "",
+  });
 
+  const errorAlert = (
+    <Dialog
+      visible={errorContent.visible}
+      dialogAnimation={
+        new ScaleAnimation({
+          initialValue: 0,
+          useNativeDriver: true,
+        })
+      }
+      dialogTitle={
+        <DialogTitle
+          style={{ backgroundColor: "#2b2b2b" }}
+          textStyle={{ color: "white", fontWeight: "bold", fontSize: 20 }}
+          title={
+            <Text>
+              {errorContent.title}{" "}
+              <MaterialIcons name="error" size={16} color="#FF416C" />
+            </Text>
+          }
+        />
+      }
+      footer={
+        <DialogFooter style={{ backgroundColor: "#2b2b2b" }}>
+          <DialogButton
+            style={{ backgroundColor: "#2b2b2b" }}
+            text="Aceptar"
+            onPress={() => setErrorContent({ ...errorContent, visible: false })}
+          />
+        </DialogFooter>
+      }
+    >
+      <DialogContent style={{ backgroundColor: "#2b2b2b" }}>
+        <Text
+          style={{
+            fontSize: 18,
+            color: "white",
+            backgroundColor: "#2b2b2b",
+          }}
+        >
+          {errorContent.message}
+        </Text>
+      </DialogContent>
+    </Dialog>
+  );
   const searchBtn = async () => {
     Keyboard.dismiss();
-    if (!inputVisible) {
-      setInputVisible(true);
+    if (textCedula.length < 9 || !/^\d+$/.test(textCedula)) {
+      setErrorContent({
+        visible: true,
+        message: "La cédula debe tener al menos 9 caracteres numéricos",
+        title: "Error",
+      });
     } else {
-      if (!textCedula || textCedula == "Cédula") {
-        setInputAnimation("zoomOut");
-      } else if (textCedula.length < 9 || !reg.test(textCedula)) {
-        Platform.OS == "web"
-          ? alert(`La cédula ${textCedula} no es válida`)
-          : Alert.alert("Error", `La cédula ${textCedula} no es válida`);
-      } else {
-        setLoadingData(true);
-        setSearchButton(true);
-        await fetch(`https://api.lxndr.dev/uae/notas/v2/?cedula=${textCedula}&analytics=${JSON.stringify(deviceInfo)}`)
-          .then((res) => res.json())
-          .then((data) => {
-            if (data.error)
-              return Platform.OS == "web"
-                ? alert(`Ocurrió un error\n${data.message}`)
-                : Alert.alert("Error", `Ocurrió un error\n${data.message}`);
-            setApiData(data);
-            setStudentData({
-              nombres: data.nombres,
-              apellidos: data.apellidos,
-              carrera: data.carrera,
-              facultad: data.facultad,
-              sede: data.sede,
+      setLoadingData(true);
+      setSearchButton(true);
+      await fetch(
+        `https://api.lxndr.dev/uae/notas/v2/?cedula=${textCedula}&analytics=${JSON.stringify(
+          deviceInfo
+        )}`
+      )
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.error) {
+            return setErrorContent({
+              visible: true,
+              message: data.message,
+              title: "Error",
             });
-            setFoundVisible(true);
-          })
-          .catch((err) => {
-            Platform.OS == "web"
-              ? alert("Ocurrió un error\n" + err)
-              : Alert.alert("Error", "Ocurrió un error\n" + err);
+          }
+          setApiData(data);
+          setStudentData({
+            nombres: data.nombres,
+            apellidos: data.apellidos,
+            carrera: data.carrera,
+            facultad: data.facultad,
+            sede: data.sede,
           });
-        setLoadingData(null);
-        setSearchButton(false);
-      }
+          setFoundVisible(true);
+        })
+        .catch((err) => {
+          setErrorContent({
+            visible: true,
+            message: "Error de conexión. Más información: \n" + err.message,
+            title: "Error",
+          });
+        });
+      setLoadingData(null);
+      setSearchButton(false);
     }
   };
 
@@ -118,6 +167,7 @@ const App = ({ navigation }) => {
           style={styles.tinyLogo}
           source={require("../assets/uaeLOGO.png")}
         />
+        {errorAlert}
         <Dialog
           visible={popupVisible}
           dialogAnimation={
@@ -129,7 +179,7 @@ const App = ({ navigation }) => {
           dialogTitle={
             <DialogTitle
               style={{ backgroundColor: "#2b2b2b" }}
-              textStyle={{ color: "white" }}
+              textStyle={{ color: "white", fontSize: 20, fontWeight: "bold" }}
               title="Información | UAE-SICAU"
             />
           }
@@ -138,6 +188,7 @@ const App = ({ navigation }) => {
               <DialogButton
                 style={{ backgroundColor: "#2b2b2b" }}
                 text="Ver código fuente"
+                textStyle={{ color: "#31AA84" }}
                 onPress={() =>
                   Platform.OS == "web"
                     ? window.open(
@@ -150,6 +201,7 @@ const App = ({ navigation }) => {
               <DialogButton
                 style={{ backgroundColor: "#2b2b2b" }}
                 text="Informar un problema"
+                textStyle={{ color: "#CC5500" }}
                 onPress={() =>
                   Platform.OS == "web"
                     ? window.open(
@@ -163,6 +215,7 @@ const App = ({ navigation }) => {
               />
               <DialogButton
                 style={{ backgroundColor: "#2b2b2b" }}
+                textStyle={{ color: "#D22B2B" }}
                 text="Cerrar"
                 onPress={() => setPopupVisible(false)}
               />
@@ -173,7 +226,7 @@ const App = ({ navigation }) => {
                   backgroundColor: "#2b2b2b",
                 }}
               >
-                Hecha con ❤️ - lxndr
+                lxndr
               </Text>
             </DialogFooter>
           }
@@ -187,8 +240,7 @@ const App = ({ navigation }) => {
               }}
             >
               Esta aplicación fue hecha de forma independiente y es de código
-              abierto.{"\n\n"}No asociada a la Universidad Agraria del Ecuador.
-              {"\n"}Este proyecto es netamente educativo.
+              abierto.{"\n\n"}NO asociada a la Universidad Agraria del Ecuador.
             </Text>
           </DialogContent>
         </Dialog>
@@ -203,7 +255,7 @@ const App = ({ navigation }) => {
           dialogTitle={
             <DialogTitle
               style={{ backgroundColor: "#2b2b2b" }}
-              textStyle={{ color: "white" }}
+              textStyle={{ color: "white", fontWeight: "bold", fontSize: 20 }}
               title="Estudiante encontrado"
             />
           }
@@ -211,11 +263,13 @@ const App = ({ navigation }) => {
             <DialogFooter style={{ backgroundColor: "#2b2b2b" }}>
               <DialogButton
                 style={{ backgroundColor: "#2b2b2b" }}
+                textStyle={{ color: "#D22B2B" }}
                 text="Cancelar"
                 onPress={() => setFoundVisible(false)}
               />
               <DialogButton
                 style={{ backgroundColor: "#2b2b2b" }}
+                textStyle={{ color: "#31AA84" }}
                 text="Continuar"
                 onPress={() => {
                   setFoundVisible(false);
@@ -238,10 +292,23 @@ const App = ({ navigation }) => {
                 backgroundColor: "#2b2b2b",
               }}
             >
-              Nombres: {studentData.apellidos} {studentData.nombres}
-              {"\n\n"}Carrera: {studentData.carrera}
-              {"\n\n"}Sede: {studentData.sede}
-              {"\n\n"}Facultad: {studentData.facultad}
+              <Text style={{ fontWeight: "bold", fontSize: 18 }}>Nombres:</Text>{" "}
+              {studentData.apellidos} {studentData.nombres}
+              {"\n\n"}
+              <Text style={{ fontWeight: "bold", fontSize: 18 }}>
+                Carrera:
+              </Text>{" "}
+              {studentData.carrera}
+              {"\n\n"}
+              <Text style={{ fontWeight: "bold", fontSize: 18 }}>
+                Sede:
+              </Text>{" "}
+              {studentData.sede}
+              {"\n\n"}
+              <Text style={{ fontWeight: "bold", fontSize: 18 }}>
+                Facultad:
+              </Text>{" "}
+              {studentData.facultad}
             </Text>
           </DialogContent>
         </Dialog>
@@ -254,27 +321,17 @@ const App = ({ navigation }) => {
             )}
           </LinearGradient>
         </TouchableOpacity>
-        {inputVisible ? (
-          <Animatable.View
-            style={{ paddingTop: 10 }}
-            animation={inputAnimation}
-            onAnimationEnd={() => {
-              inputAnimation === "zoomOut"
-                ? (setInputVisible(false), setInputAnimation("zoomIn"))
-                : null;
-            }}
-          >
-            <TextInput
-              autoCorrect={false}
-              autoCompleteType={"off"}
-              keyboardType={"number-pad"}
-              onSubmitEditing={() => searchBtn()}
-              style={styles.input}
-              placeholder={"Cédula"}
-              onChangeText={(cedula) => setTextCedula(cedula)}
-            />
-          </Animatable.View>
-        ) : null}
+        <View style={{ paddingTop: 10 }}>
+          <TextInput
+            autoCorrect={false}
+            autoCompleteType={"off"}
+            keyboardType={"number-pad"}
+            onSubmitEditing={() => searchBtn()}
+            style={styles.input}
+            placeholder={"Cédula"}
+            onChangeText={(cedula) => setTextCedula(cedula)}
+          />
+        </View>
       </KeyboardAvoidingView>
     </SafeAreaView>
   );

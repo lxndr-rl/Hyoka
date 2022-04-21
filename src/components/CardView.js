@@ -22,8 +22,8 @@ const Card = (props) => {
         {materia}
       </Text>
       <View style={styles.cardSection}>
-        <Text style={styles.cardTextSection1}>1st</Text>
-        <Text style={styles.cardTextSection1}>2st</Text>
+        <Text style={styles.cardTextSection1}>1º</Text>
+        <Text style={styles.cardTextSection1}>2º</Text>
         <Text
           numberOfLines={1}
           ellipsizeMode="tail"

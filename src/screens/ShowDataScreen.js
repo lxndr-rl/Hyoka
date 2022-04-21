@@ -8,16 +8,20 @@ import {
   View,
   Platform,
   ActivityIndicator,
+  Dimensions,
 } from "react-native";
 import ModalSelector from "react-native-modal-selector";
 import Card from "../components/CardView";
-import { Picker } from "@react-native-picker/picker";
 import deviceInfo from "../util/deviceInfo";
 
 let data;
 let dataYear;
-let pickerItemsSemestres;
-let pickerItemsAños;
+const phoneWidth =
+  Platform.OS == "web"
+    ? Dimensions.get("window").width < 800
+      ? Dimensions.get("window").width
+      : Dimensions.get("window").width / 2.5
+    : Dimensions.get("window").width;
 const ShowDataScreen = ({ route, navigation }) => {
   const [initialSemester, setInitialSemester] = useState(null);
   const [semestres, setSemestres] = useState([]);
@@ -25,10 +29,11 @@ const ShowDataScreen = ({ route, navigation }) => {
   const [cedula, setCedula] = useState(null);
   const [loading, setLoading] = useState(false);
   const [anioLect, setAnioLect] = useState();
-  const [semestre, setSemestre] = useState();
 
   useEffect(() => {
-    navigation.setOptions({ title: route.params.name });
+    navigation.setOptions({
+      title: `${route.params.name} - ${route.params.cedula}`,
+    });
     setNotasParciales(route.params.data.parciales);
     setCedula(route.params.cedula);
     setInitialSemester(
@@ -39,12 +44,6 @@ const ShowDataScreen = ({ route, navigation }) => {
     for (i = 0; i < route.params.data.semestres.length; i++) {
       data.push({ key: i, label: route.params.data.semestres[i] });
     }
-    pickerItemsSemestres = route.params.data.semestres.map((i) => (
-      <Picker.Item label={i.toString()} value={i} />
-    ));
-    pickerItemsAños = route.params.data.aniosLect.map((i) => (
-      <Picker.Item label={i.toString()} value={i} />
-    ));
     i = 0;
     dataYear = [{ key: i - 1, section: true, label: "Año Lectivo" }];
     for (i = 0; i < route.params.data.aniosLect.length; i++) {
@@ -69,9 +68,6 @@ const ShowDataScreen = ({ route, navigation }) => {
         setSemestres(apiDATA.semestres);
         setNotasParciales(apiDATA.parciales);
         setInitialSemester(apiDATA.parciales[apiDATA.semestres[0]]);
-        pickerItemsSemestres = apiDATA.semestres.map((i) => (
-          <Picker.Item label={i.toString()} value={i} />
-        ));
         let i = 0;
         data = [{ key: i - 1, section: true, label: "Semestre" }];
         for (i = 0; i < apiDATA.semestres.length; i++) {
@@ -96,70 +92,56 @@ const ShowDataScreen = ({ route, navigation }) => {
     >
       <View style={styles.container}>
         <Text style={styles.title}>Año Lectivo</Text>
-        {Platform.OS == "web" ? (
-          <Picker
-            selectedValue={anioLect ?? route.params.data.aniosLect[0]}
-            onValueChange={(itemValue, itemIndex) => {
-              setAnioLect(itemValue);
-              FetchAPI(itemValue);
-            }}
-          >
-            {pickerItemsAños}
-          </Picker>
-        ) : (
-          <ModalSelector
-            data={dataYear}
-            sectionTextStyle={{
-              color: "#BFBCBC",
-            }}
-            optionTextStyle={{
-              color: "lightblue",
-            }}
-            optionContainerStyle={{
-              borderRadius: 5,
-              flexShrink: 1,
-              marginBottom: 8,
-              padding: 8,
-              backgroundColor: "#171717",
-            }}
-            cancelStyle={{
-              borderRadius: 5,
-              backgroundColor: "#171717",
-              padding: 8,
-            }}
-            cancelTextStyle={{
-              textAlign: "center",
-              color: "#BFBCBC",
-              fontSize: 16,
-            }}
-            optionStyle={{
-              padding: 8,
-              borderBottomWidth: 1,
-              borderBottomColor: "#818181",
-            }}
-            style={{ width: 200, alignSelf: "center" }}
-            backdropPressToClose
-            initValue={anioLect ?? route.params.data.aniosLect[0]}
-            onChange={(option) => {
-              setAnioLect(option.label);
-              FetchAPI(option.label);
-              Keyboard.dismiss();
-            }}
-            cancelText="Cancelar"
-          />
-        )}
+        <ModalSelector
+          data={dataYear}
+          sectionTextStyle={{
+            color: "#BFBCBC",
+          }}
+          optionTextStyle={{
+            color: "lightblue",
+          }}
+          optionContainerStyle={{
+            borderRadius: 5,
+            flexShrink: 1,
+            marginBottom: 8,
+            alignSelf: "center",
+            width: phoneWidth - 50,
+            padding: 8,
+            backgroundColor: "#171717",
+          }}
+          cancelStyle={{
+            borderRadius: 5,
+            backgroundColor: "#171717",
+            width: phoneWidth - 50,
+            padding: 8,
+          }}
+          cancelTextStyle={{
+            textAlign: "center",
+            color: "#D22B2B",
+            alignSelf: "center",
+            fontSize: 16,
+          }}
+          cancelContainerStyle={{
+            width: phoneWidth - 50,
+            alignSelf: "center",
+          }}
+          optionStyle={{
+            padding: 8,
+            borderBottomWidth: 1,
+            borderBottomColor: "#818181",
+          }}
+          style={{ width: 200, alignSelf: "center" }}
+          backdropPressToClose
+          initValue={anioLect ?? route.params.data.aniosLect[0]}
+          onChange={(option) => {
+            setAnioLect(option.label);
+            FetchAPI(option.label);
+            Keyboard.dismiss();
+          }}
+          cancelText="Cerrar"
+        />
         <Text style={styles.title}>Semestre</Text>
-        {loading ? null : Platform.OS == "web" ? (
-          <Picker
-            selectedValue={semestre ?? route.params.data.semestres[0]}
-            onValueChange={(itemValue, itemIndex) => {
-              setSemestre(itemValue);
-              setInitialSemester(notasParciales[itemValue]);
-            }}
-          >
-            {pickerItemsSemestres}
-          </Picker>
-        ) : (
+        {loading ? null : (
           <ModalSelector
             data={data}
             sectionTextStyle={{
@@ -172,17 +154,25 @@ const ShowDataScreen = ({ route, navigation }) => {
               borderRadius: 5,
               flexShrink: 1,
               marginBottom: 8,
+              width: phoneWidth - 50,
+              alignSelf: "center",
               padding: 8,
               backgroundColor: "#171717",
+            }}
+            cancelContainerStyle={{
+              width: phoneWidth - 50,
+              alignSelf: "center",
             }}
             cancelStyle={{
               borderRadius: 5,
               backgroundColor: "#171717",
               padding: 8,
+              width: phoneWidth - 50,
             }}
             cancelTextStyle={{
               textAlign: "center",
-              color: "#BFBCBC",
+              color: "#D22B2B",
+              alignSelf: "center",
               fontSize: 16,
             }}
             optionStyle={{
@@ -197,7 +187,7 @@ const ShowDataScreen = ({ route, navigation }) => {
               setInitialSemester(notasParciales[option.label]);
               Keyboard.dismiss();
             }}
-            cancelText="Cancelar"
+            cancelText="Cerrar"
           />
         )}
       </View>
