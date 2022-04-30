@@ -42,35 +42,43 @@ const Card = (props) => {
       <View style={styles.cardSection}>
         <Text style={styles.cardTextSection2}>
           {props.primero}{" "}
-          {props.primero < 6 ? (
-            <MaterialIcons name="error" size={18} color="#FF416C" />
-          ) : props.primero == 6 ? (
-            <MaterialIcons name="warning" size={18} color="#FDC830" />
+          {materia !== "PROMEDIOS TOTALES" ? (
+            props.primero < 6 ? (
+              <MaterialIcons name="error" size={18} color="#FF416C" />
+            ) : props.primero == 6 ? (
+              <MaterialIcons name="warning" size={18} color="#FDC830" />
+            ) : null
           ) : null}
         </Text>
         <Text style={styles.cardTextSection2}>
           {props.segundo}{" "}
-          {props.segundo < 6 ? (
-            <MaterialIcons name="error" size={18} color="#FF416C" />
-          ) : props.segundo == 6 ? (
-            <MaterialIcons name="warning" size={18} color="#FDC830" />
+          {materia !== "PROMEDIOS TOTALES" ? (
+            props.segundo < 6 ? (
+              <MaterialIcons name="error" size={18} color="#FF416C" />
+            ) : props.segundo == 6 ? (
+              <MaterialIcons name="warning" size={18} color="#FDC830" />
+            ) : null
           ) : null}
         </Text>
         <Text style={styles.cardTextSection2}>
           {props.recuperacion}{" "}
-          {props.recuperacion < 6 && props.total < 7 ? (
-            <MaterialIcons name="error" size={18} color="#FF416C" />
-          ) : props.recuperacion == 6 ? (
-            <MaterialIcons name="warning" size={18} color="#FDC830" />
+          {materia !== "PROMEDIOS TOTALES" ? (
+            props.recuperacion < 6 && props.total < 7 ? (
+              <MaterialIcons name="error" size={18} color="#FF416C" />
+            ) : props.recuperacion == 6 ? (
+              <MaterialIcons name="warning" size={18} color="#FDC830" />
+            ) : null
           ) : null}
         </Text>
         <Text style={styles.cardTextSection2}>
           {props.total}{" "}
-          {props.total < 7 ? (
-            <MaterialIcons name="error" size={18} color="#FF416C" />
-          ) : (
-            <MaterialIcons name="check-circle" size={18} color="#38ef7d" />
-          )}
+          {materia !== "PROMEDIOS TOTALES" ? (
+            props.total < 7 ? (
+              <MaterialIcons name="error" size={18} color="#FF416C" />
+            ) : (
+              <MaterialIcons name="check-circle" size={18} color="#38ef7d" />
+            )
+          ) : null}
         </Text>
       </View>
     </LinearGradient>
