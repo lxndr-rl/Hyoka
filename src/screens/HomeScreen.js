@@ -72,6 +72,7 @@ const App = ({ navigation }) => {
       }
       footer={
         <DialogFooter style={{ backgroundColor: "#2b2b2b" }}>
+          <></>
           <DialogButton
             style={{ backgroundColor: "#2b2b2b" }}
             text="Aceptar"
