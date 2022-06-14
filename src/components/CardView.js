@@ -13,6 +13,7 @@ const phoneWidth =
 const Card = (props) => {
   const colors = [["#2b2b2b", "#2b2b2b"]];
   const materia = props.materia;
+  const showIcon = materia !== "PROMEDIOS TOTALES";
   return (
     <LinearGradient
       colors={colors[Math.floor(Math.random() * colors.length)]}
@@ -42,7 +43,7 @@ const Card = (props) => {
       <View style={styles.cardSection}>
         <Text style={styles.cardTextSection2}>
           {props.primero}{" "}
-          {materia !== "PROMEDIOS TOTALES" ? (
+          {showIcon ? (
             props.primero < 6 ? (
               <MaterialIcons name="error" size={18} color="#FF416C" />
             ) : props.primero == 6 ? (
@@ -52,7 +53,7 @@ const Card = (props) => {
         </Text>
         <Text style={styles.cardTextSection2}>
           {props.segundo}{" "}
-          {materia !== "PROMEDIOS TOTALES" ? (
+          {showIcon ? (
             props.segundo < 6 ? (
               <MaterialIcons name="error" size={18} color="#FF416C" />
             ) : props.segundo == 6 ? (
@@ -62,7 +63,7 @@ const Card = (props) => {
         </Text>
         <Text style={styles.cardTextSection2}>
           {props.recuperacion}{" "}
-          {materia !== "PROMEDIOS TOTALES" ? (
+          {showIcon ? (
             props.recuperacion < 6 && props.total < 7 ? (
               <MaterialIcons name="error" size={18} color="#FF416C" />
             ) : props.recuperacion == 6 ? (
@@ -72,7 +73,7 @@ const Card = (props) => {
         </Text>
         <Text style={styles.cardTextSection2}>
           {props.total}{" "}
-          {materia !== "PROMEDIOS TOTALES" ? (
+          {showIcon ? (
             props.total < 7 ? (
               <MaterialIcons name="error" size={18} color="#FF416C" />
             ) : (

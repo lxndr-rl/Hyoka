@@ -32,7 +32,7 @@ const ShowDataScreen = ({ route, navigation }) => {
 
   useEffect(() => {
     navigation.setOptions({
-      title: `${route.params.name} - ${route.params.cedula}`,
+      title: route.params.name,
     });
     setNotasParciales(route.params.data.parciales);
     setCedula(route.params.cedula);

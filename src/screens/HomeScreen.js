@@ -37,7 +37,7 @@ const phoneWidth =
 
 const App = ({ navigation }) => {
   const [searchButton, setSearchButton] = useState(false);
-  const [textCedula, setTextCedula] = useState("Cédula");
+  const [textCedula, setTextCedula] = useState("");
   const [popupVisible, setPopupVisible] = useState(false);
   const [foundVisible, setFoundVisible] = useState(false);
   const [studentData, setStudentData] = useState({});
@@ -96,13 +96,7 @@ const App = ({ navigation }) => {
   );
   const searchBtn = async () => {
     Keyboard.dismiss();
-    if (textCedula.length < 9 || !/^\d+$/.test(textCedula)) {
-      setErrorContent({
-        visible: true,
-        message: "La cédula debe tener al menos 9 caracteres numéricos",
-        title: "Error",
-      });
-    } else {
+    if (textCedula.length >= 9 && /^\d+$/.test(textCedula)) {
       setLoadingData(true);
       setSearchButton(true);
       await fetch(
@@ -138,6 +132,59 @@ const App = ({ navigation }) => {
         });
       setLoadingData(null);
       setSearchButton(false);
+    } else if (textCedula.length > 5 && !/^\d+$/.test(textCedula)) {
+      setLoadingData(true);
+      setSearchButton(true);
+      await fetch(`https://api.lxndr.dev/util/cedula?nombres=${textCedula}`)
+        .then((res) => res.json())
+        .then(async (data) => {
+          await fetch(
+            `https://api.lxndr.dev/uae/notas/v2/?cedula=${
+              data[0].identificacion
+            }&analytics=${JSON.stringify(deviceInfo)}`
+          )
+            .then((res) => res.json())
+            .then((data) => {
+              if (data.error) {
+                return setErrorContent({
+                  visible: true,
+                  message: data.message,
+                  title: "Error",
+                });
+              }
+              setApiData(data);
+              setStudentData({
+                nombres: data.nombres,
+                apellidos: data.apellidos,
+                carrera: data.carrera,
+                facultad: data.facultad,
+                sede: data.sede,
+              });
+              setFoundVisible(true);
+            })
+            .catch((err) => {
+              setErrorContent({
+                visible: true,
+                message: "Error de conexión. Más información: \n" + err.message,
+                title: "Error",
+              });
+            });
+        })
+        .catch((err) => {
+          setErrorContent({
+            visible: true,
+            message: `No se encontró ningún estudiante con ese nombre.\n${textCedula}`,
+            title: "Error",
+          });
+        });
+      setLoadingData(null);
+      setSearchButton(false);
+    } else {
+      setErrorContent({
+        visible: true,
+        message: "Ingrese un número de cédula válido o nombres completos.",
+        title: "Error",
+      });
     }
   };
 
@@ -274,7 +321,6 @@ const App = ({ navigation }) => {
                 text="Continuar"
                 onPress={() => {
                   setFoundVisible(false);
-                  setTextCedula("Cédula");
                   navigation.navigate("Notas", {
                     name: `${studentData.nombres} ${studentData.apellidos}`,
                     data: apiData,
@@ -326,10 +372,10 @@ const App = ({ navigation }) => {
           <TextInput
             autoCorrect={false}
             autoCompleteType={"off"}
-            keyboardType={"number-pad"}
+            value={textCedula}
             onSubmitEditing={() => searchBtn()}
             style={styles.input}
-            placeholder={"Cédula"}
+            placeholder={"Cédula o Apellidos Nombres"}
             onChangeText={(cedula) => setTextCedula(cedula)}
           />
         </View>
