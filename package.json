@@ -2,7 +2,7 @@
   "main": "index.js",
   "name": "uae-sicau",
   "description": "Obtener calificaciones UAE",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "repository": "https://github.com/lxndr-rl/UAE-SICAU",
   "author": {
     "name": "lxndr",

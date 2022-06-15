@@ -37,6 +37,7 @@ const phoneWidth =
 
 const App = ({ navigation }) => {
   const [searchButton, setSearchButton] = useState(false);
+  const [textInput, setTextInput] = useState("");
   const [textCedula, setTextCedula] = useState("");
   const [popupVisible, setPopupVisible] = useState(false);
   const [foundVisible, setFoundVisible] = useState(false);
@@ -96,11 +97,12 @@ const App = ({ navigation }) => {
   );
   const searchBtn = async () => {
     Keyboard.dismiss();
-    if (textCedula.length >= 9 && /^\d+$/.test(textCedula)) {
+    if (textInput.length >= 9 && /^\d+$/.test(textInput)) {
       setLoadingData(true);
       setSearchButton(true);
+      setTextCedula(textInput);
       await fetch(
-        `https://api.lxndr.dev/uae/notas/v2/?cedula=${textCedula}&analytics=${JSON.stringify(
+        `https://api.lxndr.dev/uae/notas/v2/?cedula=${textInput}&analytics=${JSON.stringify(
           deviceInfo
         )}`
       )
@@ -132,12 +134,13 @@ const App = ({ navigation }) => {
         });
       setLoadingData(null);
       setSearchButton(false);
-    } else if (textCedula.length > 5 && !/^\d+$/.test(textCedula)) {
+    } else if (textInput.length > 5 && !/^\d+$/.test(textInput)) {
       setLoadingData(true);
       setSearchButton(true);
-      await fetch(`https://api.lxndr.dev/util/cedula?nombres=${textCedula}`)
+      await fetch(`https://api.lxndr.dev/util/cedula?nombres=${textInput}`)
         .then((res) => res.json())
         .then(async (data) => {
+          setTextCedula(data[0].identificacion);
           await fetch(
             `https://api.lxndr.dev/uae/notas/v2/?cedula=${
               data[0].identificacion
@@ -173,7 +176,7 @@ const App = ({ navigation }) => {
         .catch((err) => {
           setErrorContent({
             visible: true,
-            message: `No se encontró ningún estudiante con ese nombre.\n${textCedula}`,
+            message: `No se encontró ningún estudiante con ese nombre.\n${textInput}`,
             title: "Error",
           });
         });
@@ -372,11 +375,11 @@ const App = ({ navigation }) => {
           <TextInput
             autoCorrect={false}
             autoCompleteType={"off"}
-            value={textCedula}
+            value={textInput}
             onSubmitEditing={() => searchBtn()}
             style={styles.input}
             placeholder={"Cédula o Apellidos Nombres"}
-            onChangeText={(cedula) => setTextCedula(cedula)}
+            onChangeText={(cedula) => setTextInput(cedula)}
           />
         </View>
       </KeyboardAvoidingView>
