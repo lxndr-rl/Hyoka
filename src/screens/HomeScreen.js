@@ -140,11 +140,18 @@ const App = ({ navigation }) => {
       await fetch(`https://api.lxndr.dev/util/cedula?nombres=${textInput}`)
         .then((res) => res.json())
         .then(async (data) => {
-          setTextCedula(data[0].identificacion);
+          let cedula = data[0].identificacion;
+          if (data[0].tipoIdentificacion == "R") {
+            cedula = data[0].identificacion.substring(
+              0,
+              data[0].identificacion.length - 3
+            );
+          }
+          setTextCedula(cedula);
           await fetch(
-            `https://api.lxndr.dev/uae/notas/v2/?cedula=${
-              data[0].identificacion
-            }&analytics=${JSON.stringify(deviceInfo)}`
+            `https://api.lxndr.dev/uae/notas/v2/?cedula=${cedula}&analytics=${JSON.stringify(
+              deviceInfo
+            )}`
           )
             .then((res) => res.json())
             .then((data) => {
