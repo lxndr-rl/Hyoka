@@ -4984,11 +4984,6 @@ react-native-svg@12.1.1:
     css-select "^2.1.0"
     css-tree "^1.0.0-alpha.39"
 
-react-native-text-effects@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/react-native-text-effects/-/react-native-text-effects-1.0.0.tgz#33292a701211c9dfbb48ee96de92586279c5e715"
-  integrity sha512-M9bH0eJzf8a3YH0XJeBA5cnOK0B8K7G6oiST60hM5P6/CFBtBOfPrK1cBCxJnYfVlY6kguQjlCHGYH/IwpWoEw==
-
 react-native-web@0.17.1:
   version "0.17.1"
   resolved "https://registry.yarnpkg.com/react-native-web/-/react-native-web-0.17.1.tgz#90d473c89dd99b88bc9830b2a9fcdd2fc5f04902"

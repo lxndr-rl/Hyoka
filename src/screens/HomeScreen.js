@@ -13,12 +13,12 @@ import {
   Text,
   Linking,
   KeyboardAvoidingView,
+  TouchableWithoutFeedback,
   Keyboard,
   ActivityIndicator,
 } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
-import { TextAnimationFadeIn as FancyText } from "react-native-text-effects";
 import deviceInfo from "../util/deviceInfo";
 import Dialog, {
   DialogFooter,
@@ -199,198 +199,213 @@ const App = ({ navigation }) => {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "black" }}>
-      <TouchableOpacity
-        onPress={() => setPopupVisible(true)}
-        style={styles.buttonInfoCont}
-      >
-        <LinearGradient
-          colors={["#18bc9c", "#128f76"]}
-          style={styles.buttonInfo}
+    <TouchableWithoutFeedback
+      onPress={Keyboard.dismiss}
+      disabled={Platform.OS === "web" ? true : false}
+    >
+      <SafeAreaView style={{ flex: 1, backgroundColor: "black" }}>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+          style={styles.container}
         >
-          <MaterialIcons name="info" size={40} color="white" />
-        </LinearGradient>
-      </TouchableOpacity>
-      <KeyboardAvoidingView style={styles.container} behavior="padding">
-        <StatusBar backgroundColor="black" />
-        <View style={{ alignSelf: "center" }}>
-          <FancyText
-            value={"Consulta de Notas"}
-            delay={100}
-            duration={1000}
-            style={{ color: "white" }}
+          <StatusBar backgroundColor="black" />
+          <View style={{ alignSelf: "center", flexDirection: "row" }}>
+            <Text style={{ color: "white", fontSize: 32 }}>
+              Consulta de Notas
+            </Text>
+            <TouchableOpacity
+              onPress={() => {
+                setPopupVisible(true);
+                Keyboard.dismiss();
+              }}
+              style={styles.buttonInfoCont}
+            >
+              <LinearGradient
+                colors={["#18bc9c", "#128f76"]}
+                style={styles.buttonInfo}
+              >
+                <MaterialIcons name="info" size={30} color="white" />
+              </LinearGradient>
+            </TouchableOpacity>
+          </View>
+          <Image
+            style={styles.tinyLogo}
+            source={require("../assets/uaeLOGO.png")}
           />
-        </View>
-        <Image
-          style={styles.tinyLogo}
-          source={require("../assets/uaeLOGO.png")}
-        />
-        {errorAlert}
-        <Dialog
-          visible={popupVisible}
-          dialogAnimation={
-            new ScaleAnimation({
-              initialValue: 0,
-              useNativeDriver: true,
-            })
-          }
-          dialogTitle={
-            <DialogTitle
-              style={{ backgroundColor: "#2b2b2b" }}
-              textStyle={{ color: "white", fontSize: 20, fontWeight: "bold" }}
-              title="Información | UAE-SICAU"
-            />
-          }
-          footer={
-            <DialogFooter style={{ backgroundColor: "#2b2b2b" }}>
-              <DialogButton
+          {errorAlert}
+          <Dialog
+            visible={popupVisible}
+            dialogAnimation={
+              new ScaleAnimation({
+                initialValue: 0,
+                useNativeDriver: true,
+              })
+            }
+            dialogTitle={
+              <DialogTitle
                 style={{ backgroundColor: "#2b2b2b" }}
-                text="Ver código fuente"
-                textStyle={{ color: "#31AA84" }}
-                onPress={() =>
-                  Platform.OS == "web"
-                    ? window.open(
-                        "https://github.com/lxndr-rl/UAE-SICAU",
-                        "_blank"
-                      )
-                    : Linking.openURL("https://github.com/lxndr-rl/UAE-SICAU")
-                }
+                textStyle={{ color: "white", fontSize: 20, fontWeight: "bold" }}
+                title="Información | UAE-SICAU"
               />
-              <DialogButton
-                style={{ backgroundColor: "#2b2b2b" }}
-                text="Informar un problema"
-                textStyle={{ color: "#CC5500" }}
-                onPress={() =>
-                  Platform.OS == "web"
-                    ? window.open(
-                        `https://github.com/lxndr-rl/UAE-SICAU/issues/new?title=[ERROR]%20...&body=Platform: ${Platform.OS}`,
-                        "_blank"
-                      )
-                    : Linking.openURL(
-                        `https://github.com/lxndr-rl/UAE-SICAU/issues/new?title=[ERROR]%20...&body=Platform: ${Platform.OS}`
-                      )
-                }
-              />
-              <DialogButton
-                style={{ backgroundColor: "#2b2b2b" }}
-                textStyle={{ color: "#D22B2B" }}
-                text="Cerrar"
-                onPress={() => setPopupVisible(false)}
-              />
+            }
+            footer={
+              <DialogFooter style={{ backgroundColor: "#2b2b2b" }}>
+                <DialogButton
+                  style={{ backgroundColor: "#2b2b2b" }}
+                  text="Ver código fuente"
+                  textStyle={{ color: "#31AA84" }}
+                  onPress={() =>
+                    Platform.OS == "web"
+                      ? window.open(
+                          "https://github.com/lxndr-rl/UAE-SICAU",
+                          "_blank"
+                        )
+                      : Linking.openURL("https://github.com/lxndr-rl/UAE-SICAU")
+                  }
+                />
+                <DialogButton
+                  style={{ backgroundColor: "#2b2b2b" }}
+                  text="Bug Tracker"
+                  textStyle={{ color: "#CC5500" }}
+                  onPress={() =>
+                    Platform.OS == "web"
+                      ? window.open(
+                          `https://github.com/lxndr-rl/UAE-SICAU/issues/`,
+                          "_blank"
+                        )
+                      : Linking.openURL(
+                          `https://github.com/lxndr-rl/UAE-SICAU/issues/`
+                        )
+                  }
+                />
+                <DialogButton
+                  style={{ backgroundColor: "#2b2b2b" }}
+                  textStyle={{ color: "#D22B2B" }}
+                  text="Cerrar"
+                  onPress={() => setPopupVisible(false)}
+                />
+                <Text
+                  style={{
+                    alignSelf: "center",
+                    color: "white",
+                    backgroundColor: "#2b2b2b",
+                  }}
+                >
+                  lxndr
+                </Text>
+              </DialogFooter>
+            }
+          >
+            <DialogContent style={{ backgroundColor: "#2b2b2b" }}>
               <Text
                 style={{
-                  alignSelf: "center",
+                  fontSize: 18,
                   color: "white",
                   backgroundColor: "#2b2b2b",
                 }}
               >
-                lxndr
+                Esta aplicación fue hecha de forma independiente y es de código
+                abierto.{"\n\n"}NO asociada a la Universidad Agraria del
+                Ecuador.
               </Text>
-            </DialogFooter>
-          }
-        >
-          <DialogContent style={{ backgroundColor: "#2b2b2b" }}>
-            <Text
-              style={{
-                fontSize: 18,
-                color: "white",
-                backgroundColor: "#2b2b2b",
-              }}
-            >
-              Esta aplicación fue hecha de forma independiente y es de código
-              abierto.{"\n\n"}NO asociada a la Universidad Agraria del Ecuador.
-            </Text>
-          </DialogContent>
-        </Dialog>
-        <Dialog
-          visible={foundVisible}
-          dialogAnimation={
-            new ScaleAnimation({
-              initialValue: 0,
-              useNativeDriver: true,
-            })
-          }
-          dialogTitle={
-            <DialogTitle
-              style={{ backgroundColor: "#2b2b2b" }}
-              textStyle={{ color: "white", fontWeight: "bold", fontSize: 20 }}
-              title="Estudiante encontrado"
-            />
-          }
-          footer={
-            <DialogFooter style={{ backgroundColor: "#2b2b2b" }}>
-              <DialogButton
+            </DialogContent>
+          </Dialog>
+          <Dialog
+            visible={foundVisible}
+            dialogAnimation={
+              new ScaleAnimation({
+                initialValue: 0,
+                useNativeDriver: true,
+              })
+            }
+            dialogTitle={
+              <DialogTitle
                 style={{ backgroundColor: "#2b2b2b" }}
-                textStyle={{ color: "#D22B2B" }}
-                text="Cancelar"
-                onPress={() => setFoundVisible(false)}
+                textStyle={{ color: "white", fontWeight: "bold", fontSize: 20 }}
+                title="Estudiante encontrado"
               />
-              <DialogButton
-                style={{ backgroundColor: "#2b2b2b" }}
-                textStyle={{ color: "#31AA84" }}
-                text="Continuar"
-                onPress={() => {
-                  setFoundVisible(false);
-                  navigation.navigate("Notas", {
-                    name: `${studentData.nombres} ${studentData.apellidos}`,
-                    data: apiData,
-                    cedula: textCedula,
-                  });
+            }
+            footer={
+              <DialogFooter style={{ backgroundColor: "#2b2b2b" }}>
+                <DialogButton
+                  style={{ backgroundColor: "#2b2b2b" }}
+                  textStyle={{ color: "#D22B2B" }}
+                  text="Cancelar"
+                  onPress={() => setFoundVisible(false)}
+                />
+                <DialogButton
+                  style={{ backgroundColor: "#2b2b2b" }}
+                  textStyle={{ color: "#31AA84" }}
+                  text="Continuar"
+                  onPress={() => {
+                    setFoundVisible(false);
+                    navigation.navigate("Notas", {
+                      name: `${studentData.nombres} ${studentData.apellidos}`,
+                      data: apiData,
+                      cedula: textCedula,
+                    });
+                  }}
+                />
+              </DialogFooter>
+            }
+          >
+            <DialogContent style={{ backgroundColor: "#2b2b2b" }}>
+              <Text
+                style={{
+                  fontSize: 18,
+                  color: "white",
+                  backgroundColor: "#2b2b2b",
                 }}
-              />
-            </DialogFooter>
-          }
-        >
-          <DialogContent style={{ backgroundColor: "#2b2b2b" }}>
-            <Text
-              style={{
-                fontSize: 18,
-                color: "white",
-                backgroundColor: "#2b2b2b",
-              }}
+              >
+                <Text style={{ fontWeight: "bold", fontSize: 18 }}>
+                  Nombres:
+                </Text>{" "}
+                {studentData.apellidos} {studentData.nombres}
+                {"\n\n"}
+                <Text style={{ fontWeight: "bold", fontSize: 18 }}>
+                  Carrera:
+                </Text>{" "}
+                {studentData.carrera}
+                {"\n\n"}
+                <Text style={{ fontWeight: "bold", fontSize: 18 }}>
+                  Sede:
+                </Text>{" "}
+                {studentData.sede}
+                {"\n\n"}
+                <Text style={{ fontWeight: "bold", fontSize: 18 }}>
+                  Facultad:
+                </Text>{" "}
+                {studentData.facultad}
+              </Text>
+            </DialogContent>
+          </Dialog>
+          <TouchableOpacity disabled={searchButton} onPress={() => searchBtn()}>
+            <LinearGradient
+              colors={["#18bc9c", "#128f76"]}
+              style={styles.button}
             >
-              <Text style={{ fontWeight: "bold", fontSize: 18 }}>Nombres:</Text>{" "}
-              {studentData.apellidos} {studentData.nombres}
-              {"\n\n"}
-              <Text style={{ fontWeight: "bold", fontSize: 18 }}>
-                Carrera:
-              </Text>{" "}
-              {studentData.carrera}
-              {"\n\n"}
-              <Text style={{ fontWeight: "bold", fontSize: 18 }}>
-                Sede:
-              </Text>{" "}
-              {studentData.sede}
-              {"\n\n"}
-              <Text style={{ fontWeight: "bold", fontSize: 18 }}>
-                Facultad:
-              </Text>{" "}
-              {studentData.facultad}
-            </Text>
-          </DialogContent>
-        </Dialog>
-        <TouchableOpacity disabled={searchButton} onPress={() => searchBtn()}>
-          <LinearGradient colors={["#18bc9c", "#128f76"]} style={styles.button}>
-            {loadingData ? (
-              <ActivityIndicator size={"large"} color={"white"} />
-            ) : (
-              <MaterialIcons name="search" size={40} color="white" />
-            )}
-          </LinearGradient>
-        </TouchableOpacity>
-        <View style={{ paddingTop: 10 }}>
-          <TextInput
-            autoCorrect={false}
-            autoCompleteType={"off"}
-            value={textInput}
-            onSubmitEditing={() => searchBtn()}
-            style={styles.input}
-            placeholder={"Cédula o Apellidos Nombres"}
-            onChangeText={(cedula) => setTextInput(cedula)}
-          />
-        </View>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
+              {loadingData ? (
+                <ActivityIndicator size={"large"} color={"white"} />
+              ) : (
+                <MaterialIcons name="search" size={40} color="white" />
+              )}
+            </LinearGradient>
+          </TouchableOpacity>
+          <View style={{ paddingTop: 10 }}>
+            <TextInput
+              autoCorrect={false}
+              autoCompleteType={"off"}
+              value={textInput}
+              onSubmitEditing={() => searchBtn()}
+              style={styles.input}
+              placeholder={"Cédula o Apellidos Nombres"}
+              onChangeText={(cedula) => setTextInput(cedula)}
+              placeholderTextColor={"gray"}
+            />
+          </View>
+        </KeyboardAvoidingView>
+      </SafeAreaView>
+    </TouchableWithoutFeedback>
   );
 };
 
@@ -403,33 +418,33 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     padding: 10,
     justifyContent: "center",
+    margin: 50,
   },
   tinyLogo: {
     width: 200,
     height: 200,
     padding: 20,
-    margin: 20,
+    margin: 10,
     alignSelf: "center",
   },
   button: {
     padding: 20,
     alignItems: "center",
-    borderRadius: 50,
+    borderRadius: 40,
     fontSize: 35,
     fontWeight: "bold",
     color: "white",
     width: phoneWidth - 70,
     alignSelf: "center",
-    margin: 10,
+    marginBottom: 10,
   },
   buttonInfo: {
-    padding: 5,
-    alignItems: "flex-end",
-    borderRadius: 50,
-    margin: 5,
+    alignItems: "center",
+    marginLeft: 5,
+    borderRadius: 15,
   },
   buttonInfoCont: {
-    alignSelf: "flex-end",
+    alignSelf: "center",
   },
   paragraphStyle: {
     padding: 20,
@@ -439,14 +454,11 @@ const styles = StyleSheet.create({
   },
   input: {
     width: phoneWidth - 70,
-    color: "#555555",
     paddingRight: 10,
     paddingLeft: 10,
     height: 50,
-    borderColor: "#6E5BAA",
-    borderWidth: 1,
     borderRadius: 50,
-    alignSelf: "center",
     backgroundColor: "#ffffff",
+    alignSelf: "center",
   },
 });
