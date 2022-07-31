@@ -22,7 +22,7 @@ const SplashScreen = () => {
   useEffect(() => {
     (async () => {
       await AsyncStorage.getItem("alreadyLaunched").then((value) => {
-        if (value == null) {
+        if (value === null) {
           AsyncStorage.setItem("alreadyLaunched", JSON.stringify(true));
           setFirstRun(true);
         } else {
