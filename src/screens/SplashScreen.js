@@ -64,7 +64,7 @@ const SplashScreen = () => {
         data={slides}
         renderItem={RenderItem}
         onDone={() => setShowApp(true)}
-        showPrevButton={true}
+        showPrevButton
         prevLabel={"Atrás"}
         nextLabel={"Siguiente"}
         doneLabel={"Terminar"}
