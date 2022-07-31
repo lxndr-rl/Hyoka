@@ -186,6 +186,7 @@ const App = ({ navigation }) => {
             message: `No se encontró ningún estudiante con ese nombre.\n${textInput}`,
             title: "Error",
           });
+          console.log(err);
         });
       setLoadingData(null);
       setSearchButton(false);
