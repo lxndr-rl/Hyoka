@@ -9,6 +9,7 @@ import {
   Platform,
   ActivityIndicator,
   Dimensions,
+  Alert,
 } from "react-native";
 import ModalSelector from "react-native-modal-selector";
 import Card from "../components/CardView";
