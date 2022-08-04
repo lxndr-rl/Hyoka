@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   SafeAreaView,
   StyleSheet,
@@ -27,6 +27,7 @@ import Dialog, {
   DialogTitle,
   ScaleAnimation,
 } from "react-native-popup-dialog";
+import exampleUserData from "../util/exampleUserData";
 
 const phoneWidth =
   Platform.OS == "web"
@@ -49,6 +50,16 @@ const App = ({ navigation }) => {
     message: "",
     title: "",
   });
+
+  useEffect(() => {
+    if (__DEV__) {
+      navigation.navigate("Notas", {
+        name: exampleUserData.name,
+        data: JSON.parse(exampleUserData.data),
+        cedula: exampleUserData.cedula,
+      });
+    }
+  }, []);
 
   const errorAlert = (
     <Dialog

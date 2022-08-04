@@ -10,6 +10,7 @@ import {
   ActivityIndicator,
   Dimensions,
   Alert,
+  Switch,
 } from "react-native";
 import ModalSelector from "react-native-modal-selector";
 import Card from "../components/CardView";
@@ -25,20 +26,27 @@ const phoneWidth =
     : Dimensions.get("window").width;
 const ShowDataScreen = ({ route, navigation }) => {
   const [initialSemester, setInitialSemester] = useState(null);
+  const [initialSemester2, setInitialSemester2] = useState(null);
   const [semestres, setSemestres] = useState([]);
   const [notasParciales, setNotasParciales] = useState(null);
+  const [notasSemestrales, setNotasSemestrales] = useState(null);
   const [cedula, setCedula] = useState(null);
   const [loading, setLoading] = useState(false);
   const [anioLect, setAnioLect] = useState();
+  const [isPromedio, setIsPromedio] = useState(false);
 
   useEffect(() => {
     navigation.setOptions({
       title: route.params.name,
     });
     setNotasParciales(route.params.data.parciales);
+    setNotasSemestrales(route.params.data.promedios);
     setCedula(route.params.cedula);
     setInitialSemester(
       route.params.data.parciales[route.params.data.semestres[0]]
+    );
+    setInitialSemester2(
+      route.params.data.promedios[route.params.data.semestres[0]]
     );
     let i = 0;
     data = [{ key: i - 1, section: true, label: "Semestre" }];
@@ -51,6 +59,8 @@ const ShowDataScreen = ({ route, navigation }) => {
       dataYear.push({ key: i, label: route.params.data.aniosLect[i] });
     }
   }, []);
+
+  const toggleSwitch = () => setIsPromedio((previousState) => !previousState);
 
   const FetchAPI = (anioLectivo) => {
     if (!anioLectivo) return console.log("Error");
@@ -68,7 +78,9 @@ const ShowDataScreen = ({ route, navigation }) => {
             : Alert.alert("Error", `Ocurrió un error\n${data.message}`);
         setSemestres(apiDATA.semestres);
         setNotasParciales(apiDATA.parciales);
+        setNotasSemestrales(apiDATA.promedios);
         setInitialSemester(apiDATA.parciales[apiDATA.semestres[0]]);
+        setInitialSemester2(apiDATA.promedios[apiDATA.semestres[0]]);
         let i = 0;
         data = [{ key: i - 1, section: true, label: "Semestre" }];
         for (i = 0; i < apiDATA.semestres.length; i++) {
@@ -186,19 +198,55 @@ const ShowDataScreen = ({ route, navigation }) => {
             initValue={semestres[0] ?? route.params.data.semestres[0]}
             onChange={(option) => {
               setInitialSemester(notasParciales[option.label]);
+              setInitialSemester2(notasSemestrales[option.label]);
               Keyboard.dismiss();
             }}
             cancelText="Cerrar"
           />
         )}
+        <View
+          style={{
+            flexDirection: "row",
+          }}
+        >
+          <Text style={[styles.title, { fontSize: 14, marginTop: 7 }]}>
+            Notas Parciales
+          </Text>
+          <Switch
+            style={{
+              marginTop: 10,
+              marginHorizontal: 10,
+            }}
+            trackColor={{ false: "#767577", true: "#31AA84" }}
+            thumbColor={isPromedio ? "#f4f3f4" : "#f4f3f4"}
+            ios_backgroundColor="#3e3e3e"
+            onValueChange={toggleSwitch}
+            value={isPromedio}
+          />
+          <Text style={[styles.title, { fontSize: 14, marginTop: 7 }]}>
+            Notas Semestrales
+          </Text>
+        </View>
       </View>
       {loading ? (
         <ActivityIndicator size={"large"} color={"white"} />
+      ) : isPromedio ? (
+        initialSemester2 ? (
+          initialSemester2.map((element) => {
+            return (
+              <Card
+                key={element.materia + Math.random() * 20}
+                materia={element.materia}
+                total={element.total}
+              />
+            );
+          })
+        ) : null
       ) : initialSemester ? (
         initialSemester.map((element) => {
           return (
             <Card
-              key={element.materia + Math.floor(Math.random() * 20)}
+              key={element.materia + Math.random() * 20}
               materia={element.materia}
               primero={element.primero}
               segundo={element.segundo}
@@ -227,6 +275,5 @@ const styles = StyleSheet.create({
     fontSize: 20,
     alignSelf: "center",
     color: "white",
-    paddingStart: 20,
   },
 });
