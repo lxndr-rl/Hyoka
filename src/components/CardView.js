@@ -14,138 +14,124 @@ const Card = (props) => {
   const colors = [["#2b2b2b", "#2b2b2b"]];
   const materia = props.materia;
   const showIcon = materia !== "PROMEDIOS TOTALES";
-  const isParcial = props.primero && props.segundo && props.recuperacion;
+  const isParcial = props.isParcial;
+  if (isParcial)
+    return (
+      <LinearGradient
+        colors={colors[Math.floor(Math.random() * colors.length)]}
+        style={styles.cardView}
+      >
+        <Text numberOfLines={1} ellipsizeMode="tail" style={styles.cardTitle}>
+          {materia}
+        </Text>
+        <View style={styles.cardSection}>
+          <Text style={styles.cardTextSection1}>1º</Text>
+          <Text style={styles.cardTextSection1}>2º</Text>
+          <Text
+            numberOfLines={1}
+            ellipsizeMode="tail"
+            style={styles.cardTextSection1}
+          >
+            Recuperación
+          </Text>
+          <Text
+            numberOfLines={1}
+            ellipsizeMode="tail"
+            style={styles.cardTextSection1}
+          >
+            Total
+          </Text>
+        </View>
+        <View style={styles.cardSection}>
+          <Text style={styles.cardTextSection2}>
+            {props.primero}{" "}
+            {showIcon ? (
+              props.primero < 6 ? (
+                <MaterialIcons name="error" size={18} color="#FF416C" />
+              ) : props.primero == 6 ? (
+                <MaterialIcons name="warning" size={18} color="#FDC830" />
+              ) : null
+            ) : null}
+          </Text>
+          <Text style={styles.cardTextSection2}>
+            {props.segundo}{" "}
+            {showIcon ? (
+              props.segundo < 6 ? (
+                <MaterialIcons name="error" size={18} color="#FF416C" />
+              ) : props.segundo == 6 ? (
+                <MaterialIcons name="warning" size={18} color="#FDC830" />
+              ) : null
+            ) : null}
+          </Text>
+          <Text style={styles.cardTextSection2}>
+            {props.recuperacion}{" "}
+            {showIcon ? (
+              props.recuperacion < 6 && props.total < 7 ? (
+                <MaterialIcons name="error" size={18} color="#FF416C" />
+              ) : props.recuperacion == 6 ? (
+                <MaterialIcons name="warning" size={18} color="#FDC830" />
+              ) : null
+            ) : null}
+          </Text>
+          <Text style={styles.cardTextSection2}>
+            {props.total}{" "}
+            {showIcon ? (
+              props.total < 7 ? (
+                <MaterialIcons name="error" size={18} color="#FF416C" />
+              ) : (
+                <MaterialIcons name="check-circle" size={18} color="#38ef7d" />
+              )
+            ) : null}
+          </Text>
+        </View>
+      </LinearGradient>
+    );
+  // Retornar una vista similar pero solo con Materia, Total y el icono de error o check-circle
   return (
     <LinearGradient
-      key={materia + Math.random() * 20}
       colors={colors[Math.floor(Math.random() * colors.length)]}
-      style={
-        isParcial
-          ? styles.cardView
-          : [
-              styles.cardView,
-              {
-                margin: 7,
-                borderRadius: 20,
-                backgroundColor: "gray",
-                width: Platform.OS == "web" ? phoneWidth / 2 : phoneWidth - 30,
-                alignSelf: "center",
-                height: 90,
-                marginBottom: 20,
-              },
-            ]
-      }
+      style={[
+        styles.cardView,
+        {
+          margin: 7,
+          borderRadius: 20,
+          backgroundColor: "gray",
+          width: Platform.OS == "web" ? phoneWidth / 2 : phoneWidth - 30,
+          alignSelf: "center",
+          height: 90,
+          marginBottom: 20,
+        },
+      ]}
     >
-      {isParcial ? (
-        <View>
-          <Text numberOfLines={1} ellipsizeMode="tail" style={styles.cardTitle}>
-            {materia}
-          </Text>
-          <View style={styles.cardSection}>
-            <Text style={styles.cardTextSection1}>1º</Text>
-            <Text style={styles.cardTextSection1}>2º</Text>
-            <Text
-              numberOfLines={1}
-              ellipsizeMode="tail"
-              style={styles.cardTextSection1}
-            >
-              Recuperación
-            </Text>
-            <Text
-              numberOfLines={1}
-              ellipsizeMode="tail"
-              style={styles.cardTextSection1}
-            >
-              Total
-            </Text>
-          </View>
-          <View style={styles.cardSection}>
-            <Text style={styles.cardTextSection2}>
-              {props.primero}{" "}
-              {showIcon ? (
-                props.primero < 6 ? (
-                  <MaterialIcons name="error" size={18} color="#FF416C" />
-                ) : props.primero == 6 ? (
-                  <MaterialIcons name="warning" size={18} color="#FDC830" />
-                ) : null
-              ) : null}
-            </Text>
-            <Text style={styles.cardTextSection2}>
-              {props.segundo}{" "}
-              {showIcon ? (
-                props.segundo < 6 ? (
-                  <MaterialIcons name="error" size={18} color="#FF416C" />
-                ) : props.segundo == 6 ? (
-                  <MaterialIcons name="warning" size={18} color="#FDC830" />
-                ) : null
-              ) : null}
-            </Text>
-            <Text style={styles.cardTextSection2}>
-              {props.recuperacion}{" "}
-              {showIcon ? (
-                props.recuperacion < 6 && props.total < 7 ? (
-                  <MaterialIcons name="error" size={18} color="#FF416C" />
-                ) : props.recuperacion == 6 ? (
-                  <MaterialIcons name="warning" size={18} color="#FDC830" />
-                ) : null
-              ) : null}
-            </Text>
-            <Text style={styles.cardTextSection2}>
-              {props.total}{" "}
-              {showIcon ? (
-                props.total < 7 ? (
-                  <MaterialIcons name="error" size={18} color="#FF416C" />
-                ) : (
-                  <MaterialIcons
-                    name="check-circle"
-                    size={18}
-                    color="#38ef7d"
-                  />
-                )
-              ) : null}
-            </Text>
-          </View>
-        </View>
-      ) : (
-        <View>
-          <View style={styles.cardSection}>
-            <Text
-              numberOfLines={1}
-              ellipsizeMode="tail"
-              style={[styles.cardTitle, { alignSelf: "stretch" }]}
-            >
-              {materia}
-            </Text>
-          </View>
-          <View
-            style={[
-              styles.cardSection,
-              {
-                alignSelf: "center",
-                flexDirection: "row",
-                width:
-                  Platform.OS == "web" ? phoneWidth / 2.5 : phoneWidth / 1.9,
-              },
-            ]}
-          >
-            <Text style={styles.cardTextSection1}>Nota Final: </Text>
-            <Text style={[styles.cardTextSection2, { alignSelf: "center" }]}>
-              {props.total}{" "}
-              {showIcon ? (
-                props.total < 7 ? (
-                  <MaterialIcons name="error" size={18} color="#FF416C" />
-                ) : (
-                  <MaterialIcons
-                    name="check-circle"
-                    size={18}
-                    color="#38ef7d"
-                  />
-                )
-              ) : null}
-            </Text>
-          </View>
-        </View>
-      )}
+      <Text
+        numberOfLines={1}
+        ellipsizeMode="tail"
+        style={[styles.cardTitle, { alignSelf: "stretch" }]}
+      >
+        {materia}
+      </Text>
+      <View
+        style={[
+          styles.cardSection,
+          {
+            alignSelf: "center",
+            flexDirection: "row",
+            width: Platform.OS == "web" ? phoneWidth / 2.5 : phoneWidth / 1.9,
+          },
+        ]}
+      >
+        <Text style={styles.cardTextSection1}>Nota Final: </Text>
+        <Text style={styles.cardTextSection2}>
+          {props.total}{" "}
+          {showIcon ? (
+            props.total < 7 ? (
+              <MaterialIcons name="error" size={18} color="#FF416C" />
+            ) : (
+              <MaterialIcons name="check-circle" size={18} color="#38ef7d" />
+            )
+          ) : null}
+        </Text>
+      </View>
     </LinearGradient>
   );
 };

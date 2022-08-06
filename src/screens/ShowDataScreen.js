@@ -246,6 +246,7 @@ const ShowDataScreen = ({ route, navigation }) => {
         initialSemester.map((element) => {
           return (
             <Card
+              isParcial
               key={element.materia + Math.random() * 20}
               materia={element.materia}
               primero={element.primero}
