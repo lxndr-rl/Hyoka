@@ -49,17 +49,41 @@ const App = ({ navigation }) => {
     visible: false,
     message: "",
     title: "",
+    buttons: null,
   });
 
   useEffect(() => {
-    if (__DEV__) {
+    if (__DEV__ && false) {
       navigation.navigate("Notas", {
         name: exampleUserData.name,
         data: JSON.parse(exampleUserData.data),
         cedula: exampleUserData.cedula,
       });
     }
+    getStatus();
   }, []);
+
+  const getStatus = async () => {
+    await fetch("https://api.lxndr.dev/uae/notas/status")
+      .then((res) => res.json())
+      .then((res) => {
+        if (res.status === "Disabled") {
+          setErrorContent({
+            visible: true,
+            message: res.message,
+            title: res.title,
+            buttons: res.buttons,
+          });
+        }
+      })
+      .catch((err) => {
+        setErrorContent({
+          visible: true,
+          message: "No se pudo conectar con el servidor",
+          title: "Error",
+        });
+      });
+  };
 
   const errorAlert = (
     <Dialog
@@ -90,6 +114,25 @@ const App = ({ navigation }) => {
             text="Aceptar"
             onPress={() => setErrorContent({ ...errorContent, visible: false })}
           />
+          {errorContent.buttons
+            ? errorContent.buttons.map((button, index) => {
+                return (
+                  <DialogButton
+                    key={index}
+                    style={{
+                      backgroundColor: button.colorbackground || "#2b2b2b",
+                    }}
+                    textStyle={{ color: button.colortext || "white" }}
+                    text={button.text}
+                    onPress={() =>
+                      Platform.OS === "web"
+                        ? window.open(button.url)
+                        : Linking.openURL(button.url)
+                    }
+                  />
+                );
+              })
+            : null}
         </DialogFooter>
       }
     >
