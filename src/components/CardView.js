@@ -86,7 +86,6 @@ const Card = (props) => {
         </View>
       </LinearGradient>
     );
-  // Retornar una vista similar pero solo con Materia, Total y el icono de error o check-circle
   return (
     <LinearGradient
       colors={colors[Math.floor(Math.random() * colors.length)]}
@@ -96,9 +95,14 @@ const Card = (props) => {
           margin: 7,
           borderRadius: 20,
           backgroundColor: "gray",
-          width: Platform.OS == "web" ? phoneWidth / 2 : phoneWidth - 30,
+          width:
+            Platform.OS == "web"
+              ? Dimensions.get("window").width < 800
+                ? phoneWidth - 30
+                : phoneWidth / 2.5
+              : phoneWidth - 30,
           alignSelf: "center",
-          height: 90,
+          height: Dimensions.get("window").width < 800 ? 110 : 90,
           marginBottom: 20,
         },
       ]}

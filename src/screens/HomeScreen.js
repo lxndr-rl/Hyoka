@@ -265,7 +265,7 @@ const App = ({ navigation }) => {
         >
           <StatusBar backgroundColor="black" />
           <View style={{ alignSelf: "center", flexDirection: "row" }}>
-            <Text style={{ color: "white", fontSize: 32 }}>
+            <Text style={{ color: "white", fontSize: 30 }}>
               Consulta de Notas
             </Text>
             <TouchableOpacity
