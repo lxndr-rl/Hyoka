@@ -1,6 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import { LinearGradient } from "expo-linear-gradient";
-import { StyleSheet, View, Text, Dimensions, Platform } from "react-native";
+import {
+  StyleSheet,
+  View,
+  Text,
+  Modal,
+  TouchableOpacity,
+  Dimensions,
+  Platform,
+} from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 
 const phoneWidth =
@@ -11,6 +19,8 @@ const phoneWidth =
     : Dimensions.get("window").width;
 
 const Card = (props) => {
+  const [modalVisible, setModalVisible] = useState(false);
+  const [desglose, setDesglose] = useState({ aa: "-", ap: "-", ac: "-" });
   const colors = [["#2b2b2b", "#2b2b2b"]];
   const materia = props.materia;
   const showIcon = materia !== "PROMEDIOS TOTALES";
@@ -21,6 +31,71 @@ const Card = (props) => {
         colors={colors[Math.floor(Math.random() * colors.length)]}
         style={styles.cardView}
       >
+        <Modal
+          animationType="fade"
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={() => {
+            setModalVisible(!modalVisible);
+          }}
+        >
+          <View
+            style={[
+              styles.centeredView,
+              { backgroundColor: "rgba(0,0,0,0.9)" },
+            ]}
+          >
+            <View style={styles.modalView}>
+              <Text
+                style={styles.modalTitle}
+                numberOfLines={1}
+                ellipsizeMode="tail"
+              >
+                {materia}
+              </Text>
+              <Text
+                style={[
+                  styles.modalText,
+                  { marginBottom: 1, fontWeight: "bold" },
+                ]}
+                numberOfLines={1}
+                ellipsizeMode="tail"
+              >
+                Aprendizaje en contacto con el docente (Exámen)
+              </Text>
+              <Text style={styles.modalText}>{desglose.ac}</Text>
+              <Text
+                style={[
+                  styles.modalText,
+                  { marginBottom: 1, fontWeight: "bold" },
+                ]}
+                numberOfLines={1}
+                ellipsizeMode="tail"
+              >
+                Aprendizaje autónomo (PIS)
+              </Text>
+              <Text style={styles.modalText}>{desglose.aa}</Text>
+              <Text
+                style={[
+                  styles.modalText,
+                  { marginBottom: 1, fontWeight: "bold" },
+                ]}
+                numberOfLines={1}
+                ellipsizeMode="tail"
+              >
+                Aprendizaje práctico-experimental (Académico)
+              </Text>
+              <Text style={styles.modalText}>{desglose.ap}</Text>
+
+              <TouchableOpacity
+                style={[styles.button, styles.buttonClose]}
+                onPress={() => setModalVisible(!modalVisible)}
+              >
+                <Text style={styles.textStyle}>Cerrar</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
         <Text numberOfLines={1} ellipsizeMode="tail" style={styles.cardTitle}>
           {materia}
         </Text>
@@ -43,26 +118,54 @@ const Card = (props) => {
           </Text>
         </View>
         <View style={styles.cardSection}>
-          <Text style={styles.cardTextSection2}>
-            {props.primero}{" "}
-            {showIcon ? (
-              props.primero < 6 ? (
-                <MaterialIcons name="error" size={18} color="#FF416C" />
-              ) : props.primero == 6 ? (
-                <MaterialIcons name="warning" size={18} color="#FDC830" />
-              ) : null
-            ) : null}
-          </Text>
-          <Text style={styles.cardTextSection2}>
-            {props.segundo}{" "}
-            {showIcon ? (
-              props.segundo < 6 ? (
-                <MaterialIcons name="error" size={18} color="#FF416C" />
-              ) : props.segundo == 6 ? (
-                <MaterialIcons name="warning" size={18} color="#FDC830" />
-              ) : null
-            ) : null}
-          </Text>
+          <TouchableOpacity
+            style={{
+              flex: 2,
+            }}
+            onPress={() => {
+              setModalVisible(true);
+              setDesglose({
+                aa: props.aa1,
+                ap: props.ap1,
+                ac: props.ac1,
+              });
+            }}
+          >
+            <Text style={styles.cardTextSection2}>
+              {props.primero}{" "}
+              {showIcon ? (
+                props.primero < 6 ? (
+                  <MaterialIcons name="error" size={18} color="#FF416C" />
+                ) : props.primero == 6 ? (
+                  <MaterialIcons name="warning" size={18} color="#FDC830" />
+                ) : null
+              ) : null}
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={{
+              flex: 2,
+            }}
+            onPress={() => {
+              setModalVisible(true);
+              setDesglose({
+                aa: props.aa2,
+                ap: props.ap2,
+                ac: props.ac2,
+              });
+            }}
+          >
+            <Text style={styles.cardTextSection2}>
+              {props.segundo}{" "}
+              {showIcon ? (
+                props.segundo < 6 ? (
+                  <MaterialIcons name="error" size={18} color="#FF416C" />
+                ) : props.segundo == 6 ? (
+                  <MaterialIcons name="warning" size={18} color="#FDC830" />
+                ) : null
+              ) : null}
+            </Text>
+          </TouchableOpacity>
           <Text style={styles.cardTextSection2}>
             {props.recuperacion}{" "}
             {showIcon ? (
@@ -180,5 +283,52 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     fontSize: 18,
     fontWeight: "bold",
+  },
+  modalTitle: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "white",
+    alignSelf: "center",
+    marginBottom: 20,
+  },
+
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22,
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: "#2b2b2b",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  button: {
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2,
+  },
+  buttonClose: {
+    backgroundColor: "#2196F3",
+  },
+  textStyle: {
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center",
+  },
+  modalText: {
+    color: "white",
+    marginBottom: 15,
+    textAlign: "center",
   },
 });

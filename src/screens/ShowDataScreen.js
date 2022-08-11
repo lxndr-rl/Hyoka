@@ -227,6 +227,16 @@ const ShowDataScreen = ({ route, navigation }) => {
             Notas Semestrales
           </Text>
         </View>
+        <Text
+          style={{
+            marginTop: 10,
+            fontSize: 12,
+            color: "white",
+            fontStyle: "italic",
+          }}
+        >
+          Nota: Pulsa una nota parcial para ver el desglose
+        </Text>
       </View>
       {loading ? (
         <ActivityIndicator size={"large"} color={"white"} />
@@ -249,7 +259,13 @@ const ShowDataScreen = ({ route, navigation }) => {
               isParcial
               key={element.materia + Math.random() * 20}
               materia={element.materia}
+              ac1={element.ac1}
+              aa1={element.aa1}
+              ap1={element.ap1}
               primero={element.primero}
+              ac2={element.ac2}
+              aa2={element.aa2}
+              ap2={element.ap2}
               segundo={element.segundo}
               recuperacion={element.recuperacion}
               total={element.total}
