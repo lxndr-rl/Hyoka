@@ -16,6 +16,7 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   ActivityIndicator,
+  ScrollView,
 } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
@@ -27,6 +28,7 @@ import Dialog, {
   DialogTitle,
   ScaleAnimation,
 } from "react-native-popup-dialog";
+import HistoryView from "../components/HistoryView";
 import exampleUserData from "../util/exampleUserData";
 
 const phoneWidth =
@@ -45,6 +47,8 @@ const App = ({ navigation }) => {
   const [studentData, setStudentData] = useState({});
   const [apiData, setApiData] = useState(null);
   const [loadingData, setLoadingData] = useState(false);
+  const [historyData, setHistoryData] = useState([]);
+  const [loadingHistory, setLoadingHistory] = useState(true);
   const [errorContent, setErrorContent] = useState({
     visible: false,
     message: "",
@@ -60,8 +64,30 @@ const App = ({ navigation }) => {
         cedula: exampleUserData.cedula,
       });
     }
+    getHistory();
     getStatus();
   }, []);
+
+  const getHistory = async () => {
+    const response = await fetch(`https://api.lxndr.dev/uae/notas/history`);
+    const data = await response.json();
+    let history = [];
+    try {
+      data.data.map((item) => {
+        history.push({
+          title: `${item.apellidos.split(" ")[0]} ${
+            item.nombres.split(" ")[0]
+          }`,
+          description: `${item.ip} - ${item.osName || "Desconocido"}`,
+          time: `${item.ago.split(" ").join("\n")}`,
+        });
+      });
+    } catch {
+      history = "NO";
+    }
+    setHistoryData(history);
+    setLoadingHistory(false);
+  };
 
   const getStatus = async () => {
     await fetch("https://api.lxndr.dev/uae/notas/status")
@@ -256,15 +282,22 @@ const App = ({ navigation }) => {
   return (
     <TouchableWithoutFeedback
       onPress={Keyboard.dismiss}
-      disabled={Platform.OS === "web" ? true : false}
+      disabled={Platform.OS === "web"}
     >
-      <SafeAreaView style={{ flex: 1, backgroundColor: "black" }}>
+      <SafeAreaView
+        style={{
+          flex: 1,
+          backgroundColor: "black",
+        }}
+      >
         <KeyboardAvoidingView
           behavior={Platform.OS === "ios" ? "padding" : "height"}
           style={styles.container}
         >
           <StatusBar backgroundColor="black" />
-          <View style={{ alignSelf: "center", flexDirection: "row" }}>
+          <View
+            style={{ alignSelf: "center", flexDirection: "row", marginTop: 50 }}
+          >
             <Text style={{ color: "white", fontSize: 30 }}>
               Consulta de Notas
             </Text>
@@ -299,7 +332,11 @@ const App = ({ navigation }) => {
             dialogTitle={
               <DialogTitle
                 style={{ backgroundColor: "#2b2b2b" }}
-                textStyle={{ color: "white", fontSize: 20, fontWeight: "bold" }}
+                textStyle={{
+                  color: "white",
+                  fontSize: 20,
+                  fontWeight: "bold",
+                }}
                 title="Información | UAE-SICAU"
               />
             }
@@ -376,7 +413,11 @@ const App = ({ navigation }) => {
             dialogTitle={
               <DialogTitle
                 style={{ backgroundColor: "#2b2b2b" }}
-                textStyle={{ color: "white", fontWeight: "bold", fontSize: 20 }}
+                textStyle={{
+                  color: "white",
+                  fontWeight: "bold",
+                  fontSize: 20,
+                }}
                 title="Estudiante encontrado"
               />
             }
@@ -458,6 +499,35 @@ const App = ({ navigation }) => {
               placeholderTextColor={"gray"}
             />
           </View>
+          <View style={{ marginTop: 30, maxHeight: 300 }}>
+            <Text
+              style={{
+                fontWeight: "bold",
+                alignSelf: "center",
+                color: "white",
+                fontSize: 18,
+                marginBottom: 10,
+              }}
+            >
+              Historial de Consultas
+            </Text>
+            {loadingHistory ? (
+              <ActivityIndicator size={"large"} color={"white"} />
+            ) : historyData === "NO" ? (
+              <Text
+                style={{
+                  marginHorizontal: 10,
+                  fontSize: 12,
+                  color: "white",
+                  fontStyle: "italic",
+                }}
+              >
+                No hay datos que mostrar
+              </Text>
+            ) : (
+              <HistoryView data={historyData} />
+            )}
+          </View>
         </KeyboardAvoidingView>
       </SafeAreaView>
     </TouchableWithoutFeedback>
@@ -469,11 +539,10 @@ export default App;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "black",
     alignSelf: "center",
-    padding: 10,
-    justifyContent: "center",
     margin: 50,
+    justifyContent: "center",
+    alignItems: "center",
   },
   tinyLogo: {
     width: 200,
