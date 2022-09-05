@@ -107,31 +107,32 @@ const App = ({ navigation }) => {
       }
       footer={
         <DialogFooter style={{ backgroundColor: "#2b2b2b" }}>
-          <></>
           <DialogButton
             style={{ backgroundColor: "#2b2b2b" }}
             text="Aceptar"
             onPress={() => setErrorContent({ ...errorContent, visible: false })}
           />
-          {errorContent.buttons
-            ? errorContent.buttons.map((button, index) => {
-                return (
-                  <DialogButton
-                    key={index}
-                    style={{
-                      backgroundColor: button.colorbackground || "#2b2b2b",
-                    }}
-                    textStyle={{ color: button.colortext || "white" }}
-                    text={button.text}
-                    onPress={() =>
-                      Platform.OS === "web"
-                        ? window.open(button.url)
-                        : Linking.openURL(button.url)
-                    }
-                  />
-                );
-              })
-            : null}
+          {errorContent.buttons ? (
+            errorContent.buttons.map((button, index) => {
+              return (
+                <DialogButton
+                  key={index}
+                  style={{
+                    backgroundColor: button.colorbackground || "#2b2b2b",
+                  }}
+                  textStyle={{ color: button.colortext || "white" }}
+                  text={button.text}
+                  onPress={() =>
+                    Platform.OS === "web"
+                      ? window.open(button.url)
+                      : Linking.openURL(button.url)
+                  }
+                />
+              );
+            })
+          ) : (
+            <></>
+          )}
         </DialogFooter>
       }
     >
