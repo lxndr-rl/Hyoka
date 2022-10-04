@@ -1,12 +1,11 @@
 import React from "react";
-import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-import Inicio from "./HomeScreen";
-import Notas from "./ShowDataScreen";
+import Inicio from "../screens/HomeScreen";
+import Notas from "../screens/ShowDataScreen";
 
 const StackNavigator = createStackNavigator();
 
-const MainStack = () => {
+function MainStack() {
   return (
     <StackNavigator.Navigator>
       <StackNavigator.Screen
@@ -24,19 +23,19 @@ const MainStack = () => {
             backgroundColor: "black",
           },
           headerTintColor: "#fff",
+          headerBackTitle: "Inicio",
         }}
       />
     </StackNavigator.Navigator>
   );
-};
+}
 
 // eslint-disable-next-line no-undef
-const App = () => {
+function App() {
   return (
-    <NavigationContainer>
-      <MainStack />
-    </NavigationContainer>
+
+    <MainStack />
   );
-};
+}
 
 export default App;

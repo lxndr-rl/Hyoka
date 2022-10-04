@@ -1,62 +1,62 @@
-import React from "react";
-import Dialog, {
-  DialogFooter,
-  DialogButton,
-  DialogContent,
-  DialogTitle,
+import React, { useCallback } from "react";
+import Modal, {
+  ModalTitle,
+  ModalContent,
+  ModalFooter,
+  ModalButton,
   ScaleAnimation,
-} from "react-native-popup-dialog";
+} from "react-native-modals";
 import { Text } from "react-native";
 
-const StudentInformation = ({
+function StudentInformation({
   foundVisible,
   setFoundVisible,
   apiData,
   textCedula,
   studentData,
   navigation,
-}) => {
+}) {
   return (
-    <Dialog
+    <Modal
       visible={foundVisible}
-      dialogAnimation={
+      modalAnimation={
         new ScaleAnimation({
           initialValue: 0,
-          useNativeDriver: true,
+          useNativeDriver: false,
         })
       }
-      dialogTitle={
-        <DialogTitle
+      modalTitle={(
+        <ModalTitle
           style={{ backgroundColor: "#2b2b2b" }}
           textStyle={{ color: "white", fontWeight: "bold", fontSize: 20 }}
           title="Estudiante encontrado"
         />
-      }
-      footer={
-        <DialogFooter style={{ backgroundColor: "#2b2b2b" }}>
-          <DialogButton
+      )}
+      footer={(
+        <ModalFooter style={{ backgroundColor: "#2b2b2b" }}>
+          <ModalButton
             style={{ backgroundColor: "#2b2b2b" }}
             textStyle={{ color: "#D22B2B" }}
             text="Cancelar"
-            onPress={() => setFoundVisible(false)}
+            onPress={useCallback(() => setFoundVisible(false))}
           />
-          <DialogButton
+          <ModalButton
             style={{ backgroundColor: "#2b2b2b" }}
             textStyle={{ color: "#31AA84" }}
             text="Continuar"
-            onPress={() => {
+            onPress={useCallback(() => {
               setFoundVisible(false);
               navigation.navigate("Notas", {
                 name: `${studentData.nombres} ${studentData.apellidos}`,
                 data: apiData,
                 cedula: textCedula,
               });
-            }}
+            })}
           />
-        </DialogFooter>
-      }
+        </ModalFooter>
+      )}
     >
-      <DialogContent style={{ backgroundColor: "#2b2b2b" }}>
+      <ModalContent style={{ backgroundColor: "#2b2b2b" }}>
         <Text
           style={{
             fontSize: 18,
@@ -64,25 +64,31 @@ const StudentInformation = ({
             backgroundColor: "#2b2b2b",
           }}
         >
-          <Text style={{ fontWeight: "bold", fontSize: 18 }}>Nombres:</Text>{" "}
-          {studentData.apellidos} {studentData.nombres}
+          <Text style={{ fontWeight: "bold", fontSize: 18 }}>Nombres:</Text>
+          {" "}
+          {studentData.apellidos}
+          {" "}
+          {studentData.nombres}
           {"\n\n"}
           <Text style={{ fontWeight: "bold", fontSize: 18 }}>
             Carrera:
-          </Text>{" "}
+          </Text>
+          {" "}
           {studentData.carrera}
           {"\n\n"}
-          <Text style={{ fontWeight: "bold", fontSize: 18 }}>Sede:</Text>{" "}
+          <Text style={{ fontWeight: "bold", fontSize: 18 }}>Sede:</Text>
+          {" "}
           {studentData.sede}
           {"\n\n"}
           <Text style={{ fontWeight: "bold", fontSize: 18 }}>
             Facultad:
-          </Text>{" "}
+          </Text>
+          {" "}
           {studentData.facultad}
         </Text>
-      </DialogContent>
-    </Dialog>
+      </ModalContent>
+    </Modal>
   );
-};
+}
 
 export default StudentInformation;

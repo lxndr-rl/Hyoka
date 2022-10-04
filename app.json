@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "SICAU",
-    "slug": "UAE-SICAU",
+    "name": "Hyoka",
+    "slug": "Hyoka",
     "version": "1.2.1",
     "orientation": "portrait",
     "icon": "./src/assets/icon.png",
@@ -18,7 +18,7 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "dev.lxndr.sicau"
+      "bundleIdentifier": "dev.lxndr.hyoka"
     },
     "androidStatusBar": {
       "hidden": true
@@ -28,7 +28,7 @@
         "foregroundImage": "./src/assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
-      "package": "dev.lxndr.sicau"
+      "package": "dev.lxndr.hyoka"
     },
     "web": {
       "favicon": "./src/assets/favicon.png"

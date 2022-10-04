@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import {
   StyleSheet,
@@ -11,238 +11,11 @@ import {
 } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 
-const phoneWidth =
-  Platform.OS == "web"
-    ? Dimensions.get("window").width < 800
-      ? Dimensions.get("window").width
-      : Dimensions.get("window").width / 2.5
-    : Dimensions.get("window").width;
-
-const Card = (props) => {
-  const [modalVisible, setModalVisible] = useState(false);
-  const [desglose, setDesglose] = useState({ aa: "-", ap: "-", ac: "-" });
-  const colors = [["#2b2b2b", "#2b2b2b"]];
-  const materia = props.materia;
-  const showIcon = materia !== "PROMEDIOS TOTALES";
-  const isParcial = props.isParcial;
-  if (isParcial)
-    return (
-      <LinearGradient
-        colors={colors[Math.floor(Math.random() * colors.length)]}
-        style={styles.cardView}
-      >
-        <Modal
-          animationType="fade"
-          transparent={true}
-          visible={modalVisible}
-          onRequestClose={() => {
-            setModalVisible(!modalVisible);
-          }}
-        >
-          <View
-            style={[
-              styles.centeredView,
-              { backgroundColor: "rgba(0,0,0,0.9)" },
-            ]}
-          >
-            <View style={styles.modalView}>
-              <Text
-                style={styles.modalTitle}
-                numberOfLines={1}
-                ellipsizeMode="tail"
-              >
-                {materia}
-              </Text>
-              <Text
-                style={[
-                  styles.modalText,
-                  { marginBottom: 1, fontWeight: "bold" },
-                ]}
-                numberOfLines={1}
-                ellipsizeMode="tail"
-              >
-                Aprendizaje en contacto con el docente (Exámen)
-              </Text>
-              <Text style={styles.modalText}>{desglose.ac}</Text>
-              <Text
-                style={[
-                  styles.modalText,
-                  { marginBottom: 1, fontWeight: "bold" },
-                ]}
-                numberOfLines={1}
-                ellipsizeMode="tail"
-              >
-                Aprendizaje autónomo (PIS)
-              </Text>
-              <Text style={styles.modalText}>{desglose.aa}</Text>
-              <Text
-                style={[
-                  styles.modalText,
-                  { marginBottom: 1, fontWeight: "bold" },
-                ]}
-                numberOfLines={1}
-                ellipsizeMode="tail"
-              >
-                Aprendizaje práctico-experimental (Académico)
-              </Text>
-              <Text style={styles.modalText}>{desglose.ap}</Text>
-
-              <TouchableOpacity
-                style={[styles.button, styles.buttonClose]}
-                onPress={() => setModalVisible(!modalVisible)}
-              >
-                <Text style={styles.textStyle}>Cerrar</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </Modal>
-        <Text numberOfLines={1} ellipsizeMode="tail" style={styles.cardTitle}>
-          {materia}
-        </Text>
-        <View style={styles.cardSection}>
-          <Text style={styles.cardTextSection1}>1º</Text>
-          <Text style={styles.cardTextSection1}>2º</Text>
-          <Text
-            numberOfLines={1}
-            ellipsizeMode="tail"
-            style={styles.cardTextSection1}
-          >
-            Recuperación
-          </Text>
-          <Text
-            numberOfLines={1}
-            ellipsizeMode="tail"
-            style={styles.cardTextSection1}
-          >
-            Total
-          </Text>
-        </View>
-        <View style={styles.cardSection}>
-          <TouchableOpacity
-            style={{
-              flex: 2,
-            }}
-            onPress={() => {
-              setModalVisible(true);
-              setDesglose({
-                aa: props.aa1,
-                ap: props.ap1,
-                ac: props.ac1,
-              });
-            }}
-          >
-            <Text style={styles.cardTextSection2}>
-              {props.primero}{" "}
-              {showIcon ? (
-                props.primero < 6 ? (
-                  <MaterialIcons name="error" size={18} color="#FF416C" />
-                ) : props.primero == 6 ? (
-                  <MaterialIcons name="warning" size={18} color="#FDC830" />
-                ) : null
-              ) : null}
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={{
-              flex: 2,
-            }}
-            onPress={() => {
-              setModalVisible(true);
-              setDesglose({
-                aa: props.aa2,
-                ap: props.ap2,
-                ac: props.ac2,
-              });
-            }}
-          >
-            <Text style={styles.cardTextSection2}>
-              {props.segundo}{" "}
-              {showIcon ? (
-                props.segundo < 6 ? (
-                  <MaterialIcons name="error" size={18} color="#FF416C" />
-                ) : props.segundo == 6 ? (
-                  <MaterialIcons name="warning" size={18} color="#FDC830" />
-                ) : null
-              ) : null}
-            </Text>
-          </TouchableOpacity>
-          <Text style={styles.cardTextSection2}>
-            {props.recuperacion}{" "}
-            {showIcon ? (
-              props.recuperacion < 6 && props.total < 7 ? (
-                <MaterialIcons name="error" size={18} color="#FF416C" />
-              ) : props.recuperacion == 6 ? (
-                <MaterialIcons name="warning" size={18} color="#FDC830" />
-              ) : null
-            ) : null}
-          </Text>
-          <Text style={styles.cardTextSection2}>
-            {props.total}{" "}
-            {showIcon ? (
-              props.total < 7 ? (
-                <MaterialIcons name="error" size={18} color="#FF416C" />
-              ) : (
-                <MaterialIcons name="check-circle" size={18} color="#38ef7d" />
-              )
-            ) : null}
-          </Text>
-        </View>
-      </LinearGradient>
-    );
-  return (
-    <LinearGradient
-      colors={colors[Math.floor(Math.random() * colors.length)]}
-      style={[
-        styles.cardView,
-        {
-          margin: 7,
-          borderRadius: 20,
-          backgroundColor: "gray",
-          width:
-            Platform.OS == "web"
-              ? Dimensions.get("window").width < 800
-                ? phoneWidth - 30
-                : phoneWidth / 2.5
-              : phoneWidth - 30,
-          alignSelf: "center",
-          height: Dimensions.get("window").width < 800 ? 110 : 90,
-          marginBottom: 20,
-        },
-      ]}
-    >
-      <Text
-        numberOfLines={1}
-        ellipsizeMode="tail"
-        style={[styles.cardTitle, { alignSelf: "stretch" }]}
-      >
-        {materia}
-      </Text>
-      <View
-        style={[
-          styles.cardSection,
-          {
-            alignSelf: "center",
-            flexDirection: "row",
-            width: Platform.OS == "web" ? phoneWidth / 2.5 : phoneWidth / 1.9,
-          },
-        ]}
-      >
-        <Text style={styles.cardTextSection1}>Nota Final: </Text>
-        <Text style={styles.cardTextSection2}>
-          {props.total}{" "}
-          {showIcon ? (
-            props.total < 7 ? (
-              <MaterialIcons name="error" size={18} color="#FF416C" />
-            ) : (
-              <MaterialIcons name="check-circle" size={18} color="#38ef7d" />
-            )
-          ) : null}
-        </Text>
-      </View>
-    </LinearGradient>
-  );
-};
-export default Card;
+const phoneWidth = Platform.OS === "web"
+  ? Dimensions.get("window").width < 800
+    ? Dimensions.get("window").width
+    : Dimensions.get("window").width / 2.5
+  : Dimensions.get("window").width;
 
 const styles = StyleSheet.create({
   cardView: {
@@ -332,3 +105,233 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
 });
+
+function Card({
+  materia, isParcial, aa1, ap1, ac1, primero, segundo, recuperacion, total, aa2, ap2, ac2,
+}) {
+  const [modalVisible, setModalVisible] = useState(false);
+  const [desglose, setDesglose] = useState({ aa: "-", ap: "-", ac: "-" });
+  const colors = [["#2b2b2b", "#2b2b2b"]];
+  const showIcon = materia !== "PROMEDIOS TOTALES";
+  if (isParcial) {
+    return (
+      <LinearGradient
+        colors={colors[Math.floor(Math.random() * colors.length)]}
+        style={styles.cardView}
+      >
+        <Modal
+          animationType="fade"
+          transparent
+          visible={modalVisible}
+          onRequestClose={useCallback(() => setModalVisible(!modalVisible))}
+        >
+          <View
+            style={[
+              styles.centeredView,
+              { backgroundColor: "rgba(0,0,0,0.9)" },
+            ]}
+          >
+            <View style={styles.modalView}>
+              <Text
+                style={styles.modalTitle}
+                numberOfLines={1}
+                ellipsizeMode="tail"
+              >
+                {materia}
+              </Text>
+              <Text
+                style={[
+                  styles.modalText,
+                  { marginBottom: 1, fontWeight: "bold" },
+                ]}
+                numberOfLines={1}
+                ellipsizeMode="tail"
+              >
+                Aprendizaje en contacto con el docente (Exámen)
+              </Text>
+              <Text style={styles.modalText}>{desglose.ac}</Text>
+              <Text
+                style={[
+                  styles.modalText,
+                  { marginBottom: 1, fontWeight: "bold" },
+                ]}
+                numberOfLines={1}
+                ellipsizeMode="tail"
+              >
+                Aprendizaje autónomo (PIS)
+              </Text>
+              <Text style={styles.modalText}>{desglose.aa}</Text>
+              <Text
+                style={[
+                  styles.modalText,
+                  { marginBottom: 1, fontWeight: "bold" },
+                ]}
+                numberOfLines={1}
+                ellipsizeMode="tail"
+              >
+                Aprendizaje práctico-experimental (Académico)
+              </Text>
+              <Text style={styles.modalText}>{desglose.ap}</Text>
+
+              <TouchableOpacity
+                style={[styles.button, styles.buttonClose]}
+                onPress={useCallback(() => setModalVisible(!modalVisible))}
+              >
+                <Text style={styles.textStyle}>Cerrar</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
+        <Text numberOfLines={1} ellipsizeMode="tail" style={styles.cardTitle}>
+          {materia}
+        </Text>
+        <View style={styles.cardSection}>
+          <Text style={styles.cardTextSection1}>1º</Text>
+          <Text style={styles.cardTextSection1}>2º</Text>
+          <Text
+            numberOfLines={1}
+            ellipsizeMode="tail"
+            style={styles.cardTextSection1}
+          >
+            Recuperación
+          </Text>
+          <Text
+            numberOfLines={1}
+            ellipsizeMode="tail"
+            style={styles.cardTextSection1}
+          >
+            Total
+          </Text>
+        </View>
+        <View style={styles.cardSection}>
+          <TouchableOpacity
+            style={{
+              flex: 2,
+            }}
+            onPress={useCallback(() => {
+              setModalVisible(true);
+              setDesglose({
+                aa: aa1,
+                ap: ap1,
+                ac: ac1,
+              });
+            })}
+          >
+            <Text style={styles.cardTextSection2}>
+              {primero}
+              {" "}
+              {showIcon ? (
+                primero < 6 ? (
+                  <MaterialIcons name="error" size={18} color="#FF416C" />
+                ) : primero === 6 ? (
+                  <MaterialIcons name="warning" size={18} color="#FDC830" />
+                ) : null
+              ) : null}
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={{
+              flex: 2,
+            }}
+            onPress={useCallback(() => {
+              setModalVisible(true);
+              setDesglose({
+                aa: aa2,
+                ap: ap2,
+                ac: ac2,
+              });
+            })}
+          >
+            <Text style={styles.cardTextSection2}>
+              {segundo}
+              {" "}
+              {showIcon ? (
+                segundo < 6 ? (
+                  <MaterialIcons name="error" size={18} color="#FF416C" />
+                ) : segundo === 6 ? (
+                  <MaterialIcons name="warning" size={18} color="#FDC830" />
+                ) : null
+              ) : null}
+            </Text>
+          </TouchableOpacity>
+          <Text style={styles.cardTextSection2}>
+            {recuperacion}
+            {" "}
+            {showIcon ? (
+              recuperacion < 6 && total < 7 ? (
+                <MaterialIcons name="error" size={18} color="#FF416C" />
+              ) : recuperacion === 6 ? (
+                <MaterialIcons name="warning" size={18} color="#FDC830" />
+              ) : null
+            ) : null}
+          </Text>
+          <Text style={styles.cardTextSection2}>
+            {total}
+            {" "}
+            {showIcon ? (
+              total < 7 ? (
+                <MaterialIcons name="error" size={18} color="#FF416C" />
+              ) : (
+                <MaterialIcons name="check-circle" size={18} color="#38ef7d" />
+              )
+            ) : null}
+          </Text>
+        </View>
+      </LinearGradient>
+    );
+  }
+  return (
+    <LinearGradient
+      colors={colors[Math.floor(Math.random() * colors.length)]}
+      style={[
+        styles.cardView,
+        {
+          margin: 7,
+          borderRadius: 20,
+          backgroundColor: "gray",
+          width:
+            Platform.OS === "web"
+              ? Dimensions.get("window").width < 800
+                ? phoneWidth - 30
+                : phoneWidth / 2.5
+              : phoneWidth - 30,
+          alignSelf: "center",
+          height: Dimensions.get("window").width < 800 ? 110 : 90,
+          marginBottom: 20,
+        },
+      ]}
+    >
+      <Text
+        numberOfLines={1}
+        ellipsizeMode="tail"
+        style={[styles.cardTitle, { alignSelf: "stretch" }]}
+      >
+        {materia}
+      </Text>
+      <View
+        style={[
+          styles.cardSection,
+          {
+            alignSelf: "center",
+            flexDirection: "row",
+            width: Platform.OS === "web" ? phoneWidth / 2.5 : phoneWidth / 1.9,
+          },
+        ]}
+      >
+        <Text style={styles.cardTextSection1}>Nota Final: </Text>
+        <Text style={styles.cardTextSection2}>
+          {total}
+          {" "}
+          {showIcon ? (
+            total < 7 ? (
+              <MaterialIcons name="error" size={18} color="#FF416C" />
+            ) : (
+              <MaterialIcons name="check-circle" size={18} color="#38ef7d" />
+            )
+          ) : null}
+        </Text>
+      </View>
+    </LinearGradient>
+  );
+}
+export default Card;

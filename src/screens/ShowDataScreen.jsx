@@ -1,5 +1,4 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   StyleSheet,
   ScrollView,
@@ -9,22 +8,38 @@ import {
   Platform,
   ActivityIndicator,
   Dimensions,
-  Alert,
   Switch,
 } from "react-native";
 import ModalSelector from "react-native-modal-selector";
 import Card from "../components/CardView";
 import deviceInfo from "../util/deviceInfo";
+import ErrorAlert from "../components/ErrorAlert";
 
-let data;
-let dataYear;
-const phoneWidth =
-  Platform.OS == "web"
-    ? Dimensions.get("window").width < 800
-      ? Dimensions.get("window").width
-      : Dimensions.get("window").width / 2.5
-    : Dimensions.get("window").width;
-const ShowDataScreen = ({ route, navigation }) => {
+let data = [];
+let dataYear = [];
+const phoneWidth = Platform.OS === "web"
+  ? Dimensions.get("window").width < 800
+    ? Dimensions.get("window").width
+    : Dimensions.get("window").width / 2.5
+  : Dimensions.get("window").width;
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: "center",
+    backgroundColor: "black",
+    padding: 10,
+    justifyContent: "center",
+  },
+  title: {
+    fontWeight: "bold",
+    fontSize: 20,
+    alignSelf: "center",
+    color: "white",
+  },
+});
+
+function ShowDataScreen({ route, navigation }) {
   const [initialSemester, setInitialSemester] = useState(null);
   const [initialSemester2, setInitialSemester2] = useState(null);
   const [semestres, setSemestres] = useState([]);
@@ -34,6 +49,12 @@ const ShowDataScreen = ({ route, navigation }) => {
   const [loading, setLoading] = useState(false);
   const [anioLect, setAnioLect] = useState();
   const [isPromedio, setIsPromedio] = useState(false);
+  const [errorContent, setErrorContent] = useState({
+    visible: false,
+    message: "",
+    title: "",
+    buttons: null,
+  });
 
   useEffect(() => {
     navigation.setOptions({
@@ -43,53 +64,57 @@ const ShowDataScreen = ({ route, navigation }) => {
     setNotasSemestrales(route.params.data.promedios);
     setCedula(route.params.cedula);
     setInitialSemester(
-      route.params.data.parciales[route.params.data.semestres[0]]
+      route.params.data.parciales[route.params.data.semestres[0]],
     );
     setInitialSemester2(
-      route.params.data.promedios[route.params.data.semestres[0]]
+      route.params.data.promedios[route.params.data.semestres[0]],
     );
     let i = 0;
     data = [{ key: i - 1, section: true, label: "Semestre" }];
-    for (i = 0; i < route.params.data.semestres.length; i++) {
+    for (i = 0; i < route.params.data.semestres.length; i += 1) {
       data.push({ key: i, label: route.params.data.semestres[i] });
     }
     i = 0;
     dataYear = [{ key: i - 1, section: true, label: "Año Lectivo" }];
-    for (i = 0; i < route.params.data.aniosLect.length; i++) {
+    for (i = 0; i < route.params.data.aniosLect.length; i += 1) {
       dataYear.push({ key: i, label: route.params.data.aniosLect[i] });
     }
   }, []);
 
-  const toggleSwitch = () => setIsPromedio((previousState) => !previousState);
+  const toggleSwitch = useCallback(() => setIsPromedio((previousState) => !previousState));
 
   const FetchAPI = (anioLectivo) => {
-    if (!anioLectivo) return console.log("Error");
+    if (!anioLectivo) return;
     setLoading(true);
     fetch(
       `https://api.lxndr.dev/uae/notas/v2/?cedula=${cedula}&alect=${anioLectivo}&analytics=${JSON.stringify(
-        deviceInfo
-      )}`
+        deviceInfo,
+      )}`,
     )
       .then((res) => res.json())
       .then((apiDATA) => {
-        if (apiDATA.error)
-          return Platform.OS == "web"
-            ? alert(`Ocurrió un error\n${data.message}`)
-            : Alert.alert("Error", `Ocurrió un error\n${data.message}`);
-        setSemestres(apiDATA.semestres);
-        setNotasParciales(apiDATA.parciales);
-        setNotasSemestrales(apiDATA.promedios);
-        setInitialSemester(apiDATA.parciales[apiDATA.semestres[0]]);
-        setInitialSemester2(apiDATA.promedios[apiDATA.semestres[0]]);
-        let i = 0;
-        data = [{ key: i - 1, section: true, label: "Semestre" }];
-        for (i = 0; i < apiDATA.semestres.length; i++) {
-          data.push({ key: i, label: apiDATA.semestres[i] });
-        }
-        i = 0;
-        dataYear = [{ key: i - 1, section: true, label: "Año Lectivo" }];
-        for (i = 0; i < apiDATA.aniosLect.length; i++) {
-          dataYear.push({ key: i, label: apiDATA.aniosLect[i] });
+        if (apiDATA.error) {
+          setErrorContent({
+            visible: true,
+            message: apiDATA.message,
+            title: "Error",
+          });
+        } else {
+          setSemestres(apiDATA.semestres);
+          setNotasParciales(apiDATA.parciales);
+          setNotasSemestrales(apiDATA.promedios);
+          setInitialSemester(apiDATA.parciales[apiDATA.semestres[0]]);
+          setInitialSemester2(apiDATA.promedios[apiDATA.semestres[0]]);
+          let i = 0;
+          data = [{ key: i - 1, section: true, label: "Semestre" }];
+          for (i = 0; i < apiDATA.semestres.length; i += 1) {
+            data.push({ key: i, label: apiDATA.semestres[i] });
+          }
+          i = 0;
+          dataYear = [{ key: i - 1, section: true, label: "Año Lectivo" }];
+          for (i = 0; i < apiDATA.aniosLect.length; i += 1) {
+            dataYear.push({ key: i, label: apiDATA.aniosLect[i] });
+          }
         }
         setLoading(false);
       });
@@ -104,6 +129,10 @@ const ShowDataScreen = ({ route, navigation }) => {
       }}
     >
       <View style={styles.container}>
+        <ErrorAlert
+          errorContent={errorContent}
+          setErrorContent={setErrorContent}
+        />
         <Text style={styles.title}>Año Lectivo</Text>
         <ModalSelector
           data={dataYear}
@@ -146,11 +175,11 @@ const ShowDataScreen = ({ route, navigation }) => {
           style={{ width: 200, alignSelf: "center" }}
           backdropPressToClose
           initValue={anioLect ?? route.params.data.aniosLect[0]}
-          onChange={(option) => {
+          onChange={useCallback((option) => {
             setAnioLect(option.label);
             FetchAPI(option.label);
             Keyboard.dismiss();
-          }}
+          })}
           cancelText="Cerrar"
         />
         <Text style={styles.title}>Semestre</Text>
@@ -239,58 +268,38 @@ const ShowDataScreen = ({ route, navigation }) => {
         </Text>
       </View>
       {loading ? (
-        <ActivityIndicator size={"large"} color={"white"} />
+        <ActivityIndicator size="large" color="white" />
       ) : isPromedio ? (
         initialSemester2 ? (
-          initialSemester2.map((element) => {
-            return (
-              <Card
-                key={element.materia + Math.random() * 20}
-                materia={element.materia}
-                total={element.total}
-              />
-            );
-          })
-        ) : null
-      ) : initialSemester ? (
-        initialSemester.map((element) => {
-          return (
+          initialSemester2.map((element) => (
             <Card
-              isParcial
               key={element.materia + Math.random() * 20}
               materia={element.materia}
-              ac1={element.ac1}
-              aa1={element.aa1}
-              ap1={element.ap1}
-              primero={element.primero}
-              ac2={element.ac2}
-              aa2={element.aa2}
-              ap2={element.ap2}
-              segundo={element.segundo}
-              recuperacion={element.recuperacion}
               total={element.total}
             />
-          );
-        })
+          ))
+        ) : null
+      ) : initialSemester ? (
+        initialSemester.map((element) => (
+          <Card
+            isParcial
+            key={element.materia + Math.random() * 20}
+            materia={element.materia}
+            ac1={element.ac1}
+            aa1={element.aa1}
+            ap1={element.ap1}
+            primero={element.primero}
+            ac2={element.ac2}
+            aa2={element.aa2}
+            ap2={element.ap2}
+            segundo={element.segundo}
+            recuperacion={element.recuperacion}
+            total={element.total}
+          />
+        ))
       ) : null}
     </ScrollView>
   );
-};
+}
 
 export default ShowDataScreen;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    backgroundColor: "black",
-    padding: 10,
-    justifyContent: "center",
-  },
-  title: {
-    fontWeight: "bold",
-    fontSize: 20,
-    alignSelf: "center",
-    color: "white",
-  },
-});
