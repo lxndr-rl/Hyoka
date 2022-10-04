@@ -239,19 +239,7 @@ const App = ({ navigation }) => {
             studentData={studentData}
             textCedula={textCedula}
           />
-          <TouchableOpacity disabled={searchButton} onPress={() => searchBtn()}>
-            <LinearGradient
-              colors={["#18bc9c", "#128f76"]}
-              style={styles.button}
-            >
-              {loadingData ? (
-                <ActivityIndicator size={"large"} color={"white"} />
-              ) : (
-                <MaterialIcons name="search" size={40} color="white" />
-              )}
-            </LinearGradient>
-          </TouchableOpacity>
-          <View style={{ paddingTop: 10 }}>
+          <View style={{ paddingBottom: 10 }}>
             <TextInput
               autoCorrect={false}
               autoCompleteType={"off"}
@@ -263,6 +251,22 @@ const App = ({ navigation }) => {
               placeholderTextColor={"gray"}
             />
           </View>
+          <TouchableOpacity
+            style={styles.button}
+            disabled={searchButton}
+            onPress={() => searchBtn()}
+          >
+            <LinearGradient
+              colors={["#18bc9c", "#128f76"]}
+              style={[styles.button, { padding: 10 }]}
+            >
+              {loadingData ? (
+                <ActivityIndicator size={"large"} color={"white"} />
+              ) : (
+                <MaterialIcons name="search" size={40} color="white" />
+              )}
+            </LinearGradient>
+          </TouchableOpacity>
         </KeyboardAvoidingView>
       </SafeAreaView>
     </TouchableWithoutFeedback>
@@ -288,15 +292,11 @@ const styles = StyleSheet.create({
     alignSelf: "center",
   },
   button: {
-    padding: 20,
     alignItems: "center",
     borderRadius: 40,
-    fontSize: 35,
-    fontWeight: "bold",
-    color: "white",
     width: phoneWidth - 70,
     alignSelf: "center",
-    marginBottom: 10,
+    marginTop: 5,
   },
   buttonInfo: {
     alignItems: "center",
