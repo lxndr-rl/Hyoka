@@ -15,7 +15,7 @@ import {
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { LinearGradient } from "expo-linear-gradient";
-import _ from "lodash";
+import { filter } from "lodash/collection";
 import { FontAwesome } from "@expo/vector-icons";
 
 const phoneWidth = Platform.OS === "web"
@@ -120,7 +120,7 @@ function InputHistory({ value, onChange, onFinish }) {
   const handleText = (text) => {
     onChange(text);
     const formattedQuery = text.toLowerCase();
-    const data = _.filter(fullHistory, (dat) => {
+    const data = filter(fullHistory, (dat) => {
       if (
         dat.cedula.toLowerCase().includes(formattedQuery)
         || dat.nombres.toLowerCase().includes(formattedQuery)
