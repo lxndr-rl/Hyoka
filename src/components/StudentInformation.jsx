@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React from "react";
 import Modal, {
   ModalTitle,
   ModalContent,
@@ -38,20 +38,20 @@ function StudentInformation({
             style={{ backgroundColor: "#2b2b2b" }}
             textStyle={{ color: "#D22B2B" }}
             text="Cancelar"
-            onPress={useCallback(() => setFoundVisible(false))}
+            onPress={() => setFoundVisible(false)}
           />
           <ModalButton
             style={{ backgroundColor: "#2b2b2b" }}
             textStyle={{ color: "#31AA84" }}
             text="Continuar"
-            onPress={useCallback(() => {
+            onPress={() => {
               setFoundVisible(false);
               navigation.navigate("Notas", {
                 name: `${studentData.nombres} ${studentData.apellidos}`,
                 data: apiData,
                 cedula: textCedula,
               });
-            })}
+            }}
           />
         </ModalFooter>
       )}

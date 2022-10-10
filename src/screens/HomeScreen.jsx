@@ -1,9 +1,8 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import {
   SafeAreaView,
   StyleSheet,
   View,
-  StatusBar,
   Platform,
   Dimensions,
   TouchableOpacity,
@@ -13,10 +12,11 @@ import {
   Keyboard,
   ActivityIndicator,
 } from "react-native";
+import { StatusBar } from "expo-status-bar";
 import { MaterialIcons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import deviceInfo from "../util/deviceInfo";
+import { deviceInfo, getActualColor } from "../util";
 // import exampleUserData from "../util/exampleUserData";
 import InformationDialog from "../components/InformationDialog";
 import ErrorAlert from "../components/ErrorAlert";
@@ -32,11 +32,15 @@ const phoneWidth = Platform.OS === "web"
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "black",
     alignSelf: "center",
     padding: 10,
     justifyContent: "center",
     margin: 50,
+  },
+  logo: {
+    width: 50,
+    height: 50,
+    marginRight: 10,
   },
   tinyLogo: {
     width: 200,
@@ -59,12 +63,6 @@ const styles = StyleSheet.create({
   },
   buttonInfoCont: {
     alignSelf: "center",
-  },
-  paragraphStyle: {
-    padding: 20,
-    color: "white",
-    textAlign: "center",
-    fontSize: 16,
   },
   input: {
     width: phoneWidth - 70,
@@ -92,6 +90,7 @@ function App({ navigation }) {
     title: "",
     buttons: null,
   });
+  const [color, setColor] = useState(null);
 
   const getStatus = async () => {
     await fetch("https://api.lxndr.dev/uae/notas/status")
@@ -124,6 +123,25 @@ function App({ navigation }) {
         cedula: exampleUserData.cedula,
       });
     } */
+    (async () => {
+      await getActualColor().then((colore) => {
+        if (colore) {
+          navigation.setOptions({
+            headerStyle: {
+              backgroundColor: colore.headerColor,
+            },
+            headerRight: () => (
+              <Image
+                source={require("../assets/lxndr.png")}
+                style={styles.logo}
+              />
+            ),
+            headerTintColor: colore.textColor,
+          });
+          setColor(colore);
+        }
+      });
+    })();
     getStatus();
   }, []);
 
@@ -256,14 +274,13 @@ function App({ navigation }) {
     }
   };
 
-  return (
-
-    <SafeAreaView style={{ flex: 1, backgroundColor: "black" }}>
+  return color && (
+    <SafeAreaView style={{ flex: 1, backgroundColor: color.bgColor }}>
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={styles.container}
+        style={[styles.container, { backgroundColor: color.bgColor }]}
       >
-        <StatusBar backgroundColor="black" />
+        <StatusBar style={color.isDarkHeader ? "light" : "dark"} />
         <View
           style={{
             alignSelf: "center",
@@ -271,21 +288,21 @@ function App({ navigation }) {
             marginTop: 50,
           }}
         >
-          <Text style={{ color: "white", fontSize: 30 }}>
+          <Text style={{ color: color.textColor, fontSize: 30, fontWeight: "bold" }}>
             Consulta de Notas
           </Text>
           <TouchableOpacity
-            onPress={useCallback(() => {
+            onPress={() => {
               setPopupVisible(true);
               Keyboard.dismiss();
-            })}
+            }}
             style={styles.buttonInfoCont}
           >
             <LinearGradient
-              colors={["#18bc9c", "#128f76"]}
+              colors={color.buttonGradient}
               style={styles.buttonInfo}
             >
-              <MaterialIcons name="info" size={30} color="white" />
+              <MaterialIcons name="info" size={30} color={color.textButtonGradient} />
             </LinearGradient>
           </TouchableOpacity>
         </View>
@@ -323,13 +340,13 @@ function App({ navigation }) {
           onPress={searchBtn}
         >
           <LinearGradient
-            colors={["#18bc9c", "#128f76"]}
+            colors={color.buttonGradient}
             style={[styles.button, { padding: 10 }]}
           >
             {loadingData ? (
-              <ActivityIndicator size="large" color="white" />
+              <ActivityIndicator size="large" color={color.textButtonGradient} />
             ) : (
-              <MaterialIcons name="search" size={40} color="white" />
+              <MaterialIcons name="search" size={40} color={color.textButtonGradient} />
             )}
           </LinearGradient>
         </TouchableOpacity>

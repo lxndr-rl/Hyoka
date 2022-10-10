@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useState } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import {
   StyleSheet,
@@ -123,7 +123,7 @@ function Card({
           animationType="fade"
           transparent
           visible={modalVisible}
-          onRequestClose={useCallback(() => setModalVisible(!modalVisible))}
+          onRequestClose={() => setModalVisible(!modalVisible)}
         >
           <View
             style={[
@@ -175,7 +175,7 @@ function Card({
 
               <TouchableOpacity
                 style={[styles.button, styles.buttonClose]}
-                onPress={useCallback(() => setModalVisible(!modalVisible))}
+                onPress={() => setModalVisible(!modalVisible)}
               >
                 <Text style={styles.textStyle}>Cerrar</Text>
               </TouchableOpacity>
@@ -208,14 +208,14 @@ function Card({
             style={{
               flex: 2,
             }}
-            onPress={useCallback(() => {
+            onPress={() => {
               setModalVisible(true);
               setDesglose({
                 aa: aa1,
                 ap: ap1,
                 ac: ac1,
               });
-            })}
+            }}
           >
             <Text style={styles.cardTextSection2}>
               {primero}
@@ -233,14 +233,14 @@ function Card({
             style={{
               flex: 2,
             }}
-            onPress={useCallback(() => {
+            onPress={() => {
               setModalVisible(true);
               setDesglose({
                 aa: aa2,
                 ap: ap2,
                 ac: ac2,
               });
-            })}
+            }}
           >
             <Text style={styles.cardTextSection2}>
               {segundo}

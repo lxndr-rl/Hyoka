@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React from "react";
 import Modal, {
   ModalTitle,
   ModalContent,
@@ -47,7 +47,7 @@ function ErrorAlert({ errorContent, setErrorContent }) {
           <ModalButton
             style={{ backgroundColor: "#2b2b2b" }}
             text="Aceptar"
-            onPress={useCallback(() => setErrorContent({ ...errorContent, visible: false }))}
+            onPress={() => setErrorContent({ ...errorContent, visible: false })}
           />
           {errorContent.buttons ? (
             errorContent.buttons.map((button) => (
@@ -58,7 +58,7 @@ function ErrorAlert({ errorContent, setErrorContent }) {
                 }}
                 textStyle={{ color: button.colortext || "white" }}
                 text={button.text}
-                onPress={useCallback(() => {
+                onPress={() => {
                   if (isURL(button.url)) {
                     // eslint-disable-next-line no-unused-expressions
                     Platform.OS === "web"
@@ -67,7 +67,7 @@ function ErrorAlert({ errorContent, setErrorContent }) {
                   } else {
                     setErrorContent({ ...errorContent, visible: false });
                   }
-                })}
+                }}
               />
             ))
           ) : (

@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
     padding: 35,
     alignItems: "center",
     shadowColor: "#000",
-    height: "auto",
+    height: Platform.OS === "web" ? "50%" : "100%",
     width: "auto",
     shadowOffset: {
       width: 0,
@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5,
-    maxHeight: Dimensions.get("window").height * 0.8,
+    maxHeight: Dimensions.get("window").height - 30,
   },
   input: {
     width: phoneWidth - 70,
@@ -148,25 +148,26 @@ function InputHistory({ value, onChange, onFinish }) {
   };
 
   return (
-    <TouchableWithoutFeedback
-      onPress={Keyboard.dismiss}
-      disabled={Platform.OS === "web"}
-    >
-      <View>
-        <KeyboardAvoidingView
-          behavior={Platform.OS === "ios" ? "padding" : "height"}
-          style={styles.container}
+
+    <View>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={styles.container}
+      >
+        <TouchableOpacity onPress={() => setVisible(true)} style={styles.input}>
+          <Text style={[styles.inputText, { color: value ? "black" : "gray" }]}>
+            {value || "Cédula o Apellidos Nombres"}
+          </Text>
+        </TouchableOpacity>
+        <Modal
+          animationType="fade"
+          transparent
+          visible={visible}
+          onRequestClose={() => setVisible(false)}
         >
-          <TouchableOpacity onPress={() => setVisible(true)} style={styles.input}>
-            <Text style={[styles.inputText, { color: value ? "black" : "gray" }]}>
-              {value || "Cédula o Apellidos Nombres"}
-            </Text>
-          </TouchableOpacity>
-          <Modal
-            animationType="fade"
-            transparent
-            visible={visible}
-            onRequestClose={() => setVisible(false)}
+          <TouchableWithoutFeedback
+            onPress={Keyboard.dismiss}
+            disabled={Platform.OS === "web"}
           >
             <View style={styles.modalContent}>
               <View style={styles.buttons}>
@@ -182,6 +183,7 @@ function InputHistory({ value, onChange, onFinish }) {
                   style={styles.input}
                   placeholder="Cédula o Apellidos Nombres"
                   onChangeText={handleText}
+                  autoFocus
                   placeholderTextColor="gray"
                 />
                 <TouchableOpacity onPress={clearHistory} style={{ marginLeft: 10 }}>
@@ -190,6 +192,7 @@ function InputHistory({ value, onChange, onFinish }) {
               </View>
               <ScrollView
                 style={styles.items}
+                showsVerticalScrollIndicator={false}
               >
                 <View style={[styles.items, { justifyContent: "space-between" }]}>
                   {history ? history.map((item) => (
@@ -247,10 +250,10 @@ function InputHistory({ value, onChange, onFinish }) {
                 </TouchableOpacity>
               </View>
             </View>
-          </Modal>
-        </KeyboardAvoidingView>
-      </View>
-    </TouchableWithoutFeedback>
+          </TouchableWithoutFeedback>
+        </Modal>
+      </KeyboardAvoidingView>
+    </View>
   );
 }
 

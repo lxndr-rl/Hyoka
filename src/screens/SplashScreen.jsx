@@ -8,11 +8,12 @@ import {
   Platform,
   Text,
 } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import "react-native-gesture-handler";
 import AppIntroSlider from "react-native-app-intro-slider";
 import { NavigationContainer } from "@react-navigation/native";
 import { ModalPortal } from "react-native-modals";
 import HomeScreen from "../components/StackNavigator";
+import { getValueWithKey, setValueWithKey } from "../util";
 
 const phoneWidth = Dimensions.get("window").width;
 
@@ -93,13 +94,43 @@ function SplashScreen() {
   const [firstRun, setFirstRun] = useState();
 
   useEffect(() => {
+    setValueWithKey(
+      "@availableColors",
+      JSON.stringify([
+        {
+          name: "Tema 1",
+          bgColor: "#000000",
+          headerColor: "#000000",
+          headerTextColor: "#ffffff",
+          textColor: "#ffffff",
+          highlightColor: "#FF0063",
+          borderColor: "#C93384",
+          buttonGradient: ["#11998e", "#11997f"],
+          textButtonGradient: "#ffffff",
+          isDarkHeader: true,
+        },
+        {
+          name: "Tema 2",
+          bgColor: "#ff97d9",
+          headerColor: "#ff69b4",
+          headerTextColor: "#ffffff",
+          textColor: "#ffffff",
+          highlightColor: "#FF0063",
+          borderColor: "#C93384",
+          buttonGradient: ["#f953c6", "#ef32d9"],
+          textButtonGradient: "#ffffff",
+          isDarkHeader: false,
+        },
+      ]),
+    );
     (async () => {
-      await AsyncStorage.getItem("@alreadyLaunched").then((value) => {
-        if (value === null) {
-          AsyncStorage.setItem("@alreadyLaunched", JSON.stringify(true));
-          setFirstRun(true);
-        } else {
+      await getValueWithKey("@firstRun").then((value) => {
+        if (value) {
           setFirstRun(false);
+        } else {
+          setFirstRun(true);
+          setValueWithKey("@selectedColor", "0");
+          setValueWithKey("@firstRun", "false");
         }
       });
       if (Platform.OS === "web") setFirstRun(false);

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   ScrollView,
@@ -12,7 +12,7 @@ import {
 } from "react-native";
 import ModalSelector from "react-native-modal-selector";
 import Card from "../components/CardView";
-import deviceInfo from "../util/deviceInfo";
+import { deviceInfo } from "../util";
 import ErrorAlert from "../components/ErrorAlert";
 
 let data = [];
@@ -81,7 +81,7 @@ function ShowDataScreen({ route, navigation }) {
     }
   }, []);
 
-  const toggleSwitch = useCallback(() => setIsPromedio((previousState) => !previousState));
+  const toggleSwitch = () => setIsPromedio((previousState) => !previousState);
 
   const FetchAPI = (anioLectivo) => {
     if (!anioLectivo) return;
@@ -175,11 +175,11 @@ function ShowDataScreen({ route, navigation }) {
           style={{ width: 200, alignSelf: "center" }}
           backdropPressToClose
           initValue={anioLect ?? route.params.data.aniosLect[0]}
-          onChange={useCallback((option) => {
+          onChange={(option) => {
             setAnioLect(option.label);
             FetchAPI(option.label);
             Keyboard.dismiss();
-          })}
+          }}
           cancelText="Cerrar"
         />
         <Text style={styles.title}>Semestre</Text>

@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React from "react";
 import Modal, {
   ModalTitle,
   ModalContent,
@@ -7,6 +7,7 @@ import Modal, {
   ScaleAnimation,
 } from "react-native-modals";
 import { Text, Linking, Platform } from "react-native";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 function InformationDialog({ popupVisible, setPopupVisible }) {
   return (
@@ -31,26 +32,26 @@ function InformationDialog({ popupVisible, setPopupVisible }) {
             style={{ backgroundColor: "#2b2b2b" }}
             text="Ver código fuente"
             textStyle={{ color: "#31AA84" }}
-            onPress={useCallback(() => (Platform.OS === "web"
+            onPress={() => (Platform.OS === "web"
               ? window.open("https://github.com/lxndr-rl/Hyoka", "_blank")
-              : Linking.openURL("https://github.com/lxndr-rl/Hyoka")))}
+              : Linking.openURL("https://github.com/lxndr-rl/Hyoka"))}
           />
           <ModalButton
             style={{ backgroundColor: "#2b2b2b" }}
             text="Bug Tracker"
             textStyle={{ color: "#CC5500" }}
-            onPress={useCallback(() => (Platform.OS === "web"
+            onPress={() => (Platform.OS === "web"
               ? window.open(
                 "https://github.com/lxndr-rl/Hyoka/issues/",
                 "_blank",
               )
-              : Linking.openURL("https://github.com/lxndr-rl/Hyoka/issues/")))}
+              : Linking.openURL("https://github.com/lxndr-rl/Hyoka/issues/"))}
           />
           <ModalButton
             style={{ backgroundColor: "#2b2b2b" }}
             textStyle={{ color: "#D22B2B" }}
             text="Cerrar"
-            onPress={useCallback(() => setPopupVisible(false))}
+            onPress={() => setPopupVisible(false)}
           />
           <Text
             style={{
@@ -59,7 +60,7 @@ function InformationDialog({ popupVisible, setPopupVisible }) {
               backgroundColor: "#2b2b2b",
             }}
           >
-            lxndr
+            by lxndr
           </Text>
         </ModalFooter>
       )}
@@ -72,10 +73,32 @@ function InformationDialog({ popupVisible, setPopupVisible }) {
             backgroundColor: "#2b2b2b",
           }}
         >
-          Esta aplicación fue hecha de forma independiente y es de código
+          Esta aplicación está hecha de forma independiente y es de código
           abierto.
           {"\n\n"}
           NO asociada a la Universidad Agraria del Ecuador.
+          {"\n\n\n"}
+          Icono de la aplicación:
+          {" "}
+          {Platform.OS === "web" ? (
+            <TouchableOpacity onPress={() => (Platform.OS === "web"
+              ? window.open("https://icons8.com", "_blank")
+              : Linking.openURL("https://icons8.com"))}
+            >
+              <Text
+                style={{ color: "#fdcccd" }}
+              >
+                Ithan
+              </Text>
+            </TouchableOpacity>
+          ) : (
+            <Text
+              style={{ color: "#fdcccd" }}
+              onPress={() => Linking.openURL("https://icons8.com")}
+            >
+              Ithan
+            </Text>
+          )}
         </Text>
       </ModalContent>
     </Modal>
