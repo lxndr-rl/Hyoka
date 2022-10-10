@@ -2,7 +2,7 @@
   "expo": {
     "name": "Hyoka",
     "slug": "Hyoka",
-    "version": "2.0.0",
+    "version": "2.0.1",
     "orientation": "portrait",
     "icon": "./src/assets/icon.png",
     "splash": {
@@ -11,7 +11,8 @@
       "backgroundColor": "#ffdbe5"
     },
     "updates": {
-      "fallbackToCacheTimeout": 0
+      "fallbackToCacheTimeout": 0,
+      "url": "https://u.expo.dev/dbc2105d-b10d-4fb1-987e-f64da8427c55"
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
@@ -30,6 +31,14 @@
     },
     "web": {
       "favicon": "./src/assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "dbc2105d-b10d-4fb1-987e-f64da8427c55"
+      }
+    },
+    "runtimeVersion": {
+      "policy": "sdkVersion"
     }
   }
 }

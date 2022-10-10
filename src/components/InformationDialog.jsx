@@ -82,8 +82,8 @@ function InformationDialog({ popupVisible, setPopupVisible }) {
           {" "}
           {Platform.OS === "web" ? (
             <TouchableOpacity onPress={() => (Platform.OS === "web"
-              ? window.open("https://icons8.com", "_blank")
-              : Linking.openURL("https://icons8.com"))}
+              ? window.open("https://www.instagram.com/ithan211/", "_blank")
+              : Linking.openURL("https://www.instagram.com/ithan211/"))}
             >
               <Text
                 style={{ color: "#E6AE82" }}
@@ -94,7 +94,7 @@ function InformationDialog({ popupVisible, setPopupVisible }) {
           ) : (
             <Text
               style={{ color: "#E6AE82" }}
-              onPress={() => Linking.openURL("https://icons8.com")}
+              onPress={() => Linking.openURL("https://www.instagram.com/ithan211/")}
             >
               Ithan
             </Text>
