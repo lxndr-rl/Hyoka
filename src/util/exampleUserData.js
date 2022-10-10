@@ -1,5 +1,5 @@
 const exampleUserData = {
-  name: `Nombre de Prueba`,
+  name: "Nombre de Prueba",
   data: JSON.stringify({
     error: false,
     aniosLect: ["2021-2022"],
