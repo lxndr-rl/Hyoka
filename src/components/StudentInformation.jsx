@@ -27,21 +27,21 @@ function StudentInformation({
       }
       modalTitle={(
         <ModalTitle
-          style={{ backgroundColor: "#2b2b2b" }}
-          textStyle={{ color: "white", fontWeight: "bold", fontSize: 20 }}
+          style={{ backgroundColor: "rgba(254, 238, 239, .7))" }}
+          textStyle={{ color: "#8f6960", fontWeight: "bold", fontSize: 20 }}
           title="Estudiante encontrado"
         />
       )}
       footer={(
-        <ModalFooter style={{ backgroundColor: "#2b2b2b" }}>
+        <ModalFooter style={{ backgroundColor: "rgba(254, 238, 239, .7))" }}>
           <ModalButton
-            style={{ backgroundColor: "#2b2b2b" }}
+            style={{ backgroundColor: "rgba(254, 238, 239, .7))" }}
             textStyle={{ color: "#D22B2B" }}
             text="Cancelar"
             onPress={() => setFoundVisible(false)}
           />
           <ModalButton
-            style={{ backgroundColor: "#2b2b2b" }}
+            style={{ backgroundColor: "rgba(254, 238, 239, .7))" }}
             textStyle={{ color: "#31AA84" }}
             text="Continuar"
             onPress={() => {
@@ -56,12 +56,12 @@ function StudentInformation({
         </ModalFooter>
       )}
     >
-      <ModalContent style={{ backgroundColor: "#2b2b2b" }}>
+      <ModalContent style={{ backgroundColor: "rgba(254, 238, 239, .7))" }}>
         <Text
           style={{
             fontSize: 18,
-            color: "white",
-            backgroundColor: "#2b2b2b",
+            color: "#8f6960",
+            backgroundColor: "rgba(254, 238, 239, .7))",
           }}
         >
           <Text style={{ fontWeight: "bold", fontSize: 18 }}>Nombres:</Text>

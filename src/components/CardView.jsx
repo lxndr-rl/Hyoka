@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
   },
   cardTextSection1: {
     flex: 2,
-    color: "#a2a2a2",
+    color: "#8f6960",
     padding: 8,
     alignSelf: "stretch",
     justifyContent: "center",
@@ -50,7 +50,7 @@ const styles = StyleSheet.create({
   },
   cardTextSection2: {
     flex: 2,
-    color: "#81d4fa",
+    color: "white",
     padding: 8,
     alignSelf: "stretch",
     justifyContent: "center",
@@ -60,7 +60,7 @@ const styles = StyleSheet.create({
   modalTitle: {
     fontSize: 20,
     fontWeight: "bold",
-    color: "white",
+    color: "#8f6960",
     alignSelf: "center",
     marginBottom: 20,
   },
@@ -73,7 +73,7 @@ const styles = StyleSheet.create({
   },
   modalView: {
     margin: 20,
-    backgroundColor: "#2b2b2b",
+    backgroundColor: "rgba(254, 238, 239, .9)",
     borderRadius: 20,
     padding: 35,
     alignItems: "center",
@@ -92,7 +92,7 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   buttonClose: {
-    backgroundColor: "#2196F3",
+    backgroundColor: "#E94057",
   },
   textStyle: {
     color: "white",
@@ -100,7 +100,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   modalText: {
-    color: "white",
+    color: "#8f6960",
     marginBottom: 15,
     textAlign: "center",
   },
@@ -111,7 +111,7 @@ function Card({
 }) {
   const [modalVisible, setModalVisible] = useState(false);
   const [desglose, setDesglose] = useState({ aa: "-", ap: "-", ac: "-" });
-  const colors = [["#2b2b2b", "#2b2b2b"]];
+  const colors = [["#ff809d", "#f8b0c0"]];
   const showIcon = materia !== "PROMEDIOS TOTALES";
   if (isParcial) {
     return (
@@ -128,7 +128,7 @@ function Card({
           <View
             style={[
               styles.centeredView,
-              { backgroundColor: "rgba(0,0,0,0.9)" },
+              { backgroundColor: "transparent" },
             ]}
           >
             <View style={styles.modalView}>

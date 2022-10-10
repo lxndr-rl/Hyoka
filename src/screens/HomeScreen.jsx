@@ -11,23 +11,22 @@ import {
   KeyboardAvoidingView,
   Keyboard,
   ActivityIndicator,
+  ImageBackground,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { MaterialIcons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { deviceInfo, getActualColor } from "../util";
-// import exampleUserData from "../util/exampleUserData";
+import exampleUserData from "../util/exampleUserData";
 import InformationDialog from "../components/InformationDialog";
 import ErrorAlert from "../components/ErrorAlert";
 import StudentInformation from "../components/StudentInformation";
 import InputHistory from "../components/InputHistory";
 
-const phoneWidth = Platform.OS === "web"
-  ? Dimensions.get("window").width < 800
-    ? Dimensions.get("window").width - 100
-    : 350
-  : Dimensions.get("window").width - 100;
+const phoneWidth = Dimensions.get("window").width < 800
+  ? Dimensions.get("window").width - 100
+  : 350;
 
 const styles = StyleSheet.create({
   container: {
@@ -116,13 +115,13 @@ function App({ navigation }) {
   };
 
   useEffect(() => {
-    /* if (__DEV__) {
+    if (__DEV__) {
       navigation.navigate("Notas", {
         name: exampleUserData.name,
         data: JSON.parse(exampleUserData.data),
         cedula: exampleUserData.cedula,
       });
-    } */
+    }
     (async () => {
       await getActualColor().then((colore) => {
         if (colore) {
@@ -275,82 +274,113 @@ function App({ navigation }) {
   };
 
   return color && (
-    <SafeAreaView style={{ flex: 1, backgroundColor: color.bgColor }}>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={[styles.container, { backgroundColor: color.bgColor }]}
+    <SafeAreaView style={{ flex: 1 }}>
+      <LinearGradient
+        colors={["#feeeef", "#ffdbe5"]}
+        style={{
+          left: 0,
+          right: 0,
+          top: 0,
+          height: "100%",
+          width: "100%",
+        }}
       >
-        <StatusBar style={color.isDarkHeader ? "light" : "dark"} />
-        <View
+        <ImageBackground
+          source={require("../assets/sakura.png")}
           style={{
-            alignSelf: "center",
+            position: "absolute",
             flexDirection: "row",
-            marginTop: 50,
+            height: "100%",
+            width: "100%",
           }}
+          imageStyle={{ opacity: 0.1 }}
+          resizeMode="contain"
         >
-          <Text style={{ color: color.textColor, fontSize: 30, fontWeight: "bold" }}>
-            Consulta de Notas
-          </Text>
-          <TouchableOpacity
-            onPress={() => {
-              setPopupVisible(true);
-              Keyboard.dismiss();
-            }}
-            style={styles.buttonInfoCont}
+
+          <KeyboardAvoidingView
+            behavior={Platform.OS === "ios" ? "padding" : "height"}
+            style={[styles.container, { backgroundColor: "transparent" }]}
           >
-            <LinearGradient
-              colors={color.buttonGradient}
-              style={styles.buttonInfo}
+            <StatusBar style={color.isDarkHeader ? "light" : "dark"} />
+            <View
+              style={{
+                alignSelf: "center",
+                flexDirection: "row",
+                marginTop: 50,
+              }}
             >
-              <MaterialIcons name="info" size={30} color={color.textButtonGradient} />
-            </LinearGradient>
-          </TouchableOpacity>
-        </View>
-        <Image
-          style={styles.tinyLogo}
-          source={require("../assets/uaeLOGO.png")}
-        />
-        <ErrorAlert
-          errorContent={errorContent}
-          setErrorContent={setErrorContent}
-        />
-        <InformationDialog
-          popupVisible={popupVisible}
-          setPopupVisible={setPopupVisible}
-        />
-        <StudentInformation
-          foundVisible={foundVisible}
-          setFoundVisible={setFoundVisible}
-          apiData={apiData}
-          navigation={navigation}
-          studentData={studentData}
-          textCedula={textCedula}
-        />
-        <View style={{ paddingBottom: 10 }}>
-          <InputHistory
-            value={textInput}
-            onChange={setTextInput}
-            onFinish={searchBtn}
-            style={styles.input}
-          />
-        </View>
-        <TouchableOpacity
-          style={styles.button}
-          disabled={searchButton}
-          onPress={searchBtn}
-        >
-          <LinearGradient
-            colors={color.buttonGradient}
-            style={[styles.button, { padding: 10 }]}
-          >
-            {loadingData ? (
-              <ActivityIndicator size="large" color={color.textButtonGradient} />
-            ) : (
-              <MaterialIcons name="search" size={40} color={color.textButtonGradient} />
-            )}
-          </LinearGradient>
-        </TouchableOpacity>
-      </KeyboardAvoidingView>
+              <Text style={{
+                color: color.textColor, fontSize: 30, fontWeight: "bold",
+              }}
+              >
+                Consulta De Notas
+              </Text>
+              <TouchableOpacity
+                onPress={() => {
+                  setPopupVisible(true);
+                  Keyboard.dismiss();
+                }}
+                style={styles.buttonInfoCont}
+              >
+                <LinearGradient
+                  colors={color.buttonGradient}
+                  style={styles.buttonInfo}
+                >
+                  <MaterialIcons name="info" size={30} color={color.textButtonGradient} />
+                </LinearGradient>
+              </TouchableOpacity>
+            </View>
+            <Image
+              style={styles.tinyLogo}
+              source={require("../assets/uaeLOGO.png")}
+            />
+            <ErrorAlert
+              errorContent={errorContent}
+              setErrorContent={setErrorContent}
+            />
+            <InformationDialog
+              popupVisible={popupVisible}
+              setPopupVisible={setPopupVisible}
+            />
+            <StudentInformation
+              foundVisible={foundVisible}
+              setFoundVisible={setFoundVisible}
+              apiData={apiData}
+              navigation={navigation}
+              studentData={studentData}
+              textCedula={textCedula}
+            />
+            <View style={{ paddingBottom: 10 }}>
+              <InputHistory
+                value={textInput}
+                onChange={setTextInput}
+                onFinish={searchBtn}
+                style={styles.input}
+                colorsGradient={color.itemGradient}
+                colorsGradientOk={color.buttonGradient}
+                colorsGradientCancel={["#B24592", "#F15F79"]}
+              />
+            </View>
+            <TouchableOpacity
+              style={styles.button}
+              disabled={searchButton}
+              onPress={searchBtn}
+            >
+              <LinearGradient
+                colors={color.buttonGradient}
+                style={[styles.button, { padding: 10 }]}
+              >
+                {loadingData ? (
+                  <ActivityIndicator size="large" color={color.textButtonGradient} />
+                ) : (
+                  <MaterialIcons name="search" size={40} color={color.textButtonGradient} />
+                )}
+              </LinearGradient>
+            </TouchableOpacity>
+          </KeyboardAvoidingView>
+        </ImageBackground>
+
+      </LinearGradient>
     </SafeAreaView>
   );
 }

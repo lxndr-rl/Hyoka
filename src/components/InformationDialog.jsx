@@ -21,15 +21,15 @@ function InformationDialog({ popupVisible, setPopupVisible }) {
       }
       modalTitle={(
         <ModalTitle
-          style={{ backgroundColor: "#2b2b2b" }}
-          textStyle={{ color: "white", fontSize: 20, fontWeight: "bold" }}
+          style={{ backgroundColor: "rgba(254, 238, 239, .7))" }}
+          textStyle={{ color: "#8f6960", fontSize: 20, fontWeight: "bold" }}
           title="Información | Hyoka"
         />
       )}
       footer={(
-        <ModalFooter style={{ backgroundColor: "#2b2b2b" }}>
+        <ModalFooter style={{ backgroundColor: "rgba(254, 238, 239, .7))" }}>
           <ModalButton
-            style={{ backgroundColor: "#2b2b2b" }}
+            style={{ backgroundColor: "rgba(254, 238, 239, .7))" }}
             text="Ver código fuente"
             textStyle={{ color: "#31AA84" }}
             onPress={() => (Platform.OS === "web"
@@ -37,7 +37,7 @@ function InformationDialog({ popupVisible, setPopupVisible }) {
               : Linking.openURL("https://github.com/lxndr-rl/Hyoka"))}
           />
           <ModalButton
-            style={{ backgroundColor: "#2b2b2b" }}
+            style={{ backgroundColor: "rgba(254, 238, 239, .7))" }}
             text="Bug Tracker"
             textStyle={{ color: "#CC5500" }}
             onPress={() => (Platform.OS === "web"
@@ -48,7 +48,7 @@ function InformationDialog({ popupVisible, setPopupVisible }) {
               : Linking.openURL("https://github.com/lxndr-rl/Hyoka/issues/"))}
           />
           <ModalButton
-            style={{ backgroundColor: "#2b2b2b" }}
+            style={{ backgroundColor: "rgba(254, 238, 239, .7))" }}
             textStyle={{ color: "#D22B2B" }}
             text="Cerrar"
             onPress={() => setPopupVisible(false)}
@@ -56,8 +56,8 @@ function InformationDialog({ popupVisible, setPopupVisible }) {
           <Text
             style={{
               alignSelf: "center",
-              color: "white",
-              backgroundColor: "#2b2b2b",
+              color: "#8f6960",
+              backgroundColor: "rgba(254, 238, 239, .7))",
             }}
           >
             by lxndr
@@ -65,12 +65,12 @@ function InformationDialog({ popupVisible, setPopupVisible }) {
         </ModalFooter>
       )}
     >
-      <ModalContent style={{ backgroundColor: "#2b2b2b" }}>
+      <ModalContent style={{ backgroundColor: "rgba(254, 238, 239, .7))" }}>
         <Text
           style={{
             fontSize: 18,
-            color: "white",
-            backgroundColor: "#2b2b2b",
+            color: "#8f6960",
+            backgroundColor: "rgba(254, 238, 239, .7))",
           }}
         >
           Esta aplicación está hecha de forma independiente y es de código
@@ -78,7 +78,7 @@ function InformationDialog({ popupVisible, setPopupVisible }) {
           {"\n\n"}
           NO asociada a la Universidad Agraria del Ecuador.
           {"\n\n\n"}
-          Icono de la aplicación:
+          Ilustraciones de la aplicación:
           {" "}
           {Platform.OS === "web" ? (
             <TouchableOpacity onPress={() => (Platform.OS === "web"
@@ -86,14 +86,14 @@ function InformationDialog({ popupVisible, setPopupVisible }) {
               : Linking.openURL("https://icons8.com"))}
             >
               <Text
-                style={{ color: "#fdcccd" }}
+                style={{ color: "#E6AE82" }}
               >
                 Ithan
               </Text>
             </TouchableOpacity>
           ) : (
             <Text
-              style={{ color: "#fdcccd" }}
+              style={{ color: "#E6AE82" }}
               onPress={() => Linking.openURL("https://icons8.com")}
             >
               Ithan

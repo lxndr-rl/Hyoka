@@ -18,11 +18,9 @@ import { LinearGradient } from "expo-linear-gradient";
 import { filter } from "lodash/collection";
 import { FontAwesome } from "@expo/vector-icons";
 
-const phoneWidth = Platform.OS === "web"
-  ? Dimensions.get("window").width < 800
-    ? Dimensions.get("window").width - 100
-    : 350
-  : Dimensions.get("window").width - 100;
+const phoneWidth = Dimensions.get("window").width < 800
+  ? Dimensions.get("window").width - 100
+  : 350;
 
 const styles = StyleSheet.create({
   buttons: {
@@ -56,13 +54,13 @@ const styles = StyleSheet.create({
   },
   modalContent: {
     margin: 20,
-    backgroundColor: "rgba(20,20,20, .9))",
+    backgroundColor: "rgba(254, 238, 239, .7)",
     borderRadius: 20,
     alignSelf: "center",
     padding: 35,
     alignItems: "center",
     shadowColor: "#000",
-    height: Platform.OS === "web" ? "50%" : "100%",
+    height: Platform.OS === "web" ? "50%" : Dimensions.get("window").height < 800 ? "100%" : "30%",
     width: "auto",
     shadowOffset: {
       width: 0,
@@ -74,7 +72,7 @@ const styles = StyleSheet.create({
     maxHeight: Dimensions.get("window").height - 30,
   },
   input: {
-    width: phoneWidth - 70,
+    width: phoneWidth - 100,
     paddingRight: 10,
     paddingLeft: 10,
     height: 50,
@@ -100,10 +98,13 @@ const styles = StyleSheet.create({
   itemText: {
     fontSize: 14,
     color: "white",
+    fontWeight: "bold",
   },
 });
 
-function InputHistory({ value, onChange, onFinish }) {
+function InputHistory({
+  value, onChange, onFinish, colorsGradient, colorsGradientOk, colorsGradientCancel,
+}) {
   const [visible, setVisible] = useState(false);
   const [history, setHistory] = useState([]);
   const [fullHistory, setFullHistory] = useState([]);
@@ -186,8 +187,17 @@ function InputHistory({ value, onChange, onFinish }) {
                   autoFocus
                   placeholderTextColor="gray"
                 />
-                <TouchableOpacity onPress={clearHistory} style={{ marginLeft: 10 }}>
-                  <FontAwesome name="trash-o" size={24} color="white" />
+                <TouchableOpacity
+                  onPress={clearHistory}
+                >
+                  <LinearGradient
+                    colors={colorsGradientOk}
+                    style={[styles.button, {
+                      width: 30, height: 40, marginTop: 0, padding: 0, paddingTop: 5,
+                    }]}
+                  >
+                    <FontAwesome name="trash-o" size={24} color="white" />
+                  </LinearGradient>
                 </TouchableOpacity>
               </View>
               <ScrollView
@@ -204,7 +214,7 @@ function InputHistory({ value, onChange, onFinish }) {
                       style={styles.item}
                     >
                       <LinearGradient
-                        colors={["#11998e", "#11997f"]}
+                        colors={colorsGradient}
                         style={styles.item}
                       >
                         <Text style={styles.itemText}>
@@ -230,7 +240,7 @@ function InputHistory({ value, onChange, onFinish }) {
                   }}
                 >
                   <LinearGradient
-                    colors={["#18bc9c", "#128f76"]}
+                    colors={colorsGradientOk}
                     style={styles.button}
                   >
                     <Text style={styles.buttonText}>Buscar</Text>
@@ -242,10 +252,10 @@ function InputHistory({ value, onChange, onFinish }) {
                   }}
                 >
                   <LinearGradient
-                    colors={["#c31432", "#93291E"]}
+                    colors={colorsGradientCancel}
                     style={styles.button}
                   >
-                    <Text style={styles.buttonText}>Cerrar</Text>
+                    <Text style={styles.buttonText}>Cancelar</Text>
                   </LinearGradient>
                 </TouchableOpacity>
               </View>

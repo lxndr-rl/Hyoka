@@ -31,8 +31,8 @@ function ErrorAlert({ errorContent, setErrorContent }) {
       }
       modalTitle={(
         <ModalTitle
-          style={{ backgroundColor: "#2b2b2b" }}
-          textStyle={{ color: "white", fontWeight: "bold", fontSize: 20 }}
+          style={{ backgroundColor: "rgba(254, 238, 239, .7))" }}
+          textStyle={{ color: "#8f6960", fontWeight: "bold", fontSize: 20 }}
           title={(
             <Text>
               {errorContent.title}
@@ -43,10 +43,11 @@ function ErrorAlert({ errorContent, setErrorContent }) {
         />
       )}
       footer={(
-        <ModalFooter style={{ backgroundColor: "#2b2b2b" }}>
+        <ModalFooter style={{ backgroundColor: "rgba(254, 238, 239, .7))" }}>
           <ModalButton
-            style={{ backgroundColor: "#2b2b2b" }}
+            style={{ backgroundColor: "rgba(254, 238, 239, .7))" }}
             text="Aceptar"
+            textStyle={{ color: "#8f6960", fontWeight: "bold", fontSize: 18 }}
             onPress={() => setErrorContent({ ...errorContent, visible: false })}
           />
           {errorContent.buttons ? (
@@ -54,9 +55,9 @@ function ErrorAlert({ errorContent, setErrorContent }) {
               <ModalButton
                 key={button.id}
                 style={{
-                  backgroundColor: button.colorbackground || "#2b2b2b",
+                  backgroundColor: button.colorbackground || "rgba(254, 238, 239, .7))",
                 }}
-                textStyle={{ color: button.colortext || "white" }}
+                textStyle={{ color: button.colortext || "#8f6960" }}
                 text={button.text}
                 onPress={() => {
                   if (isURL(button.url)) {
@@ -76,12 +77,12 @@ function ErrorAlert({ errorContent, setErrorContent }) {
         </ModalFooter>
       )}
     >
-      <ModalContent style={{ backgroundColor: "#2b2b2b" }}>
+      <ModalContent style={{ backgroundColor: "rgba(254, 238, 239, .7))" }}>
         <Text
           style={{
             fontSize: 18,
-            color: "white",
-            backgroundColor: "#2b2b2b",
+            color: "#8f6960",
+            backgroundColor: "rgba(254, 238, 239, .7))",
           }}
         >
           {errorContent.message}

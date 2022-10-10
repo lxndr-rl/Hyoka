@@ -8,7 +8,6 @@ import {
   Platform,
   Text,
 } from "react-native";
-import "react-native-gesture-handler";
 import AppIntroSlider from "react-native-app-intro-slider";
 import { NavigationContainer } from "@react-navigation/native";
 import { ModalPortal } from "react-native-modals";
@@ -80,13 +79,13 @@ const slides = [
     image: require("../assets/history.png"),
     backgroundColor: "#febe29",
   },
-  {
+/*   {
     key: "s3",
     title: "Customizable",
     text: "Personaliza el color de la aplicación",
     image: require("../assets/colors.png"),
     backgroundColor: "#9120d2",
-  },
+  }, */
 ];
 
 function SplashScreen() {
@@ -98,26 +97,15 @@ function SplashScreen() {
       "@availableColors",
       JSON.stringify([
         {
-          name: "Tema 1",
+          name: "Hyoka",
           bgColor: "#000000",
           headerColor: "#000000",
           headerTextColor: "#ffffff",
-          textColor: "#ffffff",
+          textColor: "#8f6960",
           highlightColor: "#FF0063",
           borderColor: "#C93384",
-          buttonGradient: ["#11998e", "#11997f"],
-          textButtonGradient: "#ffffff",
-          isDarkHeader: true,
-        },
-        {
-          name: "Tema 2",
-          bgColor: "#ff97d9",
-          headerColor: "#ff69b4",
-          headerTextColor: "#ffffff",
-          textColor: "#ffffff",
-          highlightColor: "#FF0063",
-          borderColor: "#C93384",
-          buttonGradient: ["#f953c6", "#ef32d9"],
+          buttonGradient: ["#ff809d", "#f8b0c0"],
+          itemGradient: ["#f4c4f3", "#B993D6"],
           textButtonGradient: "#ffffff",
           isDarkHeader: false,
         },

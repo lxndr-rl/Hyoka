@@ -9,8 +9,10 @@ import {
   ActivityIndicator,
   Dimensions,
   Switch,
+  ImageBackground,
 } from "react-native";
 import ModalSelector from "react-native-modal-selector";
+import { LinearGradient } from "expo-linear-gradient";
 import Card from "../components/CardView";
 import { deviceInfo } from "../util";
 import ErrorAlert from "../components/ErrorAlert";
@@ -27,7 +29,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
-    backgroundColor: "black",
+    backgroundColor: "transparent",
     padding: 10,
     justifyContent: "center",
   },
@@ -35,7 +37,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 20,
     alignSelf: "center",
-    color: "white",
+    color: "#8f6960",
   },
 });
 
@@ -59,6 +61,10 @@ function ShowDataScreen({ route, navigation }) {
   useEffect(() => {
     navigation.setOptions({
       title: route.params.name,
+      headerStyle: {
+        backgroundColor: "#ff809d",
+      },
+      headerTintColor: "#fff",
     });
     setNotasParciales(route.params.data.parciales);
     setNotasSemestrales(route.params.data.promedios);
@@ -121,184 +127,221 @@ function ShowDataScreen({ route, navigation }) {
   };
 
   return (
-    <ScrollView
+    <LinearGradient
+      colors={["#feeeef", "#ffdbe5"]}
       style={{
-        flex: 1,
-        backgroundColor: "black",
-        padding: 10,
+        left: 0,
+        right: 0,
+        top: 0,
+        height: "100%",
+        width: "100%",
       }}
     >
-      <View style={styles.container}>
-        <ErrorAlert
-          errorContent={errorContent}
-          setErrorContent={setErrorContent}
-        />
-        <Text style={styles.title}>Año Lectivo</Text>
-        <ModalSelector
-          data={dataYear}
-          sectionTextStyle={{
-            color: "#BFBCBC",
-          }}
-          optionTextStyle={{
-            color: "lightblue",
-          }}
-          optionContainerStyle={{
-            borderRadius: 5,
-            flexShrink: 1,
-            marginBottom: 8,
-            alignSelf: "center",
-            width: phoneWidth - 50,
-            padding: 8,
-            backgroundColor: "#171717",
-          }}
-          cancelStyle={{
-            borderRadius: 5,
-            backgroundColor: "#171717",
-            width: phoneWidth - 50,
-            padding: 8,
-          }}
-          cancelTextStyle={{
-            textAlign: "center",
-            color: "#D22B2B",
-            alignSelf: "center",
-            fontSize: 16,
-          }}
-          cancelContainerStyle={{
-            width: phoneWidth - 50,
-            alignSelf: "center",
-          }}
-          optionStyle={{
-            padding: 8,
-            borderBottomWidth: 1,
-            borderBottomColor: "#818181",
-          }}
-          style={{ width: 200, alignSelf: "center" }}
-          backdropPressToClose
-          initValue={anioLect ?? route.params.data.aniosLect[0]}
-          onChange={(option) => {
-            setAnioLect(option.label);
-            FetchAPI(option.label);
-            Keyboard.dismiss();
-          }}
-          cancelText="Cerrar"
-        />
-        <Text style={styles.title}>Semestre</Text>
-        {loading ? null : (
-          <ModalSelector
-            data={data}
-            sectionTextStyle={{
-              color: "#BFBCBC",
-            }}
-            optionTextStyle={{
-              color: "lightblue",
-            }}
-            optionContainerStyle={{
-              borderRadius: 5,
-              flexShrink: 1,
-              marginBottom: 8,
-              width: phoneWidth - 50,
-              alignSelf: "center",
-              padding: 8,
-              backgroundColor: "#171717",
-            }}
-            cancelContainerStyle={{
-              width: phoneWidth - 50,
-              alignSelf: "center",
-            }}
-            cancelStyle={{
-              borderRadius: 5,
-              backgroundColor: "#171717",
-              padding: 8,
-              width: phoneWidth - 50,
-            }}
-            cancelTextStyle={{
-              textAlign: "center",
-              color: "#D22B2B",
-              alignSelf: "center",
-              fontSize: 16,
-            }}
-            optionStyle={{
-              padding: 8,
-              borderBottomWidth: 1,
-              borderBottomColor: "#818181",
-            }}
-            style={{ width: 200, alignSelf: "center" }}
-            backdropPressToClose
-            initValue={semestres[0] ?? route.params.data.semestres[0]}
-            onChange={(option) => {
-              setInitialSemester(notasParciales[option.label]);
-              setInitialSemester2(notasSemestrales[option.label]);
-              Keyboard.dismiss();
-            }}
-            cancelText="Cerrar"
-          />
-        )}
-        <View
+      <ImageBackground
+        source={require("../assets/details.png")}
+        style={{
+          position: "absolute",
+          flexDirection: "row",
+          height: "100%",
+          width: "100%",
+        }}
+        resizeMode="cover"
+      >
+        <ScrollView
           style={{
-            flexDirection: "row",
+            flex: 1,
+            backgroundColor: "transparent",
+            padding: 10,
           }}
         >
-          <Text style={[styles.title, { fontSize: 14, marginTop: 7 }]}>
-            Notas Parciales
-          </Text>
-          <Switch
-            style={{
-              marginTop: 10,
-              marginHorizontal: 10,
-            }}
-            trackColor={{ false: "#767577", true: "#31AA84" }}
-            thumbColor={isPromedio ? "#f4f3f4" : "#f4f3f4"}
-            ios_backgroundColor="#3e3e3e"
-            onValueChange={toggleSwitch}
-            value={isPromedio}
-          />
-          <Text style={[styles.title, { fontSize: 14, marginTop: 7 }]}>
-            Notas Semestrales
-          </Text>
-        </View>
-        <Text
-          style={{
-            marginTop: 10,
-            fontSize: 12,
-            color: "white",
-            fontStyle: "italic",
-          }}
-        >
-          Nota: Pulsa una nota parcial para ver el desglose
-        </Text>
-      </View>
-      {loading ? (
-        <ActivityIndicator size="large" color="white" />
-      ) : isPromedio ? (
-        initialSemester2 ? (
-          initialSemester2.map((element) => (
-            <Card
-              key={element.materia + Math.random() * 20}
-              materia={element.materia}
-              total={element.total}
+
+          <View style={styles.container}>
+            <ErrorAlert
+              errorContent={errorContent}
+              setErrorContent={setErrorContent}
             />
-          ))
-        ) : null
-      ) : initialSemester ? (
-        initialSemester.map((element) => (
-          <Card
-            isParcial
-            key={element.materia + Math.random() * 20}
-            materia={element.materia}
-            ac1={element.ac1}
-            aa1={element.aa1}
-            ap1={element.ap1}
-            primero={element.primero}
-            ac2={element.ac2}
-            aa2={element.aa2}
-            ap2={element.ap2}
-            segundo={element.segundo}
-            recuperacion={element.recuperacion}
-            total={element.total}
-          />
-        ))
-      ) : null}
-    </ScrollView>
+            <Text style={styles.title}>Año Lectivo</Text>
+            <ModalSelector
+              animationType="fade"
+              data={dataYear}
+              sectionTextStyle={{
+                color: "#8f7960",
+                fontWeight: "bold",
+              }}
+              optionTextStyle={{
+                color: "#8f6960",
+              }}
+              optionContainerStyle={{
+                borderRadius: 5,
+                flexShrink: 1,
+                marginBottom: 8,
+                alignSelf: "center",
+                width: phoneWidth - 50,
+                padding: 8,
+                backgroundColor: "rgba(254, 238, 239, .9)",
+              }}
+              cancelStyle={{
+                borderRadius: 5,
+                backgroundColor: "rgba(254, 238, 239, .9)",
+                width: phoneWidth - 50,
+                padding: 8,
+              }}
+              cancelTextStyle={{
+                textAlign: "center",
+                color: "#D22B2B",
+                alignSelf: "center",
+                fontSize: 16,
+                fontWeight: "bold",
+              }}
+              cancelContainerStyle={{
+                width: phoneWidth - 50,
+                alignSelf: "center",
+              }}
+              optionStyle={{
+                padding: 8,
+                borderBottomWidth: 1,
+                borderBottomColor: "#fff",
+              }}
+              style={{ width: 200, alignSelf: "center" }}
+              backdropPressToClose
+              initValue={anioLect ?? route.params.data.aniosLect[0]}
+              onChange={(option) => {
+                setAnioLect(option.label);
+                FetchAPI(option.label);
+                Keyboard.dismiss();
+              }}
+              cancelText="Cerrar"
+              selectStyle={{ borderColor: "black" }}
+              selectTextStyle={{ color: "black" }}
+              initValueTextStyle={{ color: "black" }}
+            />
+            <Text style={styles.title}>Semestre</Text>
+            {loading ? null : (
+              <ModalSelector
+                animationType="fade"
+                data={data}
+                sectionTextStyle={{
+                  color: "#8f7960",
+                  fontWeight: "bold",
+                }}
+                optionTextStyle={{
+                  color: "#8f6960",
+                }}
+                optionContainerStyle={{
+                  borderRadius: 5,
+                  flexShrink: 1,
+                  marginBottom: 8,
+                  width: phoneWidth - 50,
+                  alignSelf: "center",
+                  padding: 8,
+                  backgroundColor: "rgba(254, 238, 239, .9)",
+                }}
+                cancelContainerStyle={{
+                  width: phoneWidth - 50,
+                  alignSelf: "center",
+                }}
+                cancelStyle={{
+                  borderRadius: 5,
+                  backgroundColor: "rgba(254, 238, 239, .9)",
+                  padding: 8,
+                  width: phoneWidth - 50,
+                }}
+                cancelTextStyle={{
+                  textAlign: "center",
+                  color: "#D22B2B",
+                  alignSelf: "center",
+                  fontSize: 16,
+                  fontWeight: "bold",
+                }}
+                optionStyle={{
+                  padding: 8,
+                  borderBottomWidth: 1,
+                  borderBottomColor: "#fff",
+                }}
+                style={{ width: 200, alignSelf: "center" }}
+                backdropPressToClose
+                initValue={semestres[0] ?? route.params.data.semestres[0]}
+                onChange={(option) => {
+                  setInitialSemester(notasParciales[option.label]);
+                  setInitialSemester2(notasSemestrales[option.label]);
+                  Keyboard.dismiss();
+                }}
+                cancelText="Cerrar"
+                selectStyle={{ borderColor: "black" }}
+                selectTextStyle={{ color: "black" }}
+                initValueTextStyle={{ color: "black" }}
+              />
+            )}
+            <View
+              style={{
+                flexDirection: "row",
+              }}
+            >
+              <Text style={[styles.title, { fontSize: 14, marginTop: 7 }]}>
+                Notas Parciales
+              </Text>
+              <Switch
+                style={{
+                  marginTop: 10,
+                  marginHorizontal: 10,
+                  color: "#D22B2B",
+                }}
+                trackColor={{ false: "#767577", true: "#ff809d" }}
+                thumbColor={isPromedio ? "#f4f3f4" : "#f4f3f4"}
+                ios_backgroundColor="#3e3e3e"
+                onValueChange={toggleSwitch}
+                value={isPromedio}
+              />
+              <Text style={[styles.title, { fontSize: 14, marginTop: 7 }]}>
+                Notas Semestrales
+              </Text>
+            </View>
+            <Text
+              style={{
+                marginTop: 10,
+                fontSize: 12,
+                color: "#8f6960",
+                fontStyle: "italic",
+              }}
+            >
+              Nota: Pulsa una nota parcial para ver el desglose
+            </Text>
+          </View>
+          {loading ? (
+            <ActivityIndicator size="large" color="#8f6960" />
+          ) : isPromedio ? (
+            initialSemester2 ? (
+              initialSemester2.map((element) => (
+                <Card
+                  key={element.materia + Math.random() * 20}
+                  materia={element.materia}
+                  total={element.total}
+                />
+              ))
+            ) : null
+          ) : initialSemester ? (
+            initialSemester.map((element) => (
+              <Card
+                isParcial
+                key={element.materia + Math.random() * 20}
+                materia={element.materia}
+                ac1={element.ac1}
+                aa1={element.aa1}
+                ap1={element.ap1}
+                primero={element.primero}
+                ac2={element.ac2}
+                aa2={element.aa2}
+                ap2={element.ap2}
+                segundo={element.segundo}
+                recuperacion={element.recuperacion}
+                total={element.total}
+              />
+            ))
+          ) : null}
+        </ScrollView>
+
+      </ImageBackground>
+    </LinearGradient>
   );
 }
 

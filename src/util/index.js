@@ -46,11 +46,15 @@ const getActualColor = async () => {
     setValueWithKey("@selectedColor", "0");
     return {
       name: "Tema 1",
-      bgColor: "#66BFBF",
-      headerColor: "#EAF6F6",
-      textColor: "#000",
+      bgColor: "#000000",
+      headerColor: "#000000",
+      headerTextColor: "#ffffff",
+      textColor: "#8f6960",
       highlightColor: "#FF0063",
-      borderColor: "#FFFFFF",
+      borderColor: "#C93384",
+      buttonGradient: ["#ff809d", "#f8b0c0"],
+      itemGradient: ["#ff808d", "#f8b8d0"],
+      textButtonGradient: "#ffffff",
       isDarkHeader: false,
     };
   } catch (e) {
