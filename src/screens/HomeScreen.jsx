@@ -18,7 +18,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { deviceInfo, getActualColor } from "../util";
-import exampleUserData from "../util/exampleUserData";
+/* import exampleUserData from "../util/exampleUserData"; */
 import InformationDialog from "../components/InformationDialog";
 import ErrorAlert from "../components/ErrorAlert";
 import StudentInformation from "../components/StudentInformation";
@@ -115,13 +115,13 @@ function App({ navigation }) {
   };
 
   useEffect(() => {
-    if (__DEV__) {
+    /*     if (__DEV__) {
       navigation.navigate("Notas", {
         name: exampleUserData.name,
         data: JSON.parse(exampleUserData.data),
         cedula: exampleUserData.cedula,
       });
-    }
+    } */
     (async () => {
       await getActualColor().then((colore) => {
         if (colore) {
