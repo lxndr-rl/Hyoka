@@ -6,8 +6,9 @@ import Modal, {
   ModalButton,
   ScaleAnimation,
 } from "react-native-modals";
-import { Text, Linking, Platform } from "react-native";
-import { TouchableOpacity } from "react-native-gesture-handler";
+import {
+  Text, Linking, Platform, TouchableOpacity,
+} from "react-native";
 
 function InformationDialog({ popupVisible, setPopupVisible }) {
   return (

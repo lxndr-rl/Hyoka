@@ -72,7 +72,7 @@ const styles = StyleSheet.create({
     maxHeight: Dimensions.get("window").height - 30,
   },
   input: {
-    width: phoneWidth - 100,
+    width: phoneWidth - 70,
     paddingRight: 10,
     paddingLeft: 10,
     height: 50,

@@ -22,7 +22,6 @@
     "@expo/webpack-config": "^0.17.0",
     "@react-native-async-storage/async-storage": "~1.17.3",
     "@react-navigation/bottom-tabs": "^6.4.0",
-    "@react-navigation/drawer": "^6.5.0",
     "@react-navigation/native": "^6.0.13",
     "@react-navigation/stack": "^6.3.2",
     "expo": "^46.0.0",
@@ -43,7 +42,6 @@
     "react-native-safe-area-context": "4.3.1",
     "react-native-screens": "~3.15.0",
     "react-native-svg": "12.3.0",
-    "react-native-timeline-flatlist": "^0.8.0",
     "react-native-web": "~0.18.7"
   },
   "devDependencies": {
