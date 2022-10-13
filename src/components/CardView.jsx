@@ -10,6 +10,7 @@ import {
   Platform,
 } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
+import RollingText from "react-native-rolling-text";
 
 const phoneWidth = Platform.OS === "web"
   ? Dimensions.get("window").width < 800
@@ -182,9 +183,9 @@ function Card({
             </View>
           </View>
         </Modal>
-        <Text numberOfLines={1} ellipsizeMode="tail" style={styles.cardTitle}>
+        <RollingText style={styles.cardTitle} durationMsPerWidth={30}>
           {materia}
-        </Text>
+        </RollingText>
         <View style={styles.cardSection}>
           <Text style={styles.cardTextSection1}>1º</Text>
           <Text style={styles.cardTextSection1}>2º</Text>

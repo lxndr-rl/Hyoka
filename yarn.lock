@@ -9290,6 +9290,11 @@ react-native-reanimated@~2.9.1:
     setimmediate "^1.0.5"
     string-hash-64 "^1.0.3"
 
+react-native-rolling-text@^0.0.2:
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/react-native-rolling-text/-/react-native-rolling-text-0.0.2.tgz#07c3118ac5afb760cdc953dd5bc3f99b8889d374"
+  integrity sha512-64Iv88fmphhLKghgzERWm8/YKT7pKyPMExeCIC/0tcyZEozdReMODcCRDbg7qPMWTgv3GFgQWhny8Kvk7f4oog==
+
 react-native-safe-area-context@4.3.1:
   version "4.3.1"
   resolved "https://registry.npmjs.org/react-native-safe-area-context/-/react-native-safe-area-context-4.3.1.tgz"
