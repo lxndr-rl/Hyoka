@@ -138,7 +138,7 @@ function ShowDataScreen({ route, navigation }) {
       }}
     >
       <ImageBackground
-        source={require("../assets/details.png")}
+        source={require("../assets/details.webp")}
         style={{
           position: "absolute",
           flexDirection: "row",

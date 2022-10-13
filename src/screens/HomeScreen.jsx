@@ -286,7 +286,7 @@ function App({ navigation }) {
         }}
       >
         <ImageBackground
-          source={require("../assets/sakura.png")}
+          source={require("../assets/sakura.webp")}
           style={{
             position: "absolute",
             flexDirection: "row",

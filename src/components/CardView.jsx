@@ -208,6 +208,7 @@ function Card({
             style={{
               flex: 2,
             }}
+            disabled={!showIcon}
             onPress={() => {
               setModalVisible(true);
               setDesglose({
@@ -233,6 +234,7 @@ function Card({
             style={{
               flex: 2,
             }}
+            disabled={!showIcon}
             onPress={() => {
               setModalVisible(true);
               setDesglose({
