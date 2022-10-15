@@ -31,7 +31,7 @@ function InformationDialog({ popupVisible, setPopupVisible }) {
         <ModalFooter style={{ backgroundColor: "rgba(254, 238, 239, .7))" }}>
           <ModalButton
             style={{ backgroundColor: "rgba(254, 238, 239, .7))" }}
-            text="Ver código fuente"
+            text="Código Fuente ↗"
             textStyle={{ color: "#31AA84" }}
             onPress={() => (Platform.OS === "web"
               ? window.open("https://github.com/lxndr-rl/Hyoka", "_blank")
@@ -39,7 +39,7 @@ function InformationDialog({ popupVisible, setPopupVisible }) {
           />
           <ModalButton
             style={{ backgroundColor: "rgba(254, 238, 239, .7))" }}
-            text="Bug Tracker"
+            text="GitHub Issues ↗"
             textStyle={{ color: "#CC5500" }}
             onPress={() => (Platform.OS === "web"
               ? window.open(
@@ -83,21 +83,21 @@ function InformationDialog({ popupVisible, setPopupVisible }) {
           {" "}
           {Platform.OS === "web" ? (
             <TouchableOpacity onPress={() => (Platform.OS === "web"
-              ? window.open("https://www.instagram.com/ithan211/", "_blank")
-              : Linking.openURL("https://www.instagram.com/ithan211/"))}
+              ? window.open("https://www.instagram.com/sta_stik/", "_blank")
+              : Linking.openURL("https://www.instagram.com/sta_stik/"))}
             >
               <Text
                 style={{ color: "#E6AE82" }}
               >
-                Ithan
+                @sta_stik
               </Text>
             </TouchableOpacity>
           ) : (
             <Text
               style={{ color: "#E6AE82" }}
-              onPress={() => Linking.openURL("https://www.instagram.com/ithan211/")}
+              onPress={() => Linking.openURL("https://www.instagram.com/sta_stik/")}
             >
-              Ithan
+              @sta_stik
             </Text>
           )}
         </Text>

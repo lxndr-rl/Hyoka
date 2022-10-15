@@ -2,11 +2,11 @@
   "expo": {
     "name": "Hyoka",
     "slug": "Hyoka",
-    "version": "2.0.2",
+    "version": "2.0.3",
     "orientation": "portrait",
-    "icon": "./src/assets/icon.webp",
+    "icon": "./src/assets/icon.png",
     "splash": {
-      "image": "./src/assets/splash.webp",
+      "image": "./src/assets/splash.png",
       "resizeMode": "cover",
       "backgroundColor": "#ffdbe5"
     },
@@ -24,7 +24,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./src/assets/adaptive-icon.webp",
+        "foregroundImage": "./src/assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
       "package": "dev.lxndr.hyoka"
@@ -39,6 +39,10 @@
     },
     "runtimeVersion": {
       "policy": "sdkVersion"
-    }
+    },
+    "plugins": [
+      ["./src/plugins/withAnimatedWebPSupport.js"],
+      ["./src/plugins/withFastImageWebPSupportIOS.js"]
+    ]
   }
 }
