@@ -11,3 +11,4 @@ web-build/
 dist/
 # macOS
 .DS_Store
+.idea
