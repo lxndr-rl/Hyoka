@@ -12,11 +12,10 @@ const withAnimatedWebPSupport = (config) => {
 
   return withGradleProperties(config, (config) => {
     config.modResults = config.modResults.filter(
-      (item) =>
-        !(
-          item.type === propertyToModify.type &&
-          item.key === propertyToModify.key
-        )
+      (item) => !(
+        item.type === propertyToModify.type
+          && item.key === propertyToModify.key
+      ),
     );
 
     config.modResults.push(propertyToModify);
@@ -28,5 +27,5 @@ const withAnimatedWebPSupport = (config) => {
 module.exports = createRunOncePlugin(
   withAnimatedWebPSupport,
   "animated-webp-support",
-  "1.0.0"
+  "1.0.0",
 );

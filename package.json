@@ -15,7 +15,8 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "eject": "expo eject",
-    "fixLint": "eslint . --ignore-path .gitignore --fix"
+    "fixLint": "eslint . --ignore-path .gitignore --fix",
+    "bweb": "set \"GENERATE_SOURCEMAP=false\" && expo export:web"
   },
   "dependencies": {
     "@expo/vector-icons": "^13.0.0",

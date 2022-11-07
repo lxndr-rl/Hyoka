@@ -26,5 +26,13 @@ module.exports = {
     "react/destructuring-assignment": "off",
     "max-len": ["error", { code: 130 }],
     "no-mixed-operators": "off",
+    "no-param-reassign": "off",
   },
+  ignorePatterns: [
+    "node_modules/",
+    "web-build/",
+    "build/",
+    "dist/",
+    "src/plugins/",
+  ],
 };
