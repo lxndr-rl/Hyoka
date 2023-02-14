@@ -27,6 +27,10 @@ module.exports = {
     "max-len": ["error", { code: 130 }],
     "no-mixed-operators": "off",
     "no-param-reassign": "off",
+    "operator-linebreak": "off",
+    "react/jsx-indent": "off",
+    "react/jsx-one-expression-per-line": "off",
+    indent: "off",
   },
   ignorePatterns: [
     "node_modules/",

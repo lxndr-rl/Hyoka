@@ -18,9 +18,10 @@ import { LinearGradient } from "expo-linear-gradient";
 import { filter } from "lodash/collection";
 import { FontAwesome } from "@expo/vector-icons";
 
-const phoneWidth = Dimensions.get("window").width < 800
-  ? Dimensions.get("window").width - 100
-  : 350;
+const phoneWidth =
+  Dimensions.get("window").width < 800
+    ? Dimensions.get("window").width - 100
+    : 350;
 
 const styles = StyleSheet.create({
   buttons: {
@@ -60,7 +61,12 @@ const styles = StyleSheet.create({
     padding: 35,
     alignItems: "center",
     shadowColor: "#000",
-    height: Platform.OS === "web" ? "50%" : Dimensions.get("window").height < 800 ? "100%" : "30%",
+    height:
+      Platform.OS === "web"
+        ? "50%"
+        : Dimensions.get("window").height < 800
+        ? "100%"
+        : "30%",
     width: "auto",
     shadowOffset: {
       width: 0,
@@ -103,11 +109,33 @@ const styles = StyleSheet.create({
 });
 
 function InputHistory({
-  value, onChange, onFinish, colorsGradient, colorsGradientOk, colorsGradientCancel,
+  value,
+  onChange,
+  onFinish,
+  colorsGradient,
+  colorsGradientOk,
+  colorsGradientCancel,
 }) {
   const [visible, setVisible] = useState(false);
   const [history, setHistory] = useState([]);
   const [fullHistory, setFullHistory] = useState([]);
+
+  const handleText = (text) => {
+    onChange(text);
+    const formattedQuery = text.toLowerCase();
+    const data = filter(fullHistory, (dat) => {
+      if (
+        dat.cedula.toLowerCase().includes(formattedQuery) ||
+        dat.nombres.toLowerCase().includes(formattedQuery) ||
+        dat.apellidos.toLowerCase().includes(formattedQuery)
+      ) {
+        return true;
+      }
+      return false;
+    });
+    setHistory(data);
+  };
+
   useEffect(() => {
     (async () => {
       const hist = await AsyncStorage.getItem("@history");
@@ -118,21 +146,12 @@ function InputHistory({
     })();
   }, []);
 
-  const handleText = (text) => {
-    onChange(text);
-    const formattedQuery = text.toLowerCase();
-    const data = filter(fullHistory, (dat) => {
-      if (
-        dat.cedula.toLowerCase().includes(formattedQuery)
-        || dat.nombres.toLowerCase().includes(formattedQuery)
-        || dat.apellidos.toLowerCase().includes(formattedQuery)
-      ) {
-        return true;
-      }
-      return false;
-    });
-    setHistory(data);
-  };
+  useEffect(() => {
+    if (visible && value) {
+      Keyboard.dismiss();
+      handleText(value);
+    }
+  }, [visible]);
 
   const refreshHistory = async () => {
     const hist = await AsyncStorage.getItem("@history");
@@ -149,7 +168,6 @@ function InputHistory({
   };
 
   return (
-
     <View>
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -187,14 +205,19 @@ function InputHistory({
                   autoFocus
                   placeholderTextColor="gray"
                 />
-                <TouchableOpacity
-                  onPress={clearHistory}
-                >
+                <TouchableOpacity onPress={clearHistory}>
                   <LinearGradient
                     colors={colorsGradientOk}
-                    style={[styles.button, {
-                      width: 30, height: 40, marginTop: 0, padding: 0, paddingTop: 5,
-                    }]}
+                    style={[
+                      styles.button,
+                      {
+                        width: 30,
+                        height: 40,
+                        marginTop: 0,
+                        padding: 0,
+                        paddingTop: 5,
+                      },
+                    ]}
                   >
                     <FontAwesome name="trash-o" size={24} color="white" />
                   </LinearGradient>
@@ -204,31 +227,29 @@ function InputHistory({
                 style={styles.items}
                 showsVerticalScrollIndicator={false}
               >
-                <View style={[styles.items, { justifyContent: "space-between" }]}>
-                  {history ? history.map((item) => (
-                    <TouchableOpacity
-                      key={item.cedula}
-                      onPress={() => {
-                        onChange(item.cedula);
-                      }}
-                      style={styles.item}
-                    >
-                      <LinearGradient
-                        colors={colorsGradient}
-                        style={styles.item}
-                      >
-                        <Text style={styles.itemText}>
-                          {item.nombres}
-                          {" "}
-                          {item.apellidos}
-                          {" "}
-                          -
-                          {" "}
-                          {item.cedula}
-                        </Text>
-                      </LinearGradient>
-                    </TouchableOpacity>
-                  )) : null}
+                <View
+                  style={[styles.items, { justifyContent: "space-between" }]}
+                >
+                  {history
+                    ? history.map((item) => (
+                        <TouchableOpacity
+                          key={item.cedula}
+                          onPress={() => {
+                            onChange(item.cedula);
+                          }}
+                          style={styles.item}
+                        >
+                          <LinearGradient
+                            colors={colorsGradient}
+                            style={styles.item}
+                          >
+                            <Text style={styles.itemText}>
+                              {item.nombres} {item.apellidos} - {item.cedula}
+                            </Text>
+                          </LinearGradient>
+                        </TouchableOpacity>
+                      ))
+                    : null}
                 </View>
               </ScrollView>
               <View style={styles.buttons}>
