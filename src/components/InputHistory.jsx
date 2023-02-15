@@ -16,7 +16,7 @@ import {
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { LinearGradient } from "expo-linear-gradient";
 import { filter } from "lodash/collection";
-import { FontAwesome } from "@expo/vector-icons";
+import { MaterialIcons } from "@expo/vector-icons";
 
 const phoneWidth =
   Dimensions.get("window").width < 800
@@ -226,7 +226,11 @@ function InputHistory({
                       },
                     ]}
                   >
-                    <FontAwesome name="trash-o" size={24} color="white" />
+                    <MaterialIcons
+                      name="delete-outline"
+                      size={24}
+                      color="white"
+                    />
                   </LinearGradient>
                 </TouchableOpacity>
               </View>
