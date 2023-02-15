@@ -6,9 +6,7 @@ import Modal, {
   ModalButton,
   ScaleAnimation,
 } from "react-native-modals";
-import {
-  Text, Linking, Platform, TouchableOpacity,
-} from "react-native";
+import { Text, Linking, Platform, TouchableOpacity } from "react-native";
 
 function InformationDialog({ popupVisible, setPopupVisible }) {
   return (
@@ -20,33 +18,37 @@ function InformationDialog({ popupVisible, setPopupVisible }) {
           useNativeDriver: false,
         })
       }
-      modalTitle={(
+      modalTitle={
         <ModalTitle
           style={{ backgroundColor: "rgba(254, 238, 239, .7))" }}
           textStyle={{ color: "#8f6960", fontSize: 20, fontWeight: "bold" }}
           title="Información | Hyoka"
         />
-      )}
-      footer={(
+      }
+      footer={
         <ModalFooter style={{ backgroundColor: "rgba(254, 238, 239, .7))" }}>
           <ModalButton
             style={{ backgroundColor: "rgba(254, 238, 239, .7))" }}
             text="Código Fuente ↗"
             textStyle={{ color: "#31AA84" }}
-            onPress={() => (Platform.OS === "web"
-              ? window.open("https://github.com/lxndr-rl/Hyoka", "_blank")
-              : Linking.openURL("https://github.com/lxndr-rl/Hyoka"))}
+            onPress={() =>
+              Platform.OS === "web"
+                ? window.open("https://github.com/lxndr-rl/Hyoka", "_blank")
+                : Linking.openURL("https://github.com/lxndr-rl/Hyoka")
+            }
           />
           <ModalButton
             style={{ backgroundColor: "rgba(254, 238, 239, .7))" }}
             text="GitHub Issues ↗"
             textStyle={{ color: "#CC5500" }}
-            onPress={() => (Platform.OS === "web"
-              ? window.open(
-                "https://github.com/lxndr-rl/Hyoka/issues/",
-                "_blank",
-              )
-              : Linking.openURL("https://github.com/lxndr-rl/Hyoka/issues/"))}
+            onPress={() =>
+              Platform.OS === "web"
+                ? window.open(
+                    "https://github.com/lxndr-rl/Hyoka/issues/",
+                    "_blank"
+                  )
+                : Linking.openURL("https://github.com/lxndr-rl/Hyoka/issues/")
+            }
           />
           <ModalButton
             style={{ backgroundColor: "rgba(254, 238, 239, .7))" }}
@@ -64,7 +66,7 @@ function InformationDialog({ popupVisible, setPopupVisible }) {
             by lxndr
           </Text>
         </ModalFooter>
-      )}
+      }
     >
       <ModalContent style={{ backgroundColor: "rgba(254, 238, 239, .7))" }}>
         <Text
@@ -79,23 +81,23 @@ function InformationDialog({ popupVisible, setPopupVisible }) {
           {"\n\n"}
           NO asociada a la Universidad Agraria del Ecuador.
           {"\n\n\n"}
-          Ilustraciones de la aplicación:
-          {" "}
+          Ilustraciones de la aplicación:{" "}
           {Platform.OS === "web" ? (
-            <TouchableOpacity onPress={() => (Platform.OS === "web"
-              ? window.open("https://www.instagram.com/sta_stik/", "_blank")
-              : Linking.openURL("https://www.instagram.com/sta_stik/"))}
+            <TouchableOpacity
+              onPress={() =>
+                Platform.OS === "web"
+                  ? window.open("https://www.instagram.com/sta_stik/", "_blank")
+                  : Linking.openURL("https://www.instagram.com/sta_stik/")
+              }
             >
-              <Text
-                style={{ color: "#E6AE82" }}
-              >
-                @sta_stik
-              </Text>
+              <Text style={{ color: "#E6AE82" }}>@sta_stik</Text>
             </TouchableOpacity>
           ) : (
             <Text
               style={{ color: "#E6AE82" }}
-              onPress={() => Linking.openURL("https://www.instagram.com/sta_stik/")}
+              onPress={() =>
+                Linking.openURL("https://www.instagram.com/sta_stik/")
+              }
             >
               @sta_stik
             </Text>

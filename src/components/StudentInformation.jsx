@@ -25,14 +25,14 @@ function StudentInformation({
           useNativeDriver: false,
         })
       }
-      modalTitle={(
+      modalTitle={
         <ModalTitle
           style={{ backgroundColor: "rgba(254, 238, 239, .7))" }}
           textStyle={{ color: "#8f6960", fontWeight: "bold", fontSize: 20 }}
           title="Estudiante encontrado"
         />
-      )}
-      footer={(
+      }
+      footer={
         <ModalFooter style={{ backgroundColor: "rgba(254, 238, 239, .7))" }}>
           <ModalButton
             style={{ backgroundColor: "rgba(254, 238, 239, .7))" }}
@@ -54,7 +54,7 @@ function StudentInformation({
             }}
           />
         </ModalFooter>
-      )}
+      }
     >
       <ModalContent style={{ backgroundColor: "rgba(254, 238, 239, .7))" }}>
         <Text
@@ -64,26 +64,20 @@ function StudentInformation({
             backgroundColor: "rgba(254, 238, 239, .7))",
           }}
         >
-          <Text style={{ fontWeight: "bold", fontSize: 18 }}>Nombres:</Text>
-          {" "}
-          {studentData.apellidos}
-          {" "}
-          {studentData.nombres}
+          <Text style={{ fontWeight: "bold", fontSize: 18 }}>Nombres:</Text>{" "}
+          {studentData.apellidos} {studentData.nombres}
           {"\n\n"}
           <Text style={{ fontWeight: "bold", fontSize: 18 }}>
             Carrera:
-          </Text>
-          {" "}
+          </Text>{" "}
           {studentData.carrera}
           {"\n\n"}
-          <Text style={{ fontWeight: "bold", fontSize: 18 }}>Sede:</Text>
-          {" "}
+          <Text style={{ fontWeight: "bold", fontSize: 18 }}>Sede:</Text>{" "}
           {studentData.sede}
           {"\n\n"}
           <Text style={{ fontWeight: "bold", fontSize: 18 }}>
             Facultad:
-          </Text>
-          {" "}
+          </Text>{" "}
           {studentData.facultad}
         </Text>
       </ModalContent>

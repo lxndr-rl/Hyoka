@@ -29,20 +29,19 @@ function ErrorAlert({ errorContent, setErrorContent }) {
           useNativeDriver: false,
         })
       }
-      modalTitle={(
+      modalTitle={
         <ModalTitle
           style={{ backgroundColor: "rgba(254, 238, 239, .7))" }}
           textStyle={{ color: "#8f6960", fontWeight: "bold", fontSize: 20 }}
-          title={(
+          title={
             <Text>
-              {errorContent.title}
-              {" "}
+              {errorContent.title}{" "}
               <MaterialIcons name="error" size={16} color="#FF416C" />
             </Text>
-          )}
+          }
         />
-      )}
-      footer={(
+      }
+      footer={
         <ModalFooter style={{ backgroundColor: "rgba(254, 238, 239, .7))" }}>
           <ModalButton
             style={{ backgroundColor: "rgba(254, 238, 239, .7))" }}
@@ -55,7 +54,8 @@ function ErrorAlert({ errorContent, setErrorContent }) {
               <ModalButton
                 key={button.id}
                 style={{
-                  backgroundColor: button.colorbackground || "rgba(254, 238, 239, .7))",
+                  backgroundColor:
+                    button.colorbackground || "rgba(254, 238, 239, .7))",
                 }}
                 textStyle={{ color: button.colortext || "#8f6960" }}
                 text={button.text}
@@ -75,7 +75,7 @@ function ErrorAlert({ errorContent, setErrorContent }) {
             <></>
           )}
         </ModalFooter>
-      )}
+      }
     >
       <ModalContent style={{ backgroundColor: "rgba(254, 238, 239, .7))" }}>
         <Text

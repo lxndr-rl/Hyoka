@@ -149,7 +149,14 @@ function InputHistory({
   useEffect(() => {
     if (visible && value) {
       Keyboard.dismiss();
-      handleText(value);
+      (async () => {
+        const hist = await AsyncStorage.getItem("@history");
+        if (hist) {
+          setHistory(JSON.parse(hist));
+          setFullHistory(JSON.parse(hist));
+        }
+        handleText(value);
+      })();
     }
   }, [visible]);
 

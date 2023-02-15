@@ -19,11 +19,12 @@ import ErrorAlert from "../components/ErrorAlert";
 
 let data = [];
 let dataYear = [];
-const phoneWidth = Platform.OS === "web"
-  ? Dimensions.get("window").width < 800
-    ? Dimensions.get("window").width
-    : Dimensions.get("window").width / 2.5
-  : Dimensions.get("window").width;
+const phoneWidth =
+  Platform.OS === "web"
+    ? Dimensions.get("window").width < 800
+      ? Dimensions.get("window").width
+      : Dimensions.get("window").width / 2.5
+    : Dimensions.get("window").width;
 
 const styles = StyleSheet.create({
   container: {
@@ -70,10 +71,10 @@ function ShowDataScreen({ route, navigation }) {
     setNotasSemestrales(route.params.data.promedios);
     setCedula(route.params.cedula);
     setInitialSemester(
-      route.params.data.parciales[route.params.data.semestres[0]],
+      route.params.data.parciales[route.params.data.semestres[0]]
     );
     setInitialSemester2(
-      route.params.data.promedios[route.params.data.semestres[0]],
+      route.params.data.promedios[route.params.data.semestres[0]]
     );
     let i = 0;
     data = [{ key: i - 1, section: true, label: "Semestre" }];
@@ -94,8 +95,8 @@ function ShowDataScreen({ route, navigation }) {
     setLoading(true);
     fetch(
       `https://api.lxndr.dev/uae/notas/v2/?cedula=${cedula}&alect=${anioLectivo}&analytics=${JSON.stringify(
-        deviceInfo,
-      )}`,
+        deviceInfo
+      )}`
     )
       .then((res) => res.json())
       .then((apiDATA) => {
@@ -154,7 +155,6 @@ function ShowDataScreen({ route, navigation }) {
             padding: 10,
           }}
         >
-
           <View style={styles.container}>
             <ErrorAlert
               errorContent={errorContent}
@@ -339,7 +339,6 @@ function ShowDataScreen({ route, navigation }) {
             ))
           ) : null}
         </ScrollView>
-
       </ImageBackground>
     </LinearGradient>
   );

@@ -30,6 +30,12 @@ module.exports = {
     "operator-linebreak": "off",
     "react/jsx-indent": "off",
     "react/jsx-one-expression-per-line": "off",
+    "comma-dangle": "off",
+    "react/jsx-wrap-multilines": "off",
+    "no-confusing-arrow": "off",
+    "implicit-arrow-linebreak": "off",
+    "react/jsx-curly-newline": "off",
+    "object-curly-newline": "off",
     indent: "off",
   },
   ignorePatterns: [

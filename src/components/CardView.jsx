@@ -12,11 +12,12 @@ import {
 import { MaterialIcons } from "@expo/vector-icons";
 import RollingText from "react-native-rolling-text";
 
-const phoneWidth = Platform.OS === "web"
-  ? Dimensions.get("window").width < 800
-    ? Dimensions.get("window").width
-    : Dimensions.get("window").width / 2.5
-  : Dimensions.get("window").width;
+const phoneWidth =
+  Platform.OS === "web"
+    ? Dimensions.get("window").width < 800
+      ? Dimensions.get("window").width
+      : Dimensions.get("window").width / 2.5
+    : Dimensions.get("window").width;
 
 const styles = StyleSheet.create({
   cardView: {
@@ -108,7 +109,18 @@ const styles = StyleSheet.create({
 });
 
 function Card({
-  materia, isParcial, aa1, ap1, ac1, primero, segundo, recuperacion, total, aa2, ap2, ac2,
+  materia,
+  isParcial,
+  aa1,
+  ap1,
+  ac1,
+  primero,
+  segundo,
+  recuperacion,
+  total,
+  aa2,
+  ap2,
+  ac2,
 }) {
   const [modalVisible, setModalVisible] = useState(false);
   const [desglose, setDesglose] = useState({ aa: "-", ap: "-", ac: "-" });
@@ -127,10 +139,7 @@ function Card({
           onRequestClose={() => setModalVisible(!modalVisible)}
         >
           <View
-            style={[
-              styles.centeredView,
-              { backgroundColor: "transparent" },
-            ]}
+            style={[styles.centeredView, { backgroundColor: "transparent" }]}
           >
             <View style={styles.modalView}>
               <Text
@@ -220,8 +229,7 @@ function Card({
             }}
           >
             <Text style={styles.cardTextSection2}>
-              {primero}
-              {" "}
+              {primero}{" "}
               {showIcon ? (
                 primero < 6 ? (
                   <MaterialIcons name="error" size={18} color="#FF416C" />
@@ -246,8 +254,7 @@ function Card({
             }}
           >
             <Text style={styles.cardTextSection2}>
-              {segundo}
-              {" "}
+              {segundo}{" "}
               {showIcon ? (
                 segundo < 6 ? (
                   <MaterialIcons name="error" size={18} color="#FF416C" />
@@ -258,8 +265,7 @@ function Card({
             </Text>
           </TouchableOpacity>
           <Text style={styles.cardTextSection2}>
-            {recuperacion}
-            {" "}
+            {recuperacion}{" "}
             {showIcon ? (
               recuperacion < 6 && total < 7 ? (
                 <MaterialIcons name="error" size={18} color="#FF416C" />
@@ -269,8 +275,7 @@ function Card({
             ) : null}
           </Text>
           <Text style={styles.cardTextSection2}>
-            {total}
-            {" "}
+            {total}{" "}
             {showIcon ? (
               total < 7 ? (
                 <MaterialIcons name="error" size={18} color="#FF416C" />
@@ -323,8 +328,7 @@ function Card({
       >
         <Text style={styles.cardTextSection1}>Nota Final: </Text>
         <Text style={styles.cardTextSection2}>
-          {total}
-          {" "}
+          {total}{" "}
           {showIcon ? (
             total < 7 ? (
               <MaterialIcons name="error" size={18} color="#FF416C" />

@@ -1,8 +1,6 @@
 import { StatusBar } from "expo-status-bar";
 import React, { useEffect, useState } from "react";
-import {
-  StyleSheet, Text, View, Image,
-} from "react-native";
+import { StyleSheet, Text, View, Image } from "react-native";
 import { getActualColor } from "../util";
 
 const styles = StyleSheet.create({

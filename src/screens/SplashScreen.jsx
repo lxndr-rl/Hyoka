@@ -79,7 +79,7 @@ const slides = [
     image: require("../assets/history.png"),
     backgroundColor: "#febe29",
   },
-/*   {
+  /*   {
     key: "s3",
     title: "Customizable",
     text: "Personaliza el color de la aplicación",
@@ -109,7 +109,7 @@ function SplashScreen() {
           textButtonGradient: "#ffffff",
           isDarkHeader: false,
         },
-      ]),
+      ])
     );
     (async () => {
       await getValueWithKey("@firstRun").then((value) => {
