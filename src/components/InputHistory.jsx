@@ -17,6 +17,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { LinearGradient } from "expo-linear-gradient";
 import { filter } from "lodash/collection";
 import { MaterialIcons } from "@expo/vector-icons";
+import Alerta from "./Alert";
 
 const phoneWidth =
   Dimensions.get("window").width < 800
@@ -169,9 +170,21 @@ function InputHistory({
   };
 
   const clearHistory = async () => {
-    await AsyncStorage.removeItem("@history");
-    setHistory([]);
-    setFullHistory([]);
+    Alerta("Borrar historial", "¿Está seguro que desea borrar el historial?", [
+      {
+        text: "Cancelar",
+        onPress: () => {},
+        style: "cancel",
+      },
+      {
+        text: "Borrar",
+        onPress: async () => {
+          await AsyncStorage.removeItem("@history");
+          setHistory([]);
+          setFullHistory([]);
+        },
+      },
+    ]);
   };
 
   return (
