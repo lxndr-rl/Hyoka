@@ -128,7 +128,8 @@ function InputHistory({
       if (
         dat.cedula.toLowerCase().includes(formattedQuery) ||
         dat.nombres.toLowerCase().includes(formattedQuery) ||
-        dat.apellidos.toLowerCase().includes(formattedQuery)
+        dat.apellidos.toLowerCase().includes(formattedQuery) ||
+        dat.completos.toLowerCase().includes(formattedQuery)
       ) {
         return true;
       }
@@ -268,7 +269,7 @@ function InputHistory({
                             style={styles.item}
                           >
                             <Text style={styles.itemText}>
-                              {item.nombres} {item.apellidos} - {item.cedula}
+                              {item.apellidos} {item.nombres} - {item.cedula}
                             </Text>
                           </LinearGradient>
                         </TouchableOpacity>

@@ -189,6 +189,7 @@ function App({ navigation }) {
             cedula: textInput,
             nombres: data.nombres.split(" ")[0],
             apellidos: data.apellidos.split(" ")[0],
+            completos: `${data.apellidos} ${data.nombres}`,
           });
           setApiData(data);
           setStudentData({
@@ -241,6 +242,7 @@ function App({ navigation }) {
                 cedula,
                 nombres: data.nombres.split(" ")[0],
                 apellidos: data.apellidos.split(" ")[0],
+                completos: `${data.apellidos} ${data.nombres}`,
               });
               setApiData(data);
               setStudentData({
