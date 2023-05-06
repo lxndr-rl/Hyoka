@@ -2,7 +2,7 @@
   "main": "index.js",
   "name": "hyoka",
   "description": "Obtener calificaciones UAE",
-  "version": "2.0.5",
+  "version": "2.0.6",
   "repository": "https://github.com/lxndr-rl/Hyoka",
   "author": {
     "name": "lxndr",

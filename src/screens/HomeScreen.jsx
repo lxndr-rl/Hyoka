@@ -124,8 +124,6 @@ function App({ navigation }) {
         cedula: exampleUserData.cedula,
       });
     } */
-    console.log("HomeScreen");
-    console.log(deviceInfo);
     (async () => {
       await getActualColor().then((colore) => {
         if (colore) {
