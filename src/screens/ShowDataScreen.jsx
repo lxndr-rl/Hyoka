@@ -94,7 +94,7 @@ function ShowDataScreen({ route, navigation }) {
     if (!anioLectivo) return;
     setLoading(true);
     fetch(
-      `https://api.lxndr.dev/uae/notas/v2/?cedula=${cedula}&alect=${anioLectivo}&analytics=${JSON.stringify(
+      `https://api.lxndr.dev/uae/notas?cedula=${cedula}&alect=${anioLectivo}&analytics=${JSON.stringify(
         deviceInfo
       )}`
     )

@@ -168,12 +168,11 @@ function App({ navigation }) {
 
   const searchBtn = async () => {
     Keyboard.dismiss();
-    if (textInput.length >= 9 && /^\d+$/.test(textInput)) {
+    if (textInput.length >= 5) {
       setLoadingData(true);
       setSearchButton(true);
-      setTextCedula(textInput);
       await fetch(
-        `https://api.lxndr.dev/uae/notas/v2/?cedula=${textInput}&analytics=${JSON.stringify(
+        `https://api.lxndr.dev/uae/notas?cedula=${textInput}&analytics=${JSON.stringify(
           deviceInfo
         )}`
       )
@@ -186,6 +185,7 @@ function App({ navigation }) {
               title: "Error",
             });
           }
+          setTextCedula(data.cedula);
           appendeUserData({
             cedula: textInput,
             nombres: data.nombres.split(" ")[0],
@@ -208,68 +208,6 @@ function App({ navigation }) {
             message: `Error de conexión. Más información: \n${err.message}`,
             title: "Error",
           });
-        });
-      setLoadingData(null);
-      setSearchButton(false);
-    } else if (textInput.length > 5 && !/^\d+$/.test(textInput)) {
-      setLoadingData(true);
-      setSearchButton(true);
-      await fetch(`https://api.lxndr.dev/util/cedula?nombres=${textInput}`)
-        .then((res) => res.json())
-        .then(async (dataC) => {
-          let cedula = dataC[0].identificacion;
-          if (dataC[0].tipoIdentificacion === "R") {
-            cedula = dataC[0].identificacion.substring(
-              0,
-              dataC[0].identificacion.length - 3
-            );
-          }
-          setTextCedula(cedula);
-          await fetch(
-            `https://api.lxndr.dev/uae/notas/v2/?cedula=${cedula}&analytics=${JSON.stringify(
-              deviceInfo
-            )}`
-          )
-            .then((res) => res.json())
-            .then((data) => {
-              if (data.error) {
-                return setErrorContent({
-                  visible: true,
-                  message: data.message,
-                  title: "Error",
-                });
-              }
-              appendeUserData({
-                cedula,
-                nombres: data.nombres.split(" ")[0],
-                apellidos: data.apellidos.split(" ")[0],
-                completos: `${data.apellidos} ${data.nombres}`,
-              });
-              setApiData(data);
-              setStudentData({
-                nombres: data.nombres,
-                apellidos: data.apellidos,
-                carrera: data.carrera,
-                facultad: data.facultad,
-                sede: data.sede,
-              });
-              setFoundVisible(true);
-            })
-            .catch((err) => {
-              setErrorContent({
-                visible: true,
-                message: `Error de conexión. Más información: \n${err.message}`,
-                title: "Error",
-              });
-            });
-        })
-        .catch((err) => {
-          setErrorContent({
-            visible: true,
-            message: `No se encontró ningún estudiante con ese nombre.\n${textInput}`,
-            title: "Error",
-          });
-          throw new Error(err);
         });
       setLoadingData(null);
       setSearchButton(false);
