@@ -14,7 +14,7 @@ import {
 import ModalSelector from "react-native-modal-selector";
 import { LinearGradient } from "expo-linear-gradient";
 import Card from "../components/CardView";
-import { deviceInfo } from "../util";
+import deviceInfo from "../util/deviceInfo";
 import ErrorAlert from "../components/ErrorAlert";
 
 let data = [];

@@ -1,5 +1,4 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import * as Device from "expo-device";
 
 /**
  *
@@ -78,25 +77,4 @@ const removeValueWithKey = async (key) => {
   return false;
 };
 
-const deviceInfo = () => {
-  const keys = [
-    "osName",
-    "osVersion",
-    "modelName",
-    "deviceName",
-    "manufacturer",
-  ];
-  const data = {};
-  for (let i = 0; i < keys.length; i += 1) {
-    data[keys[i]] = Device[keys[i]];
-  }
-  return data;
-};
-
-export {
-  getValueWithKey,
-  setValueWithKey,
-  removeValueWithKey,
-  getActualColor,
-  deviceInfo,
-};
+export { getValueWithKey, setValueWithKey, removeValueWithKey, getActualColor };

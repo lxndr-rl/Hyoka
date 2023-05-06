@@ -17,12 +17,13 @@ import { StatusBar } from "expo-status-bar";
 import { MaterialIcons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { deviceInfo, getActualColor } from "../util";
+import { getActualColor } from "../util";
 /* import exampleUserData from "../util/exampleUserData"; */
 import InformationDialog from "../components/InformationDialog";
 import ErrorAlert from "../components/ErrorAlert";
 import StudentInformation from "../components/StudentInformation";
 import InputHistory from "../components/InputHistory";
+import deviceInfo from "../util/deviceInfo";
 
 const phoneWidth =
   Dimensions.get("window").width < 800
@@ -123,6 +124,8 @@ function App({ navigation }) {
         cedula: exampleUserData.cedula,
       });
     } */
+    console.log("HomeScreen");
+    console.log(deviceInfo);
     (async () => {
       await getActualColor().then((colore) => {
         if (colore) {
