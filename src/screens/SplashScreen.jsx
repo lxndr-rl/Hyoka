@@ -14,7 +14,7 @@ import { ModalPortal } from "react-native-modals";
 import HomeScreen from "../components/StackNavigator";
 import { getValueWithKey, setValueWithKey } from "../util";
 
-const phoneWidth = Dimensions.get("window").width;
+const windowWidth = Dimensions.get("window").width;
 
 const styles = StyleSheet.create({
   container: {
@@ -26,8 +26,8 @@ const styles = StyleSheet.create({
   image: {
     flex: 1,
     position: "absolute",
-    width: phoneWidth,
-    height: phoneWidth - 200,
+    width: windowWidth,
+    height: windowWidth - 200,
   },
   containerWelc: {
     flex: 1,
@@ -88,65 +88,46 @@ const slides = [
   }, */
 ];
 
+function RenderItem({ item }) {
+  return (
+    <View
+      style={{
+        flex: 1,
+        backgroundColor: item.backgroundColor,
+        alignItems: "center",
+        justifyContent: "space-around",
+        paddingBottom: 100,
+      }}
+    >
+      <StatusBar
+        translucent
+        backgroundColor="transparent"
+        barStyle="light-content"
+      />
+      <Text style={styles.introTitleStyle}>{item.title}</Text>
+      <Image style={styles.introImageStyle} source={item.image} />
+      <Text style={styles.introTextStyle}>{item.text}</Text>
+    </View>
+  );
+}
+
 function SplashScreen() {
   const [showApp, setShowApp] = useState(false);
-  const [firstRun, setFirstRun] = useState();
+  const [firstRun, setFirstRun] = useState(null);
 
   useEffect(() => {
-    setValueWithKey(
-      "@availableColors",
-      JSON.stringify([
-        {
-          name: "Hyoka",
-          bgColor: "#000000",
-          headerColor: "#000000",
-          headerTextColor: "#ffffff",
-          textColor: "#8f6960",
-          highlightColor: "#FF0063",
-          borderColor: "#C93384",
-          buttonGradient: ["#ff809d", "#f8b0c0"],
-          itemGradient: ["#f4c4f3", "#B993D6"],
-          textButtonGradient: "#ffffff",
-          isDarkHeader: false,
-        },
-      ])
-    );
-    (async () => {
-      await getValueWithKey("@firstRun").then((value) => {
-        if (value) {
-          setFirstRun(false);
-        } else {
-          setFirstRun(true);
-          setValueWithKey("@selectedColor", "0");
-          setValueWithKey("@firstRun", "false");
-        }
-      });
-      if (Platform.OS === "web") setFirstRun(false);
-    })();
+    const checkFirstRun = () => {
+      const value = getValueWithKey("@firstRun");
+      if (value) {
+        setFirstRun(false);
+      } else {
+        setFirstRun(true);
+        setValueWithKey("@firstRun", "false");
+      }
+    };
+    checkFirstRun();
+    if (Platform.OS === "web") setFirstRun(false);
   }, []);
-
-  function RenderItem({ item }) {
-    return (
-      <View
-        style={{
-          flex: 1,
-          backgroundColor: item.backgroundColor,
-          alignItems: "center",
-          justifyContent: "space-around",
-          paddingBottom: 100,
-        }}
-      >
-        <StatusBar
-          translucent
-          backgroundColor="transparent"
-          barStyle="light-content"
-        />
-        <Text style={styles.introTitleStyle}>{item.title}</Text>
-        <Image style={styles.introImageStyle} source={item.image} />
-        <Text style={styles.introTextStyle}>{item.text}</Text>
-      </View>
-    );
-  }
 
   return (
     <NavigationContainer>
@@ -157,12 +138,12 @@ function SplashScreen() {
           <AppIntroSlider
             data={slides}
             renderItem={RenderItem}
-            onDone={setShowApp(true)}
+            onDone={() => setShowApp(true)}
             showPrevButton
             prevLabel="Atrás"
             nextLabel="Siguiente"
             doneLabel="Terminar"
-            onSkip={setShowApp(true)}
+            onSkip={() => setShowApp(true)}
           />
         )
       ) : (

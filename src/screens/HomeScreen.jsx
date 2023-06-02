@@ -1,3 +1,4 @@
+/* eslint-disable react/style-prop-object */
 import React, { useState, useEffect } from "react";
 import {
   SafeAreaView,
@@ -17,7 +18,6 @@ import { StatusBar } from "expo-status-bar";
 import { MaterialIcons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { getActualColor } from "../util";
 /* import exampleUserData from "../util/exampleUserData"; */
 import InformationDialog from "../components/InformationDialog";
 import ErrorAlert from "../components/ErrorAlert";
@@ -91,7 +91,6 @@ function App({ navigation }) {
     title: "",
     buttons: null,
   });
-  const [color, setColor] = useState(null);
 
   const getStatus = async () => {
     await fetch("https://api.lxndr.dev/uae/notas/status")
@@ -124,25 +123,6 @@ function App({ navigation }) {
         cedula: exampleUserData.cedula,
       });
     } */
-    (async () => {
-      await getActualColor().then((colore) => {
-        if (colore) {
-          navigation.setOptions({
-            headerStyle: {
-              backgroundColor: colore.headerColor,
-            },
-            headerRight: () => (
-              <Image
-                source={require("../assets/lxndr.png")}
-                style={styles.logo}
-              />
-            ),
-            headerTintColor: colore.textColor,
-          });
-          setColor(colore);
-        }
-      });
-    })();
     getStatus();
   }, []);
 
@@ -187,7 +167,7 @@ function App({ navigation }) {
           }
           setTextCedula(data.cedula);
           appendeUserData({
-            cedula: textInput,
+            cedula: data.cedula,
             nombres: data.nombres.split(" ")[0],
             apellidos: data.apellidos.split(" ")[0],
             completos: `${data.apellidos} ${data.nombres}`,
@@ -221,128 +201,115 @@ function App({ navigation }) {
   };
 
   return (
-    color && (
-      <SafeAreaView style={{ flex: 1 }}>
-        <LinearGradient
-          colors={["#feeeef", "#ffdbe5"]}
+    <SafeAreaView style={{ flex: 1 }}>
+      <LinearGradient
+        colors={["#feeeef", "#ffdbe5"]}
+        style={{
+          left: 0,
+          right: 0,
+          top: 0,
+          height: "100%",
+          width: "100%",
+        }}
+      >
+        <ImageBackground
+          source={require("../assets/sakura.webp")}
           style={{
-            left: 0,
-            right: 0,
-            top: 0,
+            position: "absolute",
+            flexDirection: "row",
             height: "100%",
             width: "100%",
           }}
+          imageStyle={{ opacity: 0.1 }}
+          resizeMode="contain"
         >
-          <ImageBackground
-            source={require("../assets/sakura.webp")}
-            style={{
-              position: "absolute",
-              flexDirection: "row",
-              height: "100%",
-              width: "100%",
-            }}
-            imageStyle={{ opacity: 0.1 }}
-            resizeMode="contain"
+          <KeyboardAvoidingView
+            behavior={Platform.OS === "ios" ? "padding" : "height"}
+            style={[styles.container, { backgroundColor: "transparent" }]}
           >
-            <KeyboardAvoidingView
-              behavior={Platform.OS === "ios" ? "padding" : "height"}
-              style={[styles.container, { backgroundColor: "transparent" }]}
+            <StatusBar style="dark" />
+            <View
+              style={{
+                alignSelf: "center",
+                flexDirection: "row",
+                marginTop: 50,
+              }}
             >
-              <StatusBar style={color.isDarkHeader ? "light" : "dark"} />
-              <View
+              <Text
                 style={{
-                  alignSelf: "center",
-                  flexDirection: "row",
-                  marginTop: 50,
+                  color: "rgb(143, 105, 96)",
+                  fontSize: 30,
+                  fontWeight: "bold",
                 }}
               >
-                <Text
-                  style={{
-                    color: color.textColor,
-                    fontSize: 30,
-                    fontWeight: "bold",
-                  }}
-                >
-                  Consulta De Notas
-                </Text>
-                <TouchableOpacity
-                  onPress={() => {
-                    setPopupVisible(true);
-                    Keyboard.dismiss();
-                  }}
-                  style={styles.buttonInfoCont}
-                >
-                  <LinearGradient
-                    colors={color.buttonGradient}
-                    style={styles.buttonInfo}
-                  >
-                    <MaterialIcons
-                      name="info"
-                      size={30}
-                      color={color.textButtonGradient}
-                    />
-                  </LinearGradient>
-                </TouchableOpacity>
-              </View>
-              <Image
-                style={styles.tinyLogo}
-                source={require("../assets/uaeLOGO.png")}
-              />
-              <ErrorAlert
-                errorContent={errorContent}
-                setErrorContent={setErrorContent}
-              />
-              <InformationDialog
-                popupVisible={popupVisible}
-                setPopupVisible={setPopupVisible}
-              />
-              <StudentInformation
-                foundVisible={foundVisible}
-                setFoundVisible={setFoundVisible}
-                apiData={apiData}
-                navigation={navigation}
-                studentData={studentData}
-                textCedula={textCedula}
-              />
-              <View style={{ paddingBottom: 10 }}>
-                <InputHistory
-                  value={textInput}
-                  onChange={setTextInput}
-                  onFinish={searchBtn}
-                  style={styles.input}
-                  colorsGradient={color.itemGradient}
-                  colorsGradientOk={color.buttonGradient}
-                  colorsGradientCancel={["#B24592", "#F15F79"]}
-                />
-              </View>
+                Consulta De Notas
+              </Text>
               <TouchableOpacity
-                style={styles.button}
-                disabled={searchButton}
-                onPress={searchBtn}
+                onPress={() => {
+                  setPopupVisible(true);
+                  Keyboard.dismiss();
+                }}
+                style={styles.buttonInfoCont}
               >
                 <LinearGradient
-                  colors={color.buttonGradient}
-                  style={[styles.button, { padding: 10 }]}
+                  colors={["#ff809d", "#f8b0c0"]}
+                  style={styles.buttonInfo}
                 >
-                  {loadingData ? (
-                    <ActivityIndicator
-                      size="large"
-                      color={color.textButtonGradient}
-                    />
-                  ) : (
-                    <MaterialIcons
-                      name="search"
-                      size={40}
-                      color={color.textButtonGradient}
-                    />
-                  )}
+                  <MaterialIcons name="info" size={30} color="#ffffff" />
                 </LinearGradient>
               </TouchableOpacity>
-            </KeyboardAvoidingView>
-          </ImageBackground>
-        </LinearGradient>
-      </SafeAreaView>
-    )
+            </View>
+            <Image
+              style={styles.tinyLogo}
+              source={require("../assets/uaeLOGO.png")}
+            />
+            <ErrorAlert
+              errorContent={errorContent}
+              setErrorContent={setErrorContent}
+            />
+            <InformationDialog
+              popupVisible={popupVisible}
+              setPopupVisible={setPopupVisible}
+            />
+            <StudentInformation
+              foundVisible={foundVisible}
+              setFoundVisible={setFoundVisible}
+              apiData={apiData}
+              navigation={navigation}
+              studentData={studentData}
+              textCedula={textCedula}
+            />
+            <View style={{ paddingBottom: 10 }}>
+              <InputHistory
+                value={textInput}
+                onChange={setTextInput}
+                onFinish={searchBtn}
+                style={styles.input}
+                colorsGradient={["#ff809d", "#f8b0c0"]}
+                colorsGradientOk={["#ff809d", "#f8b0c0"]}
+                colorsGradientCancel={["#B24592", "#F15F79"]}
+              />
+            </View>
+            <TouchableOpacity
+              style={styles.button}
+              disabled={searchButton}
+              onPress={searchBtn}
+            >
+              <LinearGradient
+                colors={["#ff809d", "#f8b0c0"]}
+                style={[styles.button, { padding: 10 }]}
+              >
+                {loadingData ? (
+                  <ActivityIndicator size="large" color="#ffffff" />
+                ) : (
+                  <MaterialIcons name="search" size={40} color="#ffffff" />
+                )}
+              </LinearGradient>
+            </TouchableOpacity>
+          </KeyboardAvoidingView>
+        </ImageBackground>
+      </LinearGradient>
+    </SafeAreaView>
   );
 }
 

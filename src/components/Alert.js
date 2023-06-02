@@ -1,10 +1,13 @@
 /* eslint-disable no-unused-expressions */
 /* eslint-disable no-alert */
 import { Alert, Platform } from "react-native";
-
+import { toUnicodeVariant } from "../util";
+//
 const alertPolyfill = (title, description, options) => {
   const result = window.confirm(
-    [title, description].filter(Boolean).join("\n")
+    [toUnicodeVariant(title, "bold sans", "bold"), description]
+      .filter(Boolean)
+      .join("\n")
   );
 
   if (result) {
