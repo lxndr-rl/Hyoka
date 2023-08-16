@@ -30,6 +30,7 @@
       "package": "dev.lxndr.hyoka"
     },
     "web": {
+      "bundler": "metro",
       "favicon": "./src/assets/favicon.png"
     },
     "extra": {
@@ -39,6 +40,7 @@
     },
     "runtimeVersion": {
       "policy": "sdkVersion"
-    }
+    },
+    "jsEngine": "hermes"
   }
 }
