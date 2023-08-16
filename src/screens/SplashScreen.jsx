@@ -2,12 +2,12 @@ import React, { useState, useEffect } from "react";
 import {
   View,
   StyleSheet,
-  Image,
   Dimensions,
   StatusBar,
   Platform,
   Text,
 } from "react-native";
+import { Image } from "expo-image";
 import AppIntroSlider from "react-native-app-intro-slider";
 import { NavigationContainer } from "@react-navigation/native";
 import { ModalPortal } from "react-native-modals";

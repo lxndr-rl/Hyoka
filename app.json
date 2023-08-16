@@ -39,10 +39,6 @@
     },
     "runtimeVersion": {
       "policy": "sdkVersion"
-    },
-    "plugins": [
-      ["./src/plugins/withAnimatedWebPSupport.js"],
-      ["./src/plugins/withFastImageWebPSupportIOS.js"]
-    ]
+    }
   }
 }

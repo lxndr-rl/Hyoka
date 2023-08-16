@@ -7,13 +7,13 @@ import {
   Platform,
   Dimensions,
   TouchableOpacity,
-  Image,
   Text,
   KeyboardAvoidingView,
   Keyboard,
   ActivityIndicator,
   ImageBackground,
 } from "react-native";
+import { Image } from "expo-image";
 import { StatusBar } from "expo-status-bar";
 import { MaterialIcons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
@@ -46,7 +46,6 @@ const styles = StyleSheet.create({
   tinyLogo: {
     width: 200,
     height: 200,
-    padding: 20,
     margin: 10,
     alignSelf: "center",
   },
@@ -261,7 +260,7 @@ function App({ navigation }) {
             </View>
             <Image
               style={styles.tinyLogo}
-              source={require("../assets/uaeLOGO.png")}
+              source={require("../assets/uaeLOGO.webp")}
             />
             <ErrorAlert
               errorContent={errorContent}
